@@ -1,29 +1,17 @@
 {
-  "name": "ui-standard-kit",
-  "version": "1.0.0",
-  "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
-  "scripts": {
-    "dev:api": "npm run dev -w apps/api-server",
-    "dev:admin": "npm run dev -w apps/admin-web",
-    "dev:cms": "concurrently \"npm run dev:api\" \"npm run dev:admin\"",
-    "clean": "node scripts/clean.mjs",
-    "clean:all": "node scripts/clean.mjs --all",
-    "setup:cms": "npm install && node scripts/setup-cms.mjs && npm run db:generate && npm run db:push && npm run db:seed",
-    "build:api": "npm run build -w apps/api-server",
-    "build:admin": "npm run build -w apps/admin-web",
-    "build:cms": "npm run build:api && npm run build:admin",
-    "lint": "eslint",
-    "db:generate": "npm run db:generate -w apps/api-server",
-    "db:push": "npm run db:push -w apps/api-server",
-    "db:seed": "npm run db:seed -w apps/api-server"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "eslint": "^9",
-    "concurrently": "^9.2.1",
-    "typescript": "^5"
-  }
+    "$schema": "https://www.schemastore.org/package.json",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.0.0",
+        "axios": "^1.11.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^2.0.0",
+        "tailwindcss": "^4.0.0",
+        "vite": "^7.0.7"
+    }
 }
