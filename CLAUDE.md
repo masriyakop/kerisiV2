@@ -1,0 +1,1 @@
+docs/ai-guidelines/CLAUDE.md

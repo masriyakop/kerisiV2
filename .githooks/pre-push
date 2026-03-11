@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "[pre-push] Checking AI guideline sync..."
+composer ai:check
+
+echo "[pre-push] AI guideline sync check passed."

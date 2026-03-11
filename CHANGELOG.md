@@ -58,5 +58,5 @@ All notable changes to this project are documented in this file.
   - User CRUD and shared user edit flows.
   - Theme color picker and login UI modernization.
 
-[1.1.0]: https://github.com/mfauzzury/corrad-xpress/releases/tag/v1.1.0
-[1.0.0]: https://github.com/mfauzzury/corrad-xpress/releases/tag/v1.0.0
+[1.1.0]: https://github.com/mfauzzury/corrad-laravel/releases/tag/v1.1.0
+[1.0.0]: https://github.com/mfauzzury/corrad-laravel/releases/tag/v1.0.0

@@ -1,0 +1,22 @@
+name: AI Guidelines Sync
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-ai-guidelines:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Verify AI guideline files are synced
+        run: php scripts/ai-guidelines-sync.php --check

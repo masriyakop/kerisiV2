@@ -1,0 +1,70 @@
+name: PR Governance
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+
+jobs:
+  validate-pr-body:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR template sections and compliance checks
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = (context.payload.pull_request?.body || "").trim();
+            const requiredSections = [
+              "## Summary",
+              "## Review Focus",
+              "## Changed Files",
+              "## Validation",
+              "## Assumptions / Risks",
+              "## Code Review",
+              "## AI Guidelines Compliance",
+            ];
+
+            const missingSections = requiredSections.filter((section) => !body.includes(section));
+
+            const requiredCheckedItems = [
+              "- [x] I reviewed changed files for correctness and edge cases",
+              "- [x] I reviewed security implications (auth/validation/data handling)",
+              "- [x] I reviewed backward compatibility/API impact",
+              "- [x] I confirmed validation evidence is complete and accurate",
+              "- [x] `composer ai:check` passed locally",
+              "- [x] No fabricated test results or command output",
+              "- [x] No guessed files/routes/contracts were introduced",
+            ];
+
+            const normalizedBody = body.toLowerCase();
+            const missingChecks = requiredCheckedItems.filter((line) => !normalizedBody.includes(line.toLowerCase()));
+
+            if (!body) {
+              core.setFailed("PR description is empty. Fill the PR template.");
+              return;
+            }
+
+            if (missingSections.length || missingChecks.length) {
+              const lines = [];
+              lines.push("PR governance validation failed.");
+
+              if (missingSections.length) {
+                lines.push("");
+                lines.push("Missing sections:");
+                for (const section of missingSections) {
+                  lines.push(`- ${section}`);
+                }
+              }
+
+              if (missingChecks.length) {
+                lines.push("");
+                lines.push("Unchecked required checklist items:");
+                for (const item of missingChecks) {
+                  lines.push(`- ${item}`);
+                }
+              }
+
+              core.setFailed(lines.join("\n"));
+              return;
+            }
+
+            core.info("PR governance validation passed.");
