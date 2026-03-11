@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## Planned / Future
+
+- Add FAQ icon link to topbar user-manual page, contextualized to the currently open page.
+- Add AI Advisor rotator text in topbar to surface system insights and latest user issues.
+- Redesign topbar with a darker "PowerBar" concept.
+- Build notification module and add topbar notifications dropdown (similar to settings) showing the latest 5 notifications.
+
 ## [1.1.0] - 2026-03-11
 
 ### Added
