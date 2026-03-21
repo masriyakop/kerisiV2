@@ -67,6 +67,7 @@ class User extends Authenticatable
     public function hasPermission(string $permission): bool
     {
         $roleModel = $this->roleModel;
+
         return $roleModel
             && is_array($roleModel->permissions)
             && in_array($permission, $roleModel->permissions);

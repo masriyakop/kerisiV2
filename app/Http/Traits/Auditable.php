@@ -21,7 +21,7 @@ trait Auditable
             $oldValues = array_diff_key($oldValues, array_flip($sensitiveFields));
             $newValues = array_diff_key($newValues, array_flip($sensitiveFields));
 
-            if (!empty($newValues)) {
+            if (! empty($newValues)) {
                 // Only include old values for changed fields
                 $relevantOld = array_intersect_key($oldValues, $newValues);
                 self::logAudit('updated', $model, $relevantOld, $newValues);
@@ -48,7 +48,7 @@ trait Auditable
             ]);
         } catch (\Throwable $e) {
             // Don't let audit logging failures break the app
-            logger()->error('Audit log failed: ' . $e->getMessage());
+            logger()->error('Audit log failed: '.$e->getMessage());
         }
     }
 }

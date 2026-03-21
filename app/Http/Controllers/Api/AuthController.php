@@ -27,7 +27,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             return $this->sendError(401, 'INVALID_CREDENTIALS', 'Invalid email or password');
         }
 
@@ -101,12 +101,12 @@ class AuthController extends Controller
     {
         $request->validate([
             'current_password' => 'required|string',
-            'new_password'     => 'required|string|min:6',
+            'new_password' => 'required|string|min:6',
         ]);
 
         $user = $request->user();
 
-        if (!Hash::check($request->input('current_password'), $user->password)) {
+        if (! Hash::check($request->input('current_password'), $user->password)) {
             return $this->sendError(400, 'INVALID_PASSWORD', 'Current password is incorrect');
         }
 
@@ -130,7 +130,7 @@ class AuthController extends Controller
 
         // Remove old avatar if exists
         if ($user->photo_url) {
-            $oldPath = 'uploads/' . basename($user->photo_url);
+            $oldPath = 'uploads/'.basename($user->photo_url);
             if (Storage::disk('public')->exists($oldPath)) {
                 Storage::disk('public')->delete($oldPath);
             }
@@ -138,12 +138,12 @@ class AuthController extends Controller
 
         $file = $request->file('file');
         $ext = $file->getClientOriginalExtension();
-        $filename = 'avatar-' . time() . '.' . $ext;
+        $filename = 'avatar-'.time().'.'.$ext;
 
         $file->storeAs('uploads', $filename, 'public');
 
         $user->update([
-            'photo_url' => '/storage/uploads/' . $filename,
+            'photo_url' => '/storage/uploads/'.$filename,
         ]);
         $user->refresh();
 
@@ -160,7 +160,7 @@ class AuthController extends Controller
         $user = $request->user();
 
         if ($user->photo_url) {
-            $oldPath = 'uploads/' . basename($user->photo_url);
+            $oldPath = 'uploads/'.basename($user->photo_url);
             if (Storage::disk('public')->exists($oldPath)) {
                 Storage::disk('public')->delete($oldPath);
             }
@@ -180,11 +180,11 @@ class AuthController extends Controller
     protected function userPayload($user): array
     {
         return [
-            'id'       => $user->id,
-            'email'    => $user->email,
-            'name'     => $user->name,
+            'id' => $user->id,
+            'email' => $user->email,
+            'name' => $user->name,
             'photo_url' => $user->photo_url,
-            'role'     => $user->role,
+            'role' => $user->role,
         ];
     }
 }

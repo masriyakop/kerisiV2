@@ -20,10 +20,10 @@ class StoreUserRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name'      => 'required|string|min:1',
-            'email'     => 'required|email|unique:users,email',
-            'password'  => 'required|string|min:6',
-            'role'      => 'nullable|string|min:1',
+            'name' => 'required|string|min:1',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'role' => 'nullable|string|min:1',
             'is_active' => 'nullable|boolean',
         ];
     }

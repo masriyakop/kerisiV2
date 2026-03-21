@@ -11,8 +11,6 @@ class BaseFormRequest extends FormRequest
     /**
      * Handle a failed validation attempt.
      *
-     * @param Validator $validator
-     * @return void
      *
      * @throws HttpResponseException
      */
@@ -21,7 +19,7 @@ class BaseFormRequest extends FormRequest
         throw new HttpResponseException(
             response()->json([
                 'error' => [
-                    'code'    => 'VALIDATION_ERROR',
+                    'code' => 'VALIDATION_ERROR',
                     'message' => 'Validation failed',
                     'details' => $validator->errors()->toArray(),
                 ],

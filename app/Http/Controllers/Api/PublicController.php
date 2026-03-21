@@ -42,7 +42,7 @@ class PublicController extends Controller
 
         // Parse storefront menu
         $storefrontMenu = [];
-        if (!empty($settings['storefrontMenu'])) {
+        if (! empty($settings['storefrontMenu'])) {
             try {
                 $parsed = json_decode($settings['storefrontMenu'], true);
                 $storefrontMenu = $this->normalizeStorefrontMenuItems($parsed ?? []);
@@ -52,17 +52,17 @@ class PublicController extends Controller
         }
 
         return $this->sendOk([
-            'siteTitle'       => $settings['siteTitle'] ?? '',
-            'tagline'         => $settings['tagline'] ?? '',
-            'webfrontTitle'   => $settings['webfrontTitle'] ?: ($settings['siteTitle'] ?? ''),
+            'siteTitle' => $settings['siteTitle'] ?? '',
+            'tagline' => $settings['tagline'] ?? '',
+            'webfrontTitle' => $settings['webfrontTitle'] ?: ($settings['siteTitle'] ?? ''),
             'webfrontTagline' => $settings['webfrontTagline'] ?: ($settings['tagline'] ?? ''),
             'metaDescription' => $settings['metaDescription'] ?? '',
-            'footerText'      => $settings['footerText'] ?? '',
-            'siteIconUrl'     => $settings['siteIconUrl'] ?? '',
+            'footerText' => $settings['footerText'] ?? '',
+            'siteIconUrl' => $settings['siteIconUrl'] ?? '',
             'webfrontLogoUrl' => $settings['webfrontLogoUrl'] ?: ($settings['siteIconUrl'] ?? ''),
-            'sidebarLogoUrl'  => $settings['sidebarLogoUrl'] ?? '',
-            'faviconUrl'      => $settings['faviconUrl'] ?? '',
-            'storefrontMenu'  => $storefrontMenu,
+            'sidebarLogoUrl' => $settings['sidebarLogoUrl'] ?? '',
+            'faviconUrl' => $settings['faviconUrl'] ?? '',
+            'storefrontMenu' => $storefrontMenu,
         ]);
     }
 
@@ -73,7 +73,7 @@ class PublicController extends Controller
     {
         $slug = trim($slug);
 
-        if (!$slug) {
+        if (! $slug) {
             return $this->sendError(404, 'NOT_FOUND', 'Page not found');
         }
 
@@ -82,7 +82,7 @@ class PublicController extends Controller
             ->with('featuredImage')
             ->first();
 
-        if (!$page) {
+        if (! $page) {
             return $this->sendError(404, 'NOT_FOUND', 'Page not found');
         }
 
@@ -137,7 +137,7 @@ class PublicController extends Controller
      */
     protected function parseFrontPageId(?string $value): ?int
     {
-        if (!$value || $value === 'null') {
+        if (! $value || $value === 'null') {
             return null;
         }
 
@@ -154,10 +154,10 @@ class PublicController extends Controller
         $withIds = [];
         foreach ($input as $index => $item) {
             $withIds[] = [
-                'id'           => !empty(trim($item['id'] ?? '')) ? trim($item['id']) : 'menu_' . ($index + 1),
-                'label'        => $item['label'] ?? '',
-                'href'         => $item['href'] ?? '',
-                'parentId'     => $item['parentId'] ?? null,
+                'id' => ! empty(trim($item['id'] ?? '')) ? trim($item['id']) : 'menu_'.($index + 1),
+                'label' => $item['label'] ?? '',
+                'href' => $item['href'] ?? '',
+                'parentId' => $item['parentId'] ?? null,
                 'openInNewTab' => $item['openInNewTab'] ?? false,
             ];
         }

@@ -39,7 +39,7 @@ class RoleController extends Controller
         }
 
         $role = Role::create([
-            'name'        => $data['name'],
+            'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'permissions' => $data['permissions'] ?? [],
         ]);
@@ -54,7 +54,7 @@ class RoleController extends Controller
     {
         $role = Role::withCount('users')->find($id);
 
-        if (!$role) {
+        if (! $role) {
             return $this->sendError(404, 'NOT_FOUND', 'Role not found');
         }
 
@@ -68,7 +68,7 @@ class RoleController extends Controller
     {
         $role = Role::find($id);
 
-        if (!$role) {
+        if (! $role) {
             return $this->sendError(404, 'NOT_FOUND', 'Role not found');
         }
 
@@ -83,7 +83,7 @@ class RoleController extends Controller
         }
 
         $role->update([
-            'name'        => $data['name'],
+            'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'permissions' => $data['permissions'] ?? [],
         ]);
@@ -98,7 +98,7 @@ class RoleController extends Controller
     {
         $role = Role::withCount('users')->find($id);
 
-        if (!$role) {
+        if (! $role) {
             return $this->sendError(404, 'NOT_FOUND', 'Role not found');
         }
 

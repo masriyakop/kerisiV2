@@ -22,10 +22,10 @@ class UpdateUserRequest extends BaseFormRequest
         $userId = $this->route('id') ?? $this->route('user');
 
         return [
-            'name'      => 'sometimes|required|string|min:1',
-            'email'     => 'sometimes|required|email|unique:users,email,' . $userId,
-            'password'  => 'nullable|string|min:6',
-            'role'      => 'nullable|string|min:1',
+            'name' => 'sometimes|required|string|min:1',
+            'email' => 'sometimes|required|email|unique:users,email,'.$userId,
+            'password' => 'nullable|string|min:6',
+            'role' => 'nullable|string|min:1',
             'is_active' => 'nullable|boolean',
         ];
     }

@@ -78,7 +78,7 @@ class SettingController extends Controller
     {
         $value = $this->settingService->get('storefrontMenu');
 
-        if (!$value) {
+        if (! $value) {
             return $this->sendOk([]);
         }
 
@@ -113,10 +113,10 @@ class SettingController extends Controller
         $withIds = [];
         foreach ($input as $index => $item) {
             $withIds[] = [
-                'id'           => !empty(trim($item['id'] ?? '')) ? trim($item['id']) : 'menu_' . ($index + 1),
-                'label'        => $item['label'] ?? '',
-                'href'         => $item['href'] ?? '',
-                'parentId'     => $item['parentId'] ?? null,
+                'id' => ! empty(trim($item['id'] ?? '')) ? trim($item['id']) : 'menu_'.($index + 1),
+                'label' => $item['label'] ?? '',
+                'href' => $item['href'] ?? '',
+                'parentId' => $item['parentId'] ?? null,
                 'openInNewTab' => $item['openInNewTab'] ?? false,
             ];
         }

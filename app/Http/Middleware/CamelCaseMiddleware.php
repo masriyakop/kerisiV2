@@ -35,12 +35,13 @@ class CamelCaseMiddleware
             $snakeKey = Str::snake($key);
             $result[$snakeKey] = is_array($value) ? $this->convertKeysToSnakeCase($value) : $value;
         }
+
         return $result;
     }
 
     private function convertKeysToCamelCase($data)
     {
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             return $data;
         }
 
@@ -50,6 +51,7 @@ class CamelCaseMiddleware
             $camelKey = is_string($key) ? (str_starts_with($key, '_') ? $key : Str::camel($key)) : $key;
             $result[$camelKey] = is_array($value) ? $this->convertKeysToCamelCase($value) : $value;
         }
+
         return $result;
     }
 }

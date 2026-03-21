@@ -10,22 +10,22 @@ class SettingService
      * Default setting keys and their default values.
      */
     protected array $defaults = [
-        'siteTitle'       => '',
-        'tagline'         => '',
-        'webfrontTitle'   => '',
+        'siteTitle' => '',
+        'tagline' => '',
+        'webfrontTitle' => '',
         'webfrontTagline' => '',
-        'titleFormat'     => '%page% | %site%',
+        'titleFormat' => '%page% | %site%',
         'metaDescription' => '',
-        'siteIconUrl'     => '',
+        'siteIconUrl' => '',
         'webfrontLogoUrl' => '',
-        'sidebarLogoUrl'  => '',
-        'faviconUrl'      => '',
-        'language'        => 'en',
-        'timezone'        => 'UTC',
-        'footerText'      => '',
-        'frontPageId'     => null,
-        'storefrontMenu'  => null,
-        'adminMenuPrefs'  => null,
+        'sidebarLogoUrl' => '',
+        'faviconUrl' => '',
+        'language' => 'en',
+        'timezone' => 'UTC',
+        'footerText' => '',
+        'frontPageId' => null,
+        'storefrontMenu' => null,
+        'adminMenuPrefs' => null,
     ];
 
     /**
@@ -34,22 +34,22 @@ class SettingService
      * @var array<string, array<int, string>>
      */
     protected array $aliases = [
-        'siteTitle'       => ['siteTitle', 'site_title'],
-        'tagline'         => ['tagline'],
-        'webfrontTitle'   => ['webfrontTitle', 'webfront_title'],
+        'siteTitle' => ['siteTitle', 'site_title'],
+        'tagline' => ['tagline'],
+        'webfrontTitle' => ['webfrontTitle', 'webfront_title'],
         'webfrontTagline' => ['webfrontTagline', 'webfront_tagline'],
-        'titleFormat'     => ['titleFormat', 'title_format'],
+        'titleFormat' => ['titleFormat', 'title_format'],
         'metaDescription' => ['metaDescription', 'meta_description'],
-        'siteIconUrl'     => ['siteIconUrl', 'site_icon_url'],
+        'siteIconUrl' => ['siteIconUrl', 'site_icon_url'],
         'webfrontLogoUrl' => ['webfrontLogoUrl', 'webfront_logo_url'],
-        'sidebarLogoUrl'  => ['sidebarLogoUrl', 'sidebar_logo_url'],
-        'faviconUrl'      => ['faviconUrl', 'favicon_url'],
-        'language'        => ['language'],
-        'timezone'        => ['timezone'],
-        'footerText'      => ['footerText', 'footer_text'],
-        'frontPageId'     => ['frontPageId', 'frontpageId', 'frontpage_id'],
-        'storefrontMenu'  => ['storefrontMenu', 'storefront_menu'],
-        'adminMenuPrefs'  => ['adminMenuPrefs', 'admin_menu_prefs'],
+        'sidebarLogoUrl' => ['sidebarLogoUrl', 'sidebar_logo_url'],
+        'faviconUrl' => ['faviconUrl', 'favicon_url'],
+        'language' => ['language'],
+        'timezone' => ['timezone'],
+        'footerText' => ['footerText', 'footer_text'],
+        'frontPageId' => ['frontPageId', 'frontpageId', 'frontpage_id'],
+        'storefrontMenu' => ['storefrontMenu', 'storefront_menu'],
+        'adminMenuPrefs' => ['adminMenuPrefs', 'admin_menu_prefs'],
     ];
 
     /**
@@ -72,8 +72,7 @@ class SettingService
     /**
      * Update multiple settings at once, upserting each key within a transaction.
      *
-     * @param array<string, mixed> $data
-     * @return void
+     * @param  array<string, mixed>  $data
      */
     public function update(array $data): void
     {
@@ -100,9 +99,7 @@ class SettingService
     /**
      * Retrieve a single setting value.
      *
-     * @param string     $key
-     * @param mixed|null $default
-     * @return string|null
+     * @param  mixed|null  $default
      */
     public function get(string $key, $default = null): ?string
     {
@@ -119,10 +116,6 @@ class SettingService
 
     /**
      * Set a single setting value.
-     *
-     * @param string $key
-     * @param string $value
-     * @return void
      */
     public function set(string $key, string $value): void
     {
@@ -135,8 +128,7 @@ class SettingService
     /**
      * Serialize a value for storage in the settings table.
      *
-     * @param mixed $value
-     * @return string
+     * @param  mixed  $value
      */
     protected function serializeValue($value): string
     {
@@ -154,9 +146,8 @@ class SettingService
     /**
      * Resolve a canonical setting key from DB rows and legacy aliases.
      *
-     * @param string $key
-     * @param array<string, mixed> $rows
-     * @param mixed $default
+     * @param  array<string, mixed>  $rows
+     * @param  mixed  $default
      * @return mixed
      */
     protected function resolveValueByAlias(string $key, array $rows, $default)
@@ -164,7 +155,7 @@ class SettingService
         $candidates = $this->aliases[$key] ?? [$key];
 
         foreach ($candidates as $candidate) {
-            if (!array_key_exists($candidate, $rows)) {
+            if (! array_key_exists($candidate, $rows)) {
                 continue;
             }
 

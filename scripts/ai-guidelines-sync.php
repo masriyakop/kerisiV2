@@ -9,11 +9,10 @@ declare(strict_types=1);
  *   php scripts/ai-guidelines-sync.php         # sync all targets
  *   php scripts/ai-guidelines-sync.php --check # verify all targets are in sync
  */
-
 $root = dirname(__DIR__);
-$canonicalPath = $root . '/docs/ai-guidelines/CLAUDE.md';
+$canonicalPath = $root.'/docs/ai-guidelines/CLAUDE.md';
 
-if (!file_exists($canonicalPath)) {
+if (! file_exists($canonicalPath)) {
     fwrite(STDERR, "Missing canonical file: docs/ai-guidelines/CLAUDE.md\n");
     exit(1);
 }
@@ -25,19 +24,19 @@ if ($canonical === false) {
 }
 
 $syncHeader = "> **Canonical source: `CLAUDE.md` at project root.**\n"
-    . "> If this file and CLAUDE.md diverge, CLAUDE.md wins. Keep them in sync.";
+    .'> If this file and CLAUDE.md diverge, CLAUDE.md wins. Keep them in sync.';
 $originalHeader = "> **This file is the single source of truth for AI-assisted development.**\n"
-    . "> All generated code MUST conform to the patterns below. No exceptions.";
+    .'> All generated code MUST conform to the patterns below. No exceptions.';
 
 $mirror = str_replace($originalHeader, $syncHeader, $canonical);
 if ($mirror === $canonical) {
     $firstNewline = strpos($canonical, "\n");
     if ($firstNewline === false) {
-        $mirror = $syncHeader . "\n\n" . $canonical;
+        $mirror = $syncHeader."\n\n".$canonical;
     } else {
         $firstLine = substr($canonical, 0, $firstNewline);
         $rest = substr($canonical, $firstNewline + 1);
-        $mirror = $firstLine . "\n\n" . $syncHeader . ($rest !== '' ? "\n" . $rest : '');
+        $mirror = $firstLine."\n\n".$syncHeader.($rest !== '' ? "\n".$rest : '');
     }
 }
 
@@ -54,18 +53,20 @@ $errors = [];
 
 foreach ($targets as $target) {
     $relativePath = $target['path'];
-    $absolutePath = $root . '/' . $relativePath;
+    $absolutePath = $root.'/'.$relativePath;
     $expected = $target['expected'];
 
     if ($checkOnly) {
-        if (!file_exists($absolutePath)) {
+        if (! file_exists($absolutePath)) {
             $errors[] = "Missing file: {$relativePath}";
+
             continue;
         }
 
         $actual = file_get_contents($absolutePath);
         if ($actual === false) {
             $errors[] = "Unreadable file: {$relativePath}";
+
             continue;
         }
 
@@ -77,7 +78,7 @@ foreach ($targets as $target) {
     }
 
     $dir = dirname($absolutePath);
-    if (!is_dir($dir) && !mkdir($dir, 0777, true) && !is_dir($dir)) {
+    if (! is_dir($dir) && ! mkdir($dir, 0777, true) && ! is_dir($dir)) {
         fwrite(STDERR, "Failed to create directory: {$dir}\n");
         exit(1);
     }

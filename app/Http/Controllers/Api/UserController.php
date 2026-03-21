@@ -31,10 +31,10 @@ class UserController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $page    = (int) $request->input('page', 1);
-        $limit   = (int) $request->input('limit', 10);
-        $q       = $request->input('q');
-        $sortBy  = $request->input('sort_by', 'created_at');
+        $page = (int) $request->input('page', 1);
+        $limit = (int) $request->input('limit', 10);
+        $q = $request->input('q');
+        $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
         $query = User::query();
@@ -55,9 +55,9 @@ class UserController extends Controller
             ->map(fn ($user) => $this->formatUser($user));
 
         return $this->sendOk($rows, [
-            'page'       => $page,
-            'limit'      => $limit,
-            'total'      => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
             'totalPages' => (int) ceil($total / $limit),
         ]);
     }
@@ -68,17 +68,17 @@ class UserController extends Controller
 
         // Resolve role_id from role name
         $roleId = null;
-        if (!empty($data['role'])) {
+        if (! empty($data['role'])) {
             $role = Role::where('name', $data['role'])->first();
             $roleId = $role?->id;
         }
 
         $user = User::create([
-            'name'      => $data['name'],
-            'email'     => $data['email'],
-            'password'  => Hash::make($data['password']),
-            'role'      => $data['role'] ?? 'admin',
-            'role_id'   => $roleId,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role' => $data['role'] ?? 'admin',
+            'role_id' => $roleId,
             'is_active' => $data['is_active'] ?? true,
         ]);
 
@@ -89,7 +89,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             return $this->sendError(404, 'NOT_FOUND', 'User not found');
         }
 
@@ -100,7 +100,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             return $this->sendError(404, 'NOT_FOUND', 'User not found');
         }
 
@@ -122,7 +122,7 @@ class UserController extends Controller
         if (isset($data['is_active'])) {
             $updateData['is_active'] = $data['is_active'];
         }
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $updateData['password'] = Hash::make($data['password']);
         }
 
@@ -139,7 +139,7 @@ class UserController extends Controller
 
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             return $this->sendError(404, 'NOT_FOUND', 'User not found');
         }
 

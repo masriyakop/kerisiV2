@@ -24,11 +24,11 @@ class PostController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $page    = (int) $request->input('page', 1);
-        $limit   = (int) $request->input('limit', 10);
-        $q       = $request->input('q');
-        $status  = $request->input('status');
-        $sortBy  = $request->input('sort_by', 'created_at');
+        $page = (int) $request->input('page', 1);
+        $limit = (int) $request->input('limit', 10);
+        $q = $request->input('q');
+        $status = $request->input('status');
+        $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
         $query = Post::query();
@@ -54,9 +54,9 @@ class PostController extends Controller
             ->get();
 
         return $this->sendOk($rows, [
-            'page'       => $page,
-            'limit'      => $limit,
-            'total'      => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
             'totalPages' => (int) ceil($total / $limit),
         ]);
     }
@@ -70,16 +70,16 @@ class PostController extends Controller
         $slug = $this->slugService->uniqueSlug('posts', $data['title'], $data['slug'] ?? null);
 
         $post = Post::create([
-            'title'             => $data['title'],
-            'slug'              => $slug,
-            'excerpt'           => $data['excerpt'] ?? null,
-            'content'           => $data['content'] ?? null,
-            'status'            => $data['status'] ?? 'draft',
+            'title' => $data['title'],
+            'slug' => $slug,
+            'excerpt' => $data['excerpt'] ?? null,
+            'content' => $data['content'] ?? null,
+            'status' => $data['status'] ?? 'draft',
             'featured_image_id' => $data['featured_image_id'] ?? null,
-            'published_at'      => ($data['status'] ?? 'draft') === 'published' ? now() : null,
+            'published_at' => ($data['status'] ?? 'draft') === 'published' ? now() : null,
         ]);
 
-        if (!empty($data['category_ids'])) {
+        if (! empty($data['category_ids'])) {
             $post->categories()->sync($data['category_ids']);
         }
 
@@ -95,7 +95,7 @@ class PostController extends Controller
     {
         $post = Post::with(['featuredImage', 'categories'])->find($id);
 
-        if (!$post) {
+        if (! $post) {
             return $this->sendError(404, 'NOT_FOUND', 'Post not found');
         }
 
@@ -109,7 +109,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
-        if (!$post) {
+        if (! $post) {
             return $this->sendError(404, 'NOT_FOUND', 'Post not found');
         }
 
@@ -123,13 +123,13 @@ class PostController extends Controller
         }
 
         $post->update([
-            'title'             => $data['title'],
-            'slug'              => $slug,
-            'excerpt'           => $data['excerpt'] ?? null,
-            'content'           => $data['content'] ?? null,
-            'status'            => $data['status'] ?? $post->status,
+            'title' => $data['title'],
+            'slug' => $slug,
+            'excerpt' => $data['excerpt'] ?? null,
+            'content' => $data['content'] ?? null,
+            'status' => $data['status'] ?? $post->status,
             'featured_image_id' => $data['featured_image_id'] ?? null,
-            'published_at'      => $publishedAt,
+            'published_at' => $publishedAt,
         ]);
 
         if (array_key_exists('category_ids', $data)) {

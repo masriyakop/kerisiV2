@@ -12,6 +12,7 @@ trait ApiResponse
         if ($meta !== null) {
             $response['meta'] = $meta;
         }
+
         return response()->json($response, $status);
     }
 
@@ -21,6 +22,7 @@ trait ApiResponse
         if ($details !== null) {
             $error['details'] = $details;
         }
+
         return response()->json(['error' => $error], $status);
     }
 

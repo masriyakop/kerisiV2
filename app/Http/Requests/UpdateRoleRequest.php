@@ -22,9 +22,9 @@ class UpdateRoleRequest extends BaseFormRequest
         $roleId = $this->route('id') ?? $this->route('role');
 
         return [
-            'name'          => 'sometimes|required|string|min:1|unique:roles,name,' . $roleId,
-            'description'   => 'nullable|string',
-            'permissions'   => 'nullable|array',
+            'name' => 'sometimes|required|string|min:1|unique:roles,name,'.$roleId,
+            'description' => 'nullable|string',
+            'permissions' => 'nullable|array',
             'permissions.*' => 'string',
         ];
     }

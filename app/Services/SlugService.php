@@ -10,11 +10,10 @@ class SlugService
     /**
      * Generate a unique slug for the given table.
      *
-     * @param string      $table         The database table to check uniqueness against.
-     * @param string      $title         The title to derive the slug from.
-     * @param string|null $requestedSlug An explicit slug to use instead of deriving from title.
-     * @param int|null    $excludeId     An ID to exclude from the uniqueness check (for updates).
-     * @return string
+     * @param  string  $table  The database table to check uniqueness against.
+     * @param  string  $title  The title to derive the slug from.
+     * @param  string|null  $requestedSlug  An explicit slug to use instead of deriving from title.
+     * @param  int|null  $excludeId  An ID to exclude from the uniqueness check (for updates).
      */
     public function uniqueSlug(string $table, string $title, ?string $requestedSlug = null, ?int $excludeId = null): string
     {
@@ -37,7 +36,7 @@ class SlugService
                 $query->where('id', '!=', $excludeId);
             }
 
-            if (!$query->exists()) {
+            if (! $query->exists()) {
                 return $slug;
             }
 

@@ -23,10 +23,10 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $page    = (int) $request->input('page', 1);
-        $limit   = (int) $request->input('limit', 10);
-        $q       = $request->input('q');
-        $sortBy  = $request->input('sort_by', 'created_at');
+        $page = (int) $request->input('page', 1);
+        $limit = (int) $request->input('limit', 10);
+        $q = $request->input('q');
+        $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
         $query = Category::query();
@@ -47,9 +47,9 @@ class CategoryController extends Controller
             ->get();
 
         return $this->sendOk($rows, [
-            'page'       => $page,
-            'limit'      => $limit,
-            'total'      => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
             'totalPages' => (int) ceil($total / $limit),
         ]);
     }
@@ -63,8 +63,8 @@ class CategoryController extends Controller
         $slug = $this->slugService->uniqueSlug('categories', $data['name'], $data['slug'] ?? null);
 
         $category = Category::create([
-            'name'        => $data['name'],
-            'slug'        => $slug,
+            'name' => $data['name'],
+            'slug' => $slug,
             'description' => $data['description'] ?? null,
         ]);
 
@@ -80,7 +80,7 @@ class CategoryController extends Controller
     {
         $category = Category::withCount('posts')->find($id);
 
-        if (!$category) {
+        if (! $category) {
             return $this->sendError(404, 'NOT_FOUND', 'Category not found');
         }
 
@@ -94,21 +94,21 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
 
-        if (!$category) {
+        if (! $category) {
             return $this->sendError(404, 'NOT_FOUND', 'Category not found');
         }
 
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
-            'slug'        => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255',
             'description' => 'nullable|string',
         ]);
 
         $slug = $this->slugService->uniqueSlug('categories', $data['name'], $data['slug'] ?? null, $id);
 
         $category->update([
-            'name'        => $data['name'],
-            'slug'        => $slug,
+            'name' => $data['name'],
+            'slug' => $slug,
             'description' => $data['description'] ?? null,
         ]);
 

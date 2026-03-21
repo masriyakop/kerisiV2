@@ -24,7 +24,7 @@ class DevelopersGuideController extends Controller
      */
     private function guidelinePath(): string
     {
-        return $this->guidelinesDir() . '/CLAUDE.md';
+        return $this->guidelinesDir().'/CLAUDE.md';
     }
 
     /**
@@ -41,8 +41,8 @@ class DevelopersGuideController extends Controller
     private function syncTargets(): array
     {
         return [
-            $this->guidelinesDir() . '/.cursorrules',
-            $this->guidelinesDir() . '/AGENTS.md',
+            $this->guidelinesDir().'/.cursorrules',
+            $this->guidelinesDir().'/AGENTS.md',
             base_path('.cursorrules'),
             base_path('AGENTS.md'),
         ];
@@ -53,7 +53,8 @@ class DevelopersGuideController extends Controller
      */
     private function relativePath(string $path): string
     {
-        $base = base_path() . DIRECTORY_SEPARATOR;
+        $base = base_path().DIRECTORY_SEPARATOR;
+
         return str_starts_with($path, $base) ? substr($path, strlen($base)) : $path;
     }
 
@@ -72,13 +73,13 @@ class DevelopersGuideController extends Controller
 
         $firstLine = strtok($content, "\n");
         if ($firstLine === false) {
-            return $syncHeader . "\n\n" . $content;
+            return $syncHeader."\n\n".$content;
         }
 
         $offset = strlen($firstLine) + 1;
         $rest = strlen($content) > $offset ? substr($content, $offset) : '';
 
-        return $firstLine . "\n\n" . $syncHeader . ($rest !== '' ? "\n" . $rest : '');
+        return $firstLine."\n\n".$syncHeader.($rest !== '' ? "\n".$rest : '');
     }
 
     /**
@@ -90,12 +91,12 @@ class DevelopersGuideController extends Controller
         $syncFiles = [
             [
                 'filename' => basename($this->rootCanonicalPath()),
-                'path'     => $this->relativePath($this->rootCanonicalPath()),
-                'exists'   => file_exists($this->rootCanonicalPath()),
-                'in_sync'  => file_exists($this->rootCanonicalPath())
+                'path' => $this->relativePath($this->rootCanonicalPath()),
+                'exists' => file_exists($this->rootCanonicalPath()),
+                'in_sync' => file_exists($this->rootCanonicalPath())
                     && file_get_contents($this->rootCanonicalPath()) === $content,
                 'read_only' => true,
-                'role'      => 'canonical',
+                'role' => 'canonical',
             ],
         ];
 
@@ -104,11 +105,11 @@ class DevelopersGuideController extends Controller
             $current = $exists ? file_get_contents($target) : null;
             $syncFiles[] = [
                 'filename' => basename($target),
-                'path'     => $this->relativePath($target),
-                'exists'   => $exists,
-                'in_sync'  => $exists && $current === $mirror,
+                'path' => $this->relativePath($target),
+                'exists' => $exists,
+                'in_sync' => $exists && $current === $mirror,
                 'read_only' => false,
-                'role'      => 'mirror',
+                'role' => 'mirror',
             ];
         }
 
@@ -122,13 +123,14 @@ class DevelopersGuideController extends Controller
     {
         $path = $this->guidelinePath();
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return $this->sendError(404, 'NOT_FOUND', 'CLAUDE.md not found in docs/ai-guidelines');
         }
 
         $content = file_get_contents($path);
+
         return $this->sendOk([
-            'content'    => $content,
+            'content' => $content,
             'sync_files' => $this->buildSyncStatus($content),
         ]);
     }
@@ -143,7 +145,7 @@ class DevelopersGuideController extends Controller
         ]);
 
         $content = $request->input('content');
-        $path    = $this->guidelinePath();
+        $path = $this->guidelinePath();
 
         // Write the canonical file
         file_put_contents($path, $content);
@@ -156,7 +158,7 @@ class DevelopersGuideController extends Controller
         $syncResults = $this->buildSyncStatus($content);
 
         return $this->sendOk([
-            'success'    => true,
+            'success' => true,
             'sync_files' => $syncResults,
         ]);
     }

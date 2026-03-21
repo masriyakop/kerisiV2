@@ -1,18 +1,18 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\PostController;
-use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DevelopersGuideController;
 use App\Http\Controllers\Api\MediaController;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\PageController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SettingController;
-use App\Http\Controllers\Api\DashboardController;
-use App\Http\Controllers\Api\PublicController;
-use App\Http\Controllers\Api\AuditLogController;
-use App\Http\Controllers\Api\DevelopersGuideController;
+use App\Http\Controllers\Api\UserController;
+use Illuminate\Support\Facades\Route;
 
 // Public routes (no auth)
 Route::prefix('public')->group(function () {

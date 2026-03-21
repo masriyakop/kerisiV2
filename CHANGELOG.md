@@ -9,6 +9,20 @@ All notable changes to this project are documented in this file.
 - Redesign topbar with a darker "PowerBar" concept.
 - Build notification module and add topbar notifications dropdown (similar to settings) showing the latest 5 notifications.
 
+## [1.2.0] - 2026-03-22
+
+### Upgraded
+- Laravel 12.54.1 to Laravel 13.1.1 (PHP 8.3+ required).
+- PHPUnit 11 to PHPUnit 12.
+- Symfony packages from 7.4.x to 8.0.x.
+- Vite 7 to Vite 8.0.1, laravel-vite-plugin 2.x to 3.0.0.
+- Laravel Tinker 2.x to 3.0.0.
+
+### Changed
+- CSRF middleware reference updated from `ValidateCsrfToken` to `PreventRequestForgery` in Sanctum config.
+- Added `serializable_classes => false` to cache config for deserialization hardening.
+- Updated `CLAUDE.md` project identity to reflect Laravel 13, PHP 8.3+, Vite 8.
+
 ## [1.1.0] - 2026-03-11
 
 ### Added

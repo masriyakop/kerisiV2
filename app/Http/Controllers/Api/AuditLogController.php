@@ -17,9 +17,9 @@ class AuditLogController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $page    = (int) $request->input('page', 1);
-        $limit   = (int) $request->input('limit', 10);
-        $sortBy  = $request->input('sort_by', 'created_at');
+        $page = (int) $request->input('page', 1);
+        $limit = (int) $request->input('limit', 10);
+        $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
         $query = AuditLog::query();
@@ -56,9 +56,9 @@ class AuditLogController extends Controller
             ->get();
 
         return $this->sendOk($rows, [
-            'page'       => $page,
-            'limit'      => $limit,
-            'total'      => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
             'totalPages' => (int) ceil($total / $limit),
         ]);
     }

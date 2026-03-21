@@ -20,8 +20,8 @@ class StoreCategoryRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name'        => 'required|string|min:1',
-            'slug'        => 'nullable|string',
+            'name' => 'required|string|min:1',
+            'slug' => 'nullable|string',
             'description' => 'nullable|string',
         ];
     }

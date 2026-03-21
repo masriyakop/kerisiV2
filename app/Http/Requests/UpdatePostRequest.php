@@ -20,14 +20,14 @@ class UpdatePostRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'title'             => 'sometimes|required|string|min:1',
-            'slug'              => 'nullable|string',
-            'excerpt'           => 'nullable|string',
-            'content'           => 'sometimes|required|string|min:1',
-            'status'            => 'nullable|in:draft,published,archived',
+            'title' => 'sometimes|required|string|min:1',
+            'slug' => 'nullable|string',
+            'excerpt' => 'nullable|string',
+            'content' => 'sometimes|required|string|min:1',
+            'status' => 'nullable|in:draft,published,archived',
             'featured_image_id' => 'nullable|integer|exists:media,id',
-            'category_ids'      => 'nullable|array',
-            'category_ids.*'    => 'integer|exists:categories,id',
+            'category_ids' => 'nullable|array',
+            'category_ids.*' => 'integer|exists:categories,id',
         ];
     }
 }

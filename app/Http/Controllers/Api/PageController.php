@@ -24,11 +24,11 @@ class PageController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $page    = (int) $request->input('page', 1);
-        $limit   = (int) $request->input('limit', 10);
-        $q       = $request->input('q');
-        $status  = $request->input('status');
-        $sortBy  = $request->input('sort_by', 'created_at');
+        $page = (int) $request->input('page', 1);
+        $limit = (int) $request->input('limit', 10);
+        $q = $request->input('q');
+        $status = $request->input('status');
+        $sortBy = $request->input('sort_by', 'created_at');
         $sortDir = $request->input('sort_dir', 'desc');
 
         $query = Page::query();
@@ -54,9 +54,9 @@ class PageController extends Controller
             ->get();
 
         return $this->sendOk($rows, [
-            'page'       => $page,
-            'limit'      => $limit,
-            'total'      => $total,
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
             'totalPages' => (int) ceil($total / $limit),
         ]);
     }
@@ -70,12 +70,12 @@ class PageController extends Controller
         $slug = $this->slugService->uniqueSlug('pages', $data['title'], $data['slug'] ?? null);
 
         $page = Page::create([
-            'title'             => $data['title'],
-            'slug'              => $slug,
-            'content'           => $data['content'] ?? null,
-            'status'            => $data['status'] ?? 'draft',
+            'title' => $data['title'],
+            'slug' => $slug,
+            'content' => $data['content'] ?? null,
+            'status' => $data['status'] ?? 'draft',
             'featured_image_id' => $data['featured_image_id'] ?? null,
-            'published_at'      => ($data['status'] ?? 'draft') === 'published' ? now() : null,
+            'published_at' => ($data['status'] ?? 'draft') === 'published' ? now() : null,
         ]);
 
         $page->load('featuredImage');
@@ -90,7 +90,7 @@ class PageController extends Controller
     {
         $page = Page::with('featuredImage')->find($id);
 
-        if (!$page) {
+        if (! $page) {
             return $this->sendError(404, 'NOT_FOUND', 'Page not found');
         }
 
@@ -104,7 +104,7 @@ class PageController extends Controller
     {
         $page = Page::find($id);
 
-        if (!$page) {
+        if (! $page) {
             return $this->sendError(404, 'NOT_FOUND', 'Page not found');
         }
 
@@ -118,12 +118,12 @@ class PageController extends Controller
         }
 
         $page->update([
-            'title'             => $data['title'],
-            'slug'              => $slug,
-            'content'           => $data['content'] ?? null,
-            'status'            => $data['status'] ?? $page->status,
+            'title' => $data['title'],
+            'slug' => $slug,
+            'content' => $data['content'] ?? null,
+            'status' => $data['status'] ?? $page->status,
             'featured_image_id' => $data['featured_image_id'] ?? null,
-            'published_at'      => $publishedAt,
+            'published_at' => $publishedAt,
         ]);
 
         $page->load('featuredImage');

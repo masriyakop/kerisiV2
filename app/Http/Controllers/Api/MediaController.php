@@ -41,23 +41,23 @@ class MediaController extends Controller
         $safeBase = preg_replace('/-+/', '-', preg_replace('/[^a-z0-9.\-_]/', '-', strtolower($originalName)));
         $ext = pathinfo($safeBase, PATHINFO_EXTENSION);
         $name = pathinfo($safeBase, PATHINFO_FILENAME);
-        $filename = $name . '-' . time() . '.' . $ext;
+        $filename = $name.'-'.time().'.'.$ext;
 
         $file->storeAs('uploads', $filename, 'public');
 
         $record = Media::create([
-            'filename'      => $filename,
+            'filename' => $filename,
             'original_name' => $originalName,
-            'title'         => pathinfo($originalName, PATHINFO_FILENAME),
-            'caption'       => null,
-            'description'   => null,
-            'mime_type'     => $file->getMimeType(),
-            'size'          => $file->getSize(),
-            'width'         => null,
-            'height'        => null,
-            'alt_text'      => null,
-            'path'          => storage_path('app/public/uploads/' . $filename),
-            'url'           => '/storage/uploads/' . $filename,
+            'title' => pathinfo($originalName, PATHINFO_FILENAME),
+            'caption' => null,
+            'description' => null,
+            'mime_type' => $file->getMimeType(),
+            'size' => $file->getSize(),
+            'width' => null,
+            'height' => null,
+            'alt_text' => null,
+            'path' => storage_path('app/public/uploads/'.$filename),
+            'url' => '/storage/uploads/'.$filename,
         ]);
 
         return $this->sendOk($record);
@@ -70,21 +70,21 @@ class MediaController extends Controller
     {
         $media = Media::find($id);
 
-        if (!$media) {
+        if (! $media) {
             return $this->sendError(404, 'NOT_FOUND', 'Media not found');
         }
 
         $data = $request->validate([
-            'title'       => 'nullable|string|max:255',
-            'alt_text'    => 'nullable|string|max:255',
-            'caption'     => 'nullable|string',
+            'title' => 'nullable|string|max:255',
+            'alt_text' => 'nullable|string|max:255',
+            'caption' => 'nullable|string',
             'description' => 'nullable|string',
         ]);
 
         $media->update([
-            'title'       => $this->asNullable($data['title'] ?? ''),
-            'alt_text'    => $this->asNullable($data['alt_text'] ?? ''),
-            'caption'     => $this->asNullable($data['caption'] ?? ''),
+            'title' => $this->asNullable($data['title'] ?? ''),
+            'alt_text' => $this->asNullable($data['alt_text'] ?? ''),
+            'caption' => $this->asNullable($data['caption'] ?? ''),
             'description' => $this->asNullable($data['description'] ?? ''),
         ]);
 
@@ -98,7 +98,7 @@ class MediaController extends Controller
     {
         $media = Media::find($id);
 
-        if (!$media) {
+        if (! $media) {
             return $this->sendError(404, 'NOT_FOUND', 'Media not found');
         }
 
@@ -117,7 +117,7 @@ class MediaController extends Controller
         $media->delete();
 
         // Delete the physical file from the public disk
-        $storagePath = 'uploads/' . $media->filename;
+        $storagePath = 'uploads/'.$media->filename;
         if (Storage::disk('public')->exists($storagePath)) {
             Storage::disk('public')->delete($storagePath);
         }

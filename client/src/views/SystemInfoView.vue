@@ -22,11 +22,11 @@ const stack: StackGroup[] = [
     icon: Monitor,
     color: { text: "text-violet-600" },
     items: [
-      { name: "Vue", version: "3.5.30", description: "Progressive JavaScript framework" },
-      { name: "TypeScript", version: "5.9.3", description: "Typed superset of JavaScript" },
-      { name: "Vite", version: "7.3.1", description: "Frontend build tool and dev server (port 5180)" },
-      { name: "Vue Router", version: "4.6.4", description: "Official router for Vue.js" },
-      { name: "Pinia", version: "3.0.4", description: "State management for Vue" },
+      { name: "Vue", version: "3.5.21", description: "Progressive JavaScript framework" },
+      { name: "TypeScript", version: "5.9.2", description: "Typed superset of JavaScript" },
+      { name: "Vite", version: "8.0.1", description: "Frontend build tool and dev server (port 5180)" },
+      { name: "Vue Router", version: "4.5.1", description: "Official router for Vue.js" },
+      { name: "Pinia", version: "3.0.3", description: "State management for Vue" },
     ],
   },
   {
@@ -34,8 +34,8 @@ const stack: StackGroup[] = [
     icon: Palette,
     color: { text: "text-pink-600" },
     items: [
-      { name: "Tailwind CSS", version: "3.4.19", description: "Utility-first CSS framework" },
-      { name: "PostCSS", version: "8.5.8", description: "CSS post-processor for build pipeline" },
+      { name: "Tailwind CSS", version: "3.4.17", description: "Utility-first CSS framework" },
+      { name: "PostCSS", version: "8.5.6", description: "CSS post-processor for build pipeline" },
       { name: "Lucide Icons", version: "0.542", description: "Beautiful consistent icons" },
     ],
   },
@@ -44,9 +44,9 @@ const stack: StackGroup[] = [
     icon: Server,
     color: { text: "text-blue-600" },
     items: [
-      { name: "Laravel", version: "12.54.1", description: "PHP web framework and REST API" },
-      { name: "PHP", version: "^8.2", description: "Required runtime version from composer" },
-      { name: "Eloquent ORM", version: "12.x", description: "Laravel ORM for model/database access" },
+      { name: "Laravel", version: "13.1.1", description: "PHP web framework and REST API" },
+      { name: "PHP", version: "^8.3", description: "Required runtime version from composer" },
+      { name: "Eloquent ORM", version: "13.x", description: "Laravel ORM for model/database access" },
       { name: "Sanctum", version: "4.3.1", description: "Token/session authentication for SPA" },
     ],
   },
@@ -56,8 +56,8 @@ const stack: StackGroup[] = [
     color: { text: "text-emerald-600" },
     items: [
       { name: "SQLite", version: "3", description: "Configured local database driver" },
-      { name: "Migrations", version: "Laravel 12", description: "Schema versioning with artisan" },
-      { name: "Seeders/Factories", version: "Laravel 12", description: "Deterministic test and fixture data" },
+      { name: "Migrations", version: "Laravel 13", description: "Schema versioning with artisan" },
+      { name: "Seeders/Factories", version: "Laravel 13", description: "Deterministic test and fixture data" },
     ],
   },
   {
@@ -66,8 +66,8 @@ const stack: StackGroup[] = [
     color: { text: "text-amber-600" },
     items: [
       { name: "Laravel Sanctum", version: "4.3.1", description: "SPA auth guard and token support" },
-      { name: "CSRF Middleware", version: "Laravel 12", description: "Built-in CSRF protection" },
-      { name: "Throttle Middleware", version: "Laravel 12", description: "Rate limiting for auth/API routes" },
+      { name: "CSRF Middleware", version: "Laravel 13", description: "Built-in CSRF protection (PreventRequestForgery)" },
+      { name: "Throttle Middleware", version: "Laravel 13", description: "Rate limiting for auth/API routes" },
       { name: "Password Hashing", version: "PHP bcrypt", description: "Secure password hashing primitives" },
     ],
   },
@@ -78,8 +78,8 @@ const stack: StackGroup[] = [
     items: [
       { name: "Composer", version: "2.x", description: "PHP dependency management" },
       { name: "npm", version: "Scripts", description: "Runs dev/build pipeline for admin client" },
-      { name: "Laravel Vite Plugin", version: "2.0", description: "Vite integration for Laravel apps" },
-      { name: "Laravel Pint", version: "1.28.0", description: "Code style tooling for PHP codebase" },
+      { name: "Laravel Vite Plugin", version: "3.0", description: "Vite integration for Laravel apps" },
+      { name: "Laravel Pint", version: "1.29.0", description: "Code style tooling for PHP codebase" },
     ],
   },
 ];
@@ -113,7 +113,7 @@ const stack: StackGroup[] = [
                 <Server class="h-4 w-4 text-blue-500" />
                 <p class="text-sm font-semibold text-slate-900">Laravel API</p>
               </div>
-              <p class="mt-1.5 text-xs text-slate-500">Laravel 12 backend with Eloquent ORM, Sanctum auth, middleware-based security, and JSON REST endpoints.</p>
+              <p class="mt-1.5 text-xs text-slate-500">Laravel 13 backend with Eloquent ORM, Sanctum auth, middleware-based security, and JSON REST endpoints.</p>
             </div>
             <div class="rounded-lg border border-slate-200 p-3">
               <div class="flex items-center gap-2">

@@ -20,10 +20,10 @@ class UpdatePageRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'title'             => 'sometimes|required|string|min:1',
-            'slug'              => 'nullable|string',
-            'content'           => 'sometimes|required|string|min:1',
-            'status'            => 'nullable|in:draft,published,archived',
+            'title' => 'sometimes|required|string|min:1',
+            'slug' => 'nullable|string',
+            'content' => 'sometimes|required|string|min:1',
+            'status' => 'nullable|in:draft,published,archived',
             'featured_image_id' => 'nullable|integer|exists:media,id',
         ];
     }

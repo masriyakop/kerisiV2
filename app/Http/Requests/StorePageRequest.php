@@ -20,10 +20,10 @@ class StorePageRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'title'             => 'required|string|min:1',
-            'slug'              => 'nullable|string',
-            'content'           => 'required|string|min:1',
-            'status'            => 'nullable|in:draft,published,archived',
+            'title' => 'required|string|min:1',
+            'slug' => 'nullable|string',
+            'content' => 'required|string|min:1',
+            'status' => 'nullable|in:draft,published,archived',
             'featured_image_id' => 'nullable|integer|exists:media,id',
         ];
     }

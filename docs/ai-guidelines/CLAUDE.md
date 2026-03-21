@@ -8,8 +8,8 @@
 | Key | Value |
 |-----|-------|
 | Name | CORRAD Laravel CMS |
-| Backend | Laravel 12, PHP 8.2+, Laravel Sanctum 4.3 |
-| Frontend | Vue 3 + TypeScript + Tailwind CSS 4 + Pinia 3 + Vite 7 |
+| Backend | Laravel 13, PHP 8.3+, Laravel Sanctum 4.3 |
+| Frontend | Vue 3 + TypeScript + Tailwind CSS 4 + Pinia 3 + Vite 8 |
 | Database | SQLite (dev), MySQL (prod) |
 | Auth | Sanctum session-based SPA auth, RBAC via `Permission` class |
 | Commands | `composer setup` (init), `composer dev` (run all), `composer test` (PHPUnit) |
