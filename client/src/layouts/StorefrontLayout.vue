@@ -107,7 +107,15 @@ const menuTree = computed(() => {
 
     <main class="mx-auto w-full max-w-4xl px-4 py-8">
       <div v-if="loading" class="rounded-lg border border-slate-200 bg-white p-6 text-slate-500">Loading page...</div>
-      <div v-else-if="error" class="rounded-lg border border-rose-200 bg-rose-50 p-6 text-rose-700">{{ error }}</div>
+      <div v-else-if="error" class="rounded-lg border border-rose-200 bg-rose-50 p-6 text-rose-700">
+        <p>{{ error }}</p>
+        <p v-if="error === 'No published page yet'" class="mt-3 text-sm text-slate-600">
+          <router-link to="/admin/login" class="font-medium text-violet-700 underline hover:text-violet-900">Open admin login</router-link>
+          to create and publish a page, or run
+          <code class="rounded bg-white/80 px-1.5 py-0.5 text-xs text-slate-800">php artisan db:seed --class=PageSeeder</code>
+          for a sample home page.
+        </p>
+      </div>
       <article v-else-if="page" class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <img
           v-if="page.featuredImage?.url"

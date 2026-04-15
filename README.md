@@ -7,6 +7,16 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Development
+
+From the project root, install PHP and Node dependencies (`composer install`, `npm install` in `client/` if needed), configure `.env`, then start the stack:
+
+```bash
+composer dev
+```
+
+That runs Laravel (`php artisan serve`), the queue worker (`php artisan queue:listen`), and the Vue client dev server (`npm --prefix client run dev`) together via `concurrently`. Stop with `Ctrl+C` in that terminal.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

@@ -13,9 +13,9 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            ['key' => 'siteTitle', 'value' => 'CORRAD Laravel'],
+            ['key' => 'siteTitle', 'value' => 'Financial Information Management System'],
             ['key' => 'tagline', 'value' => 'Design system and admin standards.'],
-            ['key' => 'webfrontTitle', 'value' => 'CORRAD Laravel'],
+            ['key' => 'webfrontTitle', 'value' => 'Financial Information Management System'],
             ['key' => 'webfrontTagline', 'value' => 'Design system and admin standards.'],
             ['key' => 'titleFormat', 'value' => '%page% | %site%'],
             ['key' => 'metaDescription', 'value' => 'Internal UI standard and admin toolkit.'],

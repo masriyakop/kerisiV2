@@ -8,6 +8,7 @@ import KitchenFormsView from "@/views/KitchenFormsView.vue";
 import LoginView from "@/views/LoginView.vue";
 import MediaLibraryView from "@/views/MediaLibraryView.vue";
 import KitchenSinkView from "@/views/KitchenSinkView.vue";
+import KitchenSinkPatternsView from "@/views/KitchenSinkPatternsView.vue";
 import PageEditorView from "@/views/PageEditorView.vue";
 import PagesListView from "@/views/PagesListView.vue";
 import PostEditorView from "@/views/PostEditorView.vue";
@@ -28,6 +29,12 @@ import SettingsView from "@/views/SettingsView.vue";
 import SystemInfoView from "@/views/SystemInfoView.vue";
 import UsersView from "@/views/UsersView.vue";
 import UserEditView from "@/views/UserEditView.vue";
+import FundTypeView from "@/views/FundTypeView.vue";
+import ActivityCodeView from "@/views/ActivityCodeView.vue";
+import AccountCodeView from "@/views/AccountCodeView.vue";
+import PtjCodeView from "@/views/PtjCodeView.vue";
+import CostCentreView from "@/views/CostCentreView.vue";
+import CascadeStructureView from "@/views/CascadeStructureView.vue";
 import StorefrontHomeView from "@/views/StorefrontHomeView.vue";
 import StorefrontPageView from "@/views/StorefrontPageView.vue";
 import { useAuthStore } from "@/stores/auth";
@@ -53,6 +60,7 @@ const legacyAdminPaths = [
   "/kitchen-sink",
   "/kitchen-sink/forms",
   "/kitchen-sink/charts",
+  "/kitchen-sink/patterns",
   "/development/database-schema",
   "/development/api-management",
   "/profile",
@@ -96,9 +104,22 @@ const router = createRouter({
     { path: "/admin/storefront-menu", redirect: "/admin/webfront-menu" },
     { path: "/admin/webfront-settings", name: "webfront-settings", component: WebfrontSettingsView, meta: { requiresAuth: true, title: "Settings" } },
     { path: "/admin/menus", name: "menus", component: MenusView, meta: { requiresAuth: true, title: "Menus" } },
+    { path: "/admin/kerisi/m/1551", name: "kerisi-fund-type", component: FundTypeView, meta: { requiresAuth: true, title: "Fund Type" } },
+    { path: "/admin/kerisi/m/1552", name: "kerisi-account-code", component: AccountCodeView, meta: { requiresAuth: true, title: "Account Code" } },
+    { path: "/admin/kerisi/m/1566", name: "kerisi-activity-code", component: ActivityCodeView, meta: { requiresAuth: true, title: "Activity Code" } },
+    { path: "/admin/kerisi/m/1887", name: "kerisi-cost-centre", component: CostCentreView, meta: { requiresAuth: true, title: "Cost Centre" } },
+    { path: "/admin/kerisi/m/2295", name: "kerisi-ptj-code", component: PtjCodeView, meta: { requiresAuth: true, title: "PTJ Code" } },
+    { path: "/admin/kerisi/m/1546", name: "kerisi-cascade-structure", component: CascadeStructureView, meta: { requiresAuth: true, title: "Cascade Structure" } },
+    { path: "/admin/kerisi/m/:menuId", name: "kerisi-menu", component: ComingSoonView, meta: { requiresAuth: true, title: "KERISI" } },
     { path: "/admin/kitchen-sink", name: "kitchen-sink", component: KitchenSinkView, meta: { requiresAuth: true, title: "Kitchen Sink" } },
     { path: "/admin/kitchen-sink/forms", name: "kitchen-forms", component: KitchenFormsView, meta: { requiresAuth: true, title: "Forms" } },
     { path: "/admin/kitchen-sink/charts", name: "kitchen-charts", component: KitchenChartsView, meta: { requiresAuth: true, title: "Charts" } },
+    {
+      path: "/admin/kitchen-sink/patterns",
+      name: "kitchen-patterns",
+      component: KitchenSinkPatternsView,
+      meta: { requiresAuth: true, title: "Kitchen Sink Patterns" },
+    },
     { path: "/admin/development/developers-guide", name: "developers-guide", component: DevelopersGuideView, meta: { requiresAuth: true, title: "Developers Guide" } },
     { path: "/admin/development/database-schema", name: "database-schema", component: DatabaseSchemaView, meta: { requiresAuth: true, title: "Database Schema" } },
     { path: "/admin/development/api-explorer", name: "api-explorer", component: ApiManagementView, meta: { requiresAuth: true, title: "API Explorer" } },

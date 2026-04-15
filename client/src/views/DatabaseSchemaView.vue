@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Database, KeyRound, Link2 } from "lucide-vue-next";
+import { computed, ref } from "vue";
+import { Database, KeyRound, Link2, Table2 } from "lucide-vue-next";
 
 import AdminLayout from "@/layouts/AdminLayout.vue";
 
@@ -146,6 +147,26 @@ const models: ModelDef[] = [
     ],
   },
 ];
+
+type ModelGroup = { id: string; label: string; tables: string[] };
+
+const modelGroups: ModelGroup[] = [
+  { id: "identity", label: "Identity & Access", tables: ["Role", "User", "Session"] },
+  { id: "content", label: "Content Management", tables: ["Post", "Category", "CategoryPost", "Page", "Media"] },
+  { id: "platform", label: "Platform & Settings", tables: ["Setting", "AuditLog"] },
+];
+
+const selectedTableName = ref(models[0]?.name ?? "");
+
+const selectedModel = computed<ModelDef | null>(() => {
+  return models.find((model) => model.name === selectedTableName.value) ?? null;
+});
+
+const totalColumns = computed(() => selectedModel.value?.fields.length ?? 0);
+
+function selectTable(tableName: string) {
+  selectedTableName.value = tableName;
+}
 </script>
 
 <template>
@@ -158,26 +179,83 @@ const models: ModelDef[] = [
       <article class="rounded-lg border border-slate-200 bg-white shadow-sm">
         <div class="flex items-center gap-2 border-b border-slate-100 px-4 py-2.5">
           <Database class="h-4 w-4 text-emerald-600" />
-          <h2 class="text-sm font-semibold text-slate-900">Laravel Eloquent Models</h2>
+          <h2 class="text-sm font-semibold text-slate-900">Schema Explorer</h2>
         </div>
-        <div class="p-4">
-          <div class="grid gap-4 lg:grid-cols-2">
-            <article v-for="model in models" :key="model.name" class="rounded-lg border border-slate-200 bg-white">
-              <div class="border-b border-slate-100 px-4 py-2.5">
-                <p class="text-sm font-semibold text-slate-900">{{ model.name }}</p>
-                <p class="mt-0.5 text-xs text-slate-500">{{ model.description }}</p>
-              </div>
-              <div class="divide-y divide-slate-100">
-                <div v-for="field in model.fields" :key="field.name" class="flex items-center justify-between gap-3 px-4 py-2">
-                  <div class="min-w-0">
-                    <p class="text-sm font-medium text-slate-900">{{ field.name }}</p>
-                    <p v-if="field.note" class="text-xs text-slate-400">{{ field.note }}</p>
+        <div class="grid min-h-[560px] grid-cols-1 lg:grid-cols-[320px_1fr]">
+          <aside class="border-b border-slate-100 p-4 lg:border-b-0 lg:border-r">
+            <div class="mb-3 flex items-center gap-2">
+              <Table2 class="h-4 w-4 text-slate-500" />
+              <h3 class="text-sm font-semibold text-slate-900">Tables</h3>
+            </div>
+            <div class="space-y-4">
+              <section v-for="group in modelGroups" :key="group.id" class="space-y-2">
+                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">{{ group.label }}</p>
+                <div class="space-y-1">
+                  <button
+                    v-for="tableName in group.tables"
+                    :key="tableName"
+                    type="button"
+                    class="flex w-full items-center justify-between rounded-md border px-3 py-2 text-left text-sm transition"
+                    :class="
+                      selectedTableName === tableName
+                        ? 'border-emerald-300 bg-emerald-50 text-emerald-800'
+                        : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+                    "
+                    @click="selectTable(tableName)"
+                  >
+                    <span class="font-medium">{{ tableName }}</span>
+                    <span
+                      class="rounded-full px-2 py-0.5 text-xs"
+                      :class="
+                        selectedTableName === tableName ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
+                      "
+                    >
+                      {{ models.find((model) => model.name === tableName)?.fields.length ?? 0 }}
+                    </span>
+                  </button>
+                </div>
+              </section>
+            </div>
+          </aside>
+
+          <section class="p-4">
+            <template v-if="selectedModel">
+              <div class="rounded-lg border border-slate-200 bg-white">
+                <div class="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 px-4 py-3">
+                  <div>
+                    <p class="text-base font-semibold text-slate-900">{{ selectedModel.name }}</p>
+                    <p class="mt-0.5 text-sm text-slate-500">{{ selectedModel.description }}</p>
                   </div>
-                  <span class="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-mono text-slate-600">{{ field.type }}</span>
+                  <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                    {{ totalColumns }} columns
+                  </span>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full divide-y divide-slate-200">
+                    <thead class="bg-slate-50">
+                      <tr>
+                        <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">Column</th>
+                        <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">Type</th>
+                        <th class="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                      <tr v-for="field in selectedModel.fields" :key="field.name">
+                        <td class="px-4 py-2.5 text-sm font-medium text-slate-900">{{ field.name }}</td>
+                        <td class="px-4 py-2.5">
+                          <span class="rounded-full bg-slate-100 px-2.5 py-0.5 font-mono text-xs text-slate-700">{{ field.type }}</span>
+                        </td>
+                        <td class="px-4 py-2.5 text-sm text-slate-600">{{ field.note ?? "—" }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
-            </article>
-          </div>
+            </template>
+            <div v-else class="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+              Select a table from the left panel to view its columns.
+            </div>
+          </section>
         </div>
       </article>
 

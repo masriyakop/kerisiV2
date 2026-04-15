@@ -89,7 +89,8 @@ function truncateHeaderText(value: string, max = HEADER_TEXT_MAX) {
   return value.length > max ? `${value.slice(0, max)}...` : value;
 }
 
-const headerSiteTitle = computed(() => truncateHeaderText(site.siteTitle || ""));
+/** Full site title from settings; layout uses CSS truncation so long names are not cut to 20 chars. */
+const headerSiteTitle = computed(() => (site.siteTitle || "").trim());
 const headerUserName = computed(() => truncateHeaderText(auth.user?.name || "Admin"));
 const headerUserRole = computed(() => truncateHeaderText(userRoleLabel.value));
 const hasActiveToast = computed(() => toast.toasts.value.length > 0);
@@ -127,6 +128,7 @@ async function signOut() {
 
 function isActive(path: string): boolean {
   if (path === "/") return route.path === "/";
+  if (path.startsWith("/admin/kerisi/m/")) return route.path === path;
   return route.path.startsWith(path);
 }
 
@@ -208,11 +210,14 @@ watch(
 
       <div class="flex items-center self-stretch">
         <div
-          v-if="site.siteTitle && showSiteTitle"
-          class="flex h-full items-center overflow-hidden whitespace-nowrap"
+          v-if="headerSiteTitle && showSiteTitle"
+          class="flex h-full min-w-0 max-w-[min(36rem,calc(100vw-14rem))] items-center overflow-hidden"
         >
-          <span class="px-4 text-sm font-light text-slate-900">{{ headerSiteTitle }}</span>
-          <span class="h-full w-px bg-slate-200" />
+          <span
+            class="truncate px-4 text-sm font-light text-slate-900"
+            :title="headerSiteTitle"
+          >{{ headerSiteTitle }}</span>
+          <span class="h-full w-px shrink-0 bg-slate-200" />
         </div>
         <AppToastRegion />
 

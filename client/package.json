@@ -6,10 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:kerisi-menu": "node ../scripts/build-kerisi-menu.mjs"
   },
   "dependencies": {
     "dompurify": "^3.3.1",
+    "exceljs": "^4.4.0",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
     "lucide-vue-next": "^0.542.0",
     "marked": "^17.0.3",
     "pinia": "^3.0.3",

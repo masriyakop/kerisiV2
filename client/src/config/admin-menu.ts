@@ -18,10 +18,13 @@ import {
   Shield,
 } from "lucide-vue-next";
 
+import { KERISI_MENU_ITEMS } from "@/config/kerisi-menu";
+
 export type MenuNode = {
   id: string;
   label: string;
   to: string;
+  menuId?: number;
   children?: MenuNode[];
 };
 
@@ -53,6 +56,11 @@ export const DEFAULT_MENU: MenuGroupDef[] = [
     items: [
       { id: "main-dashboard", label: "Dashboard", to: "/admin", icon: Gauge },
     ],
+  },
+  {
+    id: "kerisi",
+    label: "KERISI",
+    items: KERISI_MENU_ITEMS,
   },
   {
     id: "portal",
@@ -216,6 +224,7 @@ export const DEFAULT_MENU: MenuGroupDef[] = [
         icon: LayoutGrid,
         children: [
           { id: "kitchen-components", label: "Components", to: "/admin/kitchen-sink" },
+          { id: "kitchen-patterns", label: "Patterns", to: "/admin/kitchen-sink/patterns" },
           { id: "kitchen-forms", label: "Forms", to: "/admin/kitchen-sink/forms" },
           { id: "kitchen-charts", label: "Charts", to: "/admin/kitchen-sink/charts" },
         ],

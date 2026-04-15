@@ -1,0 +1,1002 @@
+MENUID,MENUTITLE,MENUPARENT,MENULEVEL,MENUORDER
+1003,"Setup and Maintenance",0,1,4
+1007,Budget,0,1,5
+1684,Purchasing,0,1,6
+1709,"Account Payable",0,1,7
+1024,"Account Receivable",0,1,8
+1052,"General Ledger",0,1,10
+1246,Refund,0,1,11
+1701,Cashbook,0,1,12
+1651,"Credit Control",0,1,14
+1122,Payroll,0,1,15
+1547,Asset,0,1,16
+1019,"Student Finance",0,1,17
+1404,Investment,0,1,18
+1133,Declaration/Claim,0,1,20
+1132,"Activity Advance",0,1,21
+1134,"Travelling Claim",0,1,22
+1137,PCB/Zakat,0,1,31
+1138,"Others Deduction",0,1,32
+1489,"Petty Cash ",0,1,34
+1251,TP1,0,1,38
+1533,Portal,0,1,40
+1229,"Debtor Portal",0,1,45
+3401,EIS,0,1,47
+1228,"Vendor Portal",0,1,48
+3454,"Staff Medical",0,1,49
+1543,"Project Monitoring",0,1,52
+1177,"Portal Debt Collector Agent (DCA)",0,1,53
+1178,"Portal Legal",0,1,54
+3,"User Manual",0,1,57
+55,"Audit Trail",0,1,59
+2616,"Debtor Information",0,1,56
+1281,"TP1 (Tax Relief) Listing",1251,2,1
+1405,Setup,1404,2,1
+1409,"Posting to GL (TB)",1052,2,1
+1427,"PCB/Zakat Request",1137,2,1
+1432,"Others Deduction Request",1138,2,1
+1461,Lookup,1122,2,1
+1509,"Student Profile or Ledger",1019,2,1
+1526,Setup,1489,2,1
+1544,"List Of Project",1543,2,1
+1549,Setup,1547,2,1
+1664,Setup,1651,2,1
+1727,Debtor,1024,2,1
+1819,Setup,1684,2,1
+1914,"Staff Profile",1533,2,1
+2189,"Debtor Profile",1229,2,1
+2210,"General Ledger Structure",1003,2,1
+3246,"Bank Setup",1701,2,1
+3421,Setup,3401,2,1
+3455,"Medical Information",3454,2,1
+5,"System Transaction",55,2,2
+1023,Invoice,1019,2,2
+1293,Setup,1007,2,2
+1436,Setup,1122,2,2
+1490,"List of Petty Cash Application ",1489,2,2
+1548,"List of Asset",1547,2,2
+2036,"Bank Master",1701,2,2
+2065,"Updated Balance",1543,2,2
+2211,"List of General Ledger Structure",1003,2,2
+2377,Bill,1709,2,2
+2676,Profile,1651,2,2
+3402,Ringkasan,3401,2,2
+3459,Reports,3454,2,2
+1040,Invoice,1024,2,3
+1041,"Credit Note",1024,2,3
+1051,"Staff Profile Information",1122,2,3
+1231,"Invoice Generation",1019,2,3
+1574,Planning,1007,2,3
+1668,"Asset Registration",1547,2,3
+1872,"Petty Cash Claim Form",1489,2,3
+2055,Payslip,1533,2,3
+2097,"Bank Account",1701,2,3
+2114,Budget,1543,2,3
+2519,"General Ledger Listing",1052,2,3
+2608,"List of Profile Update Application ",1229,2,3
+2677,Advance,1651,2,3
+3225,"Investment Application",1404,2,3
+1149,Sponsor,1019,2,4
+1250,"Salary Processing",1122,2,4
+1497,"Investment Withdrawal",1404,2,4
+1541,Initial,1007,2,4
+1782,"Credit Note Form",1024,2,4
+2056,"Journal Listing",1052,2,4
+2141,Loan,1651,2,4
+2267,"Debtors Statement",1229,2,4
+2346,"Release Payment",1489,2,4
+2574,"Asset Verification",1547,2,4
+2672,Report,1543,2,4
+2778,"Remuneration Statement",1533,2,4
+3269,"Money Transfer",1709,2,4
+3406,"Prestasi Perbelanjaan",3401,2,4
+3484,"Medical Statement",1533,2,4
+-3,"Disk Usage",55,2,5
+1042,"Debit Note",1024,2,5
+1140,"Salary Crediting",1122,2,5
+1702,"List Of CashBook (Daily)",1701,2,5
+2130,"Profile ",1228,2,5
+2312,"Financial Information",1229,2,5
+2371,"EC Form",1533,2,5
+2761,"List of Released Payment",1489,2,5
+3241,"Credit Note",1709,2,5
+3311,"Generate Journal for Investment",1404,2,5
+3412,"Prestasi Kewangan",3401,2,5
+1529,"Credit Note",1019,2,6
+2319,"Purchase Requisition",1684,2,6
+2471,"List Of Cashbook (Monthly)",1701,2,6
+2591,"Asset Cancellation",1547,2,6
+2808,"Summary List of Investments",1404,2,6
+2947,"Debt Collector Agent",1228,2,6
+3410,"Kedudukan Kewangan",3401,2,6
+3542,"Debit Note",1709,2,6
+1130,Loan,1533,2,7
+1152,"Petty Cash",1533,2,7
+1448,"List of Investments",1404,2,7
+1534,"Petty Cash Recoup Form",1489,2,7
+1575,"Debit Note",1019,2,7
+1783,"Debit Note Form",1024,2,7
+1809,Deposit,1651,2,7
+1854,"Allowance And Deduction",1122,2,7
+1961,"Vendor Portal",1228,2,7
+2048,"Purchase Order",1684,2,7
+2697,"Asset Cancellation For Verification",1547,2,7
+3255,Reconciliation,1701,2,7
+3413,"Belanja Mengikut Segmen",3401,2,7
+1043,"Discount Note",1024,2,8
+1096,Payment,1709,2,8
+1532,"Petty Cash Recoup List",1489,2,8
+1570,"Discount Note",1019,2,8
+1818,Voucher,1709,2,8
+2092,"Setup Overtime Approval",1533,2,8
+3250,"Work Progress Note",1684,2,8
+3403,JPKA,3401,2,8
+1097,Integration,1709,2,9
+1135,"Work Order",1533,2,9
+1458,"Investment Monitoring",1404,2,9
+1601,"Bill Presentment or Payment",1019,2,9
+1784,"Discount Note Form",1024,2,9
+2003,"Renew Vendor Registration",1228,2,9
+2015,"Purchase Order Status",1228,2,9
+2089,"Manual Journal Listing",1052,2,9
+2101,"Employee Benefit (GCR)",1122,2,9
+2756,"Asset Cancellation Listing",1547,2,9
+3066,"List of Deposit",1651,2,9
+3343,"Generate Voucher Draft",1489,2,9
+3506,"Letter Phrase",1003,2,9
+1020,"Debtor - En Masri",1024,2,10
+1044,Receipt,1024,2,10
+1081,"Bank Account Update",1019,2,10
+1732,"Personal Information",1533,2,10
+1869,Daily,1701,2,10
+2400,"Bill Petty Cash",1489,2,10
+2584,Reminder,1229,2,10
+2678,Refund,1651,2,10
+2877,Notification,1709,2,10
+3485,"Investment to be Withdrawn",1404,2,10
+1655,Cheque,1024,2,11
+1969,Report,1709,2,11
+2061,Monthly,1701,2,11
+2073,"HOD, VC & TNC",1003,2,11
+2090,"Manual Journal Form",1052,2,11
+2262,Report,1701,2,11
+2399,"List Petty Cash by PTJ",1489,2,11
+2623,"Vendor Assessment",1684,2,11
+1031,"PTPTN Data",1019,2,12
+1136,"Overtime Claim",1533,2,12
+1446,Accrual,1404,2,12
+1475,"Generate Schedule",1404,2,12
+1711,"Payee Registration (Others)",1709,2,12
+1747,"Cheque Return",1024,2,12
+2087,"Good Receive Note",1684,2,12
+2276,Integration,1003,2,12
+2532,Closing,1701,2,12
+2656,Report,1003,2,12
+2700,"Reset Password",1229,2,12
+3397,"Detail of Deposit",1651,2,12
+1046,"Authorized Receipting",1024,2,13
+1059,setup,1019,2,13
+1414,Report,1404,2,13
+1736,"Financial Information",1533,2,13
+1952,"Authorized Receipting",1024,2,13
+2045,Refund,1533,2,13
+2072,"Financial Status",1228,2,13
+2078,"Account Bank Updated",1709,2,13
+2456,"List of Bill Petty Cash",1489,2,13
+2822,Advertisement,1684,2,13
+3466,"Utility Registration",1709,2,13
+1061,form,1019,2,14
+1174,"Emergency Fund",1533,2,14
+1953,"Authorized Receipting Form",1024,2,14
+2152,"Reset Password",1228,2,14
+2740,"Cek yang mungkin error",1003,2,14
+2751,"Account Bank by Payee",1709,2,14
+3344,"List of Voucher Petty Cash",1489,2,14
+1047,"Offline Receipt",1024,2,15
+1048,"Pre-printed Receipt",1024,2,15
+1975,"Asset Depreciation",1547,2,15
+2138,"Vehicle Information",1533,2,15
+2679,"Debt Monitoring",1651,2,15
+2767,"Tender/Quotation List",1228,2,15
+2826,Tender/Quotation,1684,2,15
+2884,"Variation Order(VO)",1684,2,15
+3253,"Journal Revaluation",1709,2,15
+1263,Report,1019,2,16
+2058,Refund,1533,2,16
+2424,"Confirmation Payment",1489,2,16
+2883,Agreement,1684,2,16
+3530,"Asset Transfer",1547,2,16
+1032,Insurance,1019,2,17
+1049,"Cashbook PTJ",1024,2,17
+1471,Monitoring,1007,2,17
+1880,Report,1489,2,17
+1945,"Remuneration Statements (OLD)",1533,2,17
+2135,Reversal,1052,2,17
+3197,Currency,1003,2,17
+3494,"Asset Movement",1547,2,17
+1554,Increment,1007,2,18
+1721,"Bank Guarantee",1684,2,18
+1731,"Payee Registration Details Add",1024,2,18
+1877,"List Of Accrual",1404,2,18
+3224,"Setup Carian Structure Budget",1003,2,18
+3468,"Asset Maintenance",1547,2,18
+3525,"Update Information",1709,2,18
+1359,"Income Tax Forms",1122,2,19
+1555,Decrement,1007,2,19
+1976,"Asset Disposal",1547,2,19
+2157,"Zakat / Waqaf Deduction",1533,2,19
+2220,"Unidentified Receipt",1052,2,19
+2557,Barring,1019,2,19
+1481,Report,1122,2,20
+1556,"Virement ",1007,2,20
+1900,"CN By Batch Submit",1019,2,20
+1950,Report,1052,2,20
+2315,"Advance Staff / Declaration",1533,2,20
+3503,"Asset Lost",1547,2,20
+1695,Integration,1122,2,21
+1786,Setup,1024,2,21
+1899,"CN By Batch Entry",1019,2,21
+1922,Vendor,1684,2,21
+3388,"Invoice Balance",1651,2,21
+1841,"Status PO & PR",1684,2,22
+1991,Report,1547,2,22
+2292,Report,1651,2,22
+2445,"Other Deduction",1533,2,22
+2636,"List of Offered",1019,2,22
+3085,"Yearly Closing",1052,2,22
+3327,"Journal Adjustment",1122,2,22
+3287,"List of Year and Month",1052,2,23
+3463,"Financial Statement (PPI)",1052,2,23
+1938,"Report PO",1684,2,24
+2592,TP1,1533,2,24
+2897,"Manual Invoice Listing",1019,2,24
+2823,"List of Letter",1533,2,25
+2898,"Manual Invoice Form",1019,2,25
+3093,"Bank Account Update",1019,2,25
+3442,"Kew 8",1122,2,25
+1966,Report,1007,2,26
+2852,Report,1684,2,26
+2867,"Stock Application",1533,2,26
+3321,"Variation Order (VO)",1684,2,27
+2389,"Budget Closing",1007,2,29
+3154,Closing,1007,2,34
+1909,xxxxx,1024,2,123
+1908,xxxxx,1024,2,124
+1038,"List of Offered Student",1032,3,1
+1590,"List of Receipts",1044,3,1
+2183,Application,1047,3,1
+1067,"Sponsor Type",1059,3,1
+2390,"Student Journal Approval",1149,3,1
+1985,"New Application",1174,3,1
+2027,"Salary Generation Verification",1250,3,1
+1262,"Invoice-Report Listing General",1263,3,1
+1415,"Generate Letter for Investment",1414,3,1
+1440,"Monthly Setup Salary",1436,3,1
+3310,"Job Type",1461,3,1
+1476,"Penyata Gaji Induk",1481,3,1
+1472,"Apply for Withdrawal",1497,3,1
+1561,General,1549,3,1
+1516,"New Application",1574,3,1
+1029,"Outbound data",1601,3,1
+1030,"Receipt by Batch",1601,3,1
+1652,"Cheque Registry",1655,3,1
+1733,Profile,1732,3,1
+1045,"List Of Return Cheque",1747,3,1
+1787,"Discount Policy",1786,3,1
+1823,"Voucher Registration",1818,3,1
+1881,"Report Of Petty Cash Recoup",1880,3,1
+1828,"Vendor Profile",1922,3,1
+1939,Bendahari,1938,3,1
+1882,"GL Opening",1950,3,1
+1968,"Total Allocation, Expenditure and Balance of Allocation",1966,3,1
+3457,"Laporan Belanjawan",1966,3,1
+3558,"Payment Record",1969,3,1
+1622,"Asset Depreciation Process",1975,3,1
+1647,"Disposal Application",1976,3,1
+3531,"Report KewPa",1991,3,1
+2046,"New Application",2045,3,1
+2059,"New Application",2058,3,1
+2102,"GCR Listing",2101,3,1
+2115,"List of Budget",2114,3,1
+2682,"Loan Profile",2141,3,1
+2158,Application,2157,3,1
+1551,"Fund Type",2210,3,1
+2330,"List of Fund Type",2211,3,1
+2280,"Entry Form Unidentified Receipt",2220,3,1
+2269,"Attachment 1 - Baucar Yang Belum Didebitkan oleh Bank",2262,3,1
+2277,"Integration - PTJ",2276,3,1
+2195,"Outstanding Invoice",2312,3,1
+2368,Setup,2315,3,1
+1771,"New Purchase Requisition",2319,3,1
+1716,"Bill Registration",2377,3,1
+2479,"Cashbook Closing",2532,3,1
+2593,"TP1 Application",2592,3,1
+2624,"Good Receive Note",2623,3,1
+2657,"Budget Not Exists",2656,3,1
+2673,"Allocation Receive Log",2672,3,1
+2680,"Advance Payment",2677,3,1
+2690,Reminder,2679,3,1
+2721,"Advertisement Request List",2822,3,1
+2809,"Laporan  LPPM JPKA: KPT",2852,3,1
+2868,"New Application",2867,3,1
+2878,"Send Email",2877,3,1
+2848,"New Variation Order (VO)",2884,3,1
+2949,"List Assign",2947,3,1
+3026,"Yearly Closing Process",3085,3,1
+2937,"Offer Student ",3093,3,1
+3198,"List of Currency",3197,3,1
+3226,"New Application ",3225,3,1
+3242,"Credit Note Form",3241,3,1
+1840,"Work Progress Note List",3250,3,1
+3254,"Journal Revaluation Process",3253,3,1
+2127,"Reconciliation Daily",3255,3,1
+3270,"List of Money Transfer",3269,3,1
+3312,"List of Investments",3311,3,1
+3322,"List of VO",3321,3,1
+-3411,"Prestasi Perbelanjaan",3403,3,1
+3414,"Setup Belanja Mengikut Segmen",3421,3,1
+3440,"Kew.8 List of Staff",3442,3,1
+3460,"Treatment Ledger by Clinic",3459,3,1
+3487,"Combine Report",3463,3,1
+3469,"Damage Report",3468,3,1
+3495,"Movement List",3494,3,1
+3504,"Asset Lost Listing",3503,3,1
+3526,"Update Bank Account and Factoring for Bill",3525,3,1
+2544,"Asset Transfer Request (Outside PTJ)",3530,3,1
+3543,"Debit Note Listing",3542,3,1
+1339,"Import Data Insurance",1032,3,2
+1598,"Entry Form",1044,3,2
+2370,"Offline Receipt Application Form",1047,3,2
+1058,"Fee Category",1059,3,2
+1257,"Fee Structure",1061,3,2
+1616,"Loan Application",1130,3,2
+1998,Manage,1136,3,2
+1507,PTPTN,1149,3,2
+3015,"New Application",1152,3,2
+1993,"List of Emergency Fund",1174,3,2
+1260,"Payroll Process",1250,3,2
+1284,"CN - Report Listing General",1263,3,2
+1796,"Budget Code",1293,3,2
+2308,"EC Account Code",1359,3,2
+1465,"Generate Letter for Withdraw",1414,3,2
+1441,"Employer Account Info",1436,3,2
+3328,"Staff Prefix",1461,3,2
+1480,"Penyata Saraan dan Potongan",1481,3,2
+1528,"Petty Cash Personnel",1526,3,2
+1677,LookUp,1549,3,2
+1663,"Execution & Enforcement",1664,3,2
+1665,"Bucket Ageing",1664,3,2
+2366,"Statement of Account (SOA)",1736,3,2
+1789,"Discount Policy Details",1786,3,2
+3461,"Direct Voucher",1818,3,2
+1829,"Item Main Listing",1819,3,2
+1850,"List Of Allowance And Deduction",1854,3,2
+2099,"Listing Of Bank Statement",1869,3,2
+2663,"List of Vendor",1922,3,2
+1941,PTJ,1938,3,2
+1628,"Asset Depreciation Accrual",1975,3,2
+2397,"Disposal Application Listing",1976,3,2
+2774,"Asset Movement Report",1991,3,2
+3064,"Auditor Asset Listing",1991,3,2
+2053,"List of Refund Application",2045,3,2
+1833,"Purchase Order List",2048,3,2
+2060,"List of Refund Application",2058,3,2
+2103,Setup,2101,3,2
+2110,"New Budget",2114,3,2
+2683,"Loan Disburse",2141,3,2
+2159,"Listing Application",2157,3,2
+1566,"Activity Code",2210,3,2
+1874,"List of Activity Code",2211,3,2
+2221,"List of Unidentified Receipt",2220,3,2
+2264,"Attachment 2 - Penerimaan Yang Belum DiKreditkan Oleh Bank",2262,3,2
+2278,"Integration - Cost center",2276,3,2
+2667,"Subsidiary Statement",2292,3,2
+2279,Receipt,2312,3,2
+2342,"Activity Advance Application",2315,3,2
+2107,"Bill Registration Cancellation @ Knockoff",2377,3,2
+2542,"Master File",2532,3,2
+2556,"List of Students",2557,3,2
+2594,"List of Application",2592,3,2
+2626,"Work Progress Note",2623,3,2
+2285,"Refund (Staff)",2678,3,2
+2618,"New Tender/Quotation",2822,3,2
+2333,"Committe & Participant",2826,3,2
+2810,"Laporan Perolehan PTJ JPKA: LPPM",2852,3,2
+2915,"List of Application",2867,3,2
+2879,"Historical Sender",2877,3,2
+3320,"List of Agreement",2883,3,2
+2846,"List of Variation Order (VO)",2884,3,2
+3086,"Journal Adjustment Listing",3085,3,2
+2802,"Manual Update ",3093,3,2
+3199,"AG Rate",3197,3,2
+3231,"List of Draft Application",3225,3,2
+3243,"Credit Note Listing",3241,3,2
+1838,"Work Progress Note Detail",3250,3,2
+2242,"Reconciliation Monthly",3255,3,2
+3313,"Journal Details",3311,3,2
+3323,"New Variation Order (VO)",3321,3,2
+3472,"Treatment Ledger by Year",3459,3,2
+3491,"Preventive Maintenance ",3468,3,2
+3496,"Movement Application",3494,3,2
+3505,"Asset Lost  Application",3503,3,2
+3529,"Update Bank Account and Factoring for Voucher",3525,3,2
+2543,"Asset Transfer Listing",3530,3,2
+3548,"Debit Note Form",3542,3,2
+1581,"My Request",1040,3,3
+1278,"CN Form - En Masri",1061,3,3
+2017,"Loan Application (Special Case)",1130,3,3
+1194,"Work Order Instruction",1135,3,3
+1025,Profile,1149,3,3
+1150,"PTPTN (Masri)",1149,3,3
+1157,"List of Petty Cash",1152,3,3
+2768,"List of Emergency Fund (Verify)",1174,3,3
+1518,"Payroll Calculation (Temp)",1250,3,3
+1285,"DN - Report Listing General",1263,3,3
+1294,Allocation,1293,3,3
+2112,"EC Process",1359,3,3
+3268,"Generate Instruction Letter / Cadangan Pelaburan",1414,3,3
+1442,"Income Type",1436,3,3
+1462,"Status Staff",1461,3,3
+1888,"Crediting To Bank",1481,3,3
+1499,"List of Investments Withdrawal",1497,3,3
+1656,"Cheque Release",1655,3,3
+1835,GRN,1668,3,3
+2297,"Voucher Listing",1818,3,3
+1820,"Item Main",1819,3,3
+1845,"Allowance And Deduction Bulks",1854,3,3
+1871,"List Of Bank Statement Upload",1869,3,3
+2417,"Laporan Baucar Panjar Wang Runcit",1880,3,3
+3428,"Trial Balance Summary",1950,3,3
+1986,"Payee List Report ",1969,3,3
+1683,"Asset Depreciation Listing",1975,3,3
+2495,"Asset Disposal Registration",1976,3,3
+2039,"List of Purchase Order Cancellation",2048,3,3
+2136,GCR,2101,3,3
+2295,"PTJ Code",2210,3,3
+1886,"List of PTJ Code",2211,3,3
+2225,"Manual Journal Entry",2220,3,3
+2263,"Attachment 3 - Senarai Debit/Kredit Dalam Penyata Bank Yang Tiada Dalam Buku Tunai",2262,3,3
+2443,"Integration - Profile",2276,3,3
+3379,"Subsidiary Ledger",2292,3,3
+2282,"Credit Note",2312,3,3
+2536,"Advance Declaration",2315,3,3
+1773,"Purchase Requisition List",2319,3,3
+2553,"List of Cashbook (Monthly)",2532,3,3
+2601,"Release Registration Fee for New Student (Offered)",2557,3,3
+2963,"Project Monitoring",2672,3,3
+2627,"Advance Monitoring",2677,3,3
+2828,"Duration Tender/Quotation",2822,3,3
+3272,Evaluation,2826,3,3
+3087,"Journal Adjustment Form",3085,3,3
+3232,"List of Rejected Application",3225,3,3
+3264,"Credit Note Cancellation",3241,3,3
+2082,"Work Progress Note Cancel",3250,3,3
+3256,"Unmatched Matching Record",3255,3,3
+3346,"Generate Voucher Draft",3269,3,3
+3426,"Pengurusan Perakaunan",3403,3,3
+3449,"List of Kew 8 form",3442,3,3
+3475,"Treatment Statement by Staff",3459,3,3
+3582,"Report Item Setup",3463,3,3
+3497,"Corrective Maintenance",3468,3,3
+3549,"Debit Note Cancellation",3542,3,3
+1039,"New/Returning Student",1032,3,4
+2797,"List of returning student whose insurance invoice at iFAS",1032,3,4
+1582,"My Request Form",1040,3,4
+2108,"Receipt Collection Entry",1047,3,4
+1530,"Credit Note Form",1061,3,4
+1220,"List of Work Order Instruction",1135,3,4
+1196,"List of Overtime Claim",1136,3,4
+1249,"Notification OT Claim",1136,3,4
+1491,"Invoice Generation",1149,3,4
+2708,"List of Emergency Fund (Paid)",1174,3,4
+1286,"DC - Report Listing General",1263,3,4
+2526,"EC Process By Individual",1359,3,4
+1417,Bank,1405,3,4
+1517,"Monthly Schedule Investment",1414,3,4
+1443,"Tax Child Relief",1436,3,4
+1463,"Job Status",1461,3,4
+1893,"Income Adjustment Report",1481,3,4
+1493,"List of Withdrawal - Rejected",1497,3,4
+1946,Journal,1668,3,4
+3023,"Zakat / Waqaf Deduction Application Portal",1695,3,4
+1660,"List of Bank Guarantee",1721,3,4
+1936,"Non-Invoice Structure",1786,3,4
+2298,"Voucher Cancel",1818,3,4
+1932,"List Of Jobscope",1819,3,4
+1891,"Individual Allowance & Deduction",1854,3,4
+3032,"Delete By Bulk",1854,3,4
+2502,"Laporan Buku Tunai Panjar Wang Runcit",1880,3,4
+1674,"Disposed Batch Listing",1976,3,4
+3374,"Laporan Pendaftaran Aset",1991,3,4
+2030,"New PO Cancellation",2048,3,4
+1887,"Cost Centre",2210,3,4
+2360,"List of Cost Centre",2211,3,4
+2281,"Matching Report Transaction",2262,3,4
+2444,"Integration - Activity",2276,3,4
+2336,"Report Ageing",2292,3,4
+2283,"Debit Note",2312,3,4
+2344,Manage,2315,3,4
+2320,"List of Purchase Requisition Cancellation",2319,3,4
+2409,"Journal Bill Cancel @ Knockoff",2377,3,4
+3009,"Penyata Penyesuaian Bank",2532,3,4
+2752,"List of All Application (Approver)",2592,3,4
+3077,"Auditor WIP Report",2672,3,4
+3348,"List of Voucher Money Transfer",3269,3,4
+3416,"Perbelanjaan LPPM",3403,3,4
+3474,"Overall Treatment Ledger by Staff",3459,3,4
+3516,"BS P&L",3463,3,4
+3501," Schedule Maintenance Listing",3468,3,4
+3550,"Debit Note Cancellation Form",3542,3,4
+2799,"List of new/returning student whose insurance is duplicate/multiple",1032,3,5
+1728,"Debtor Profile",1040,3,5
+1742,"Bank-In Slip Generation",1044,3,5
+1325,"List Of Staff",1051,3,5
+1070,"Account Code Setup",1059,3,5
+1279,"DN Form - En Masri",1061,3,5
+1666,"Work Order Received",1135,3,5
+1981,"Collected Hours",1136,3,5
+2754,"Emergency Fund Cashbook Report",1174,3,5
+1538,"Insurance Report Listing",1263,3,5
+1487,"FD Summary",1414,3,5
+1464,"Title Staff",1461,3,5
+1836,"Listing of Staff",1481,3,5
+2506,"Dasar Sedia Ada",1574,3,5
+2151,Bill,1668,3,5
+2540,"Other Deduction",1695,3,5
+1847,"Online Payment History",1736,3,5
+1859,Receipt,1736,3,5
+2412,"Journal Voucher Cancel ",1818,3,5
+2066,"Assessment Question",1819,3,5
+3350,"Laporan Buku Tunai",1880,3,5
+3387,"Asset Disposal Listing",1976,3,5
+2431,"Laporan Aset Mengikut Jabatan Dan Lokasi",1991,3,5
+2041,"Cancel PO Partial Listing",2048,3,5
+1552,"Account Code",2210,3,5
+2331,"Penyata Penyesuaian Bank",2262,3,5
+2642,"Report Detail Ageing",2292,3,5
+2355,"Bill Cancel @ Knockoff Listing",2377,3,5
+2533,"Closing - Attachment 1",2532,3,5
+3306,"Committee Report",2822,3,5
+2724,Selection,2826,3,5
+2951,"Completed List",2947,3,5
+3431,"Terimaan dan Bayaran Bil",3403,3,5
+3473,"Notification Letter",3459,3,5
+1757,"Recurring List",1040,3,6
+1761,"Bank-In Slip Download",1044,3,6
+2347,"List of Receipt on Behalf",1044,3,6
+2939,"Online Payment Requery",1044,3,6
+1071,"Discount Structure",1059,3,6
+1576,"Debit Note Form",1061,3,6
+1187,"Loan Disbursement",1097,3,6
+3060,"Advance Payment",1130,3,6
+2709,"Emergency Fund (Unblock)",1174,3,6
+3465,"Bonus Generation",1250,3,6
+1539,"Statistic Record By Category",1263,3,6
+1334," Budget Structure List",1293,3,6
+2313,"EC Remuneration Staff",1359,3,6
+1418,"Investment Type & GL Code",1405,3,6
+1488,"FD Details",1414,3,6
+1889,"Variance Allowance And Deduction",1481,3,6
+1959,"Asset Approval (GRN/Bill) ",1668,3,6
+2773,"Emergency Fund",1695,3,6
+1955,"Bank Account No For Updated",1922,3,6
+2166,"Bilangan Hari Daftar Bil Belum Bayar",1969,3,6
+3390,Integration,1976,3,6
+3349,"Laporan Susut Nilai Aset",1991,3,6
+2042,"New Cancel PO Partial",2048,3,6
+1546,"Cascade Structure",2210,3,6
+2167,"List of Cascade Structure",2211,3,6
+3453,"List of Account Code (PPI)",2211,3,6
+2588,"Online Payment History",2312,3,6
+3038,"List of PR To Be Cancel",2319,3,6
+2534,"Closing - Attachment 2",2532,3,6
+3100,"Report Vendor Assessment (GRN)",2852,3,6
+1740,"Update Foreign Currency",1044,3,7
+2348,"Entry Form on Behalf",1044,3,7
+1072,"Insurance Institution",1059,3,7
+1280,"DC Form - En Masri",1061,3,7
+2833,"Roster Schedule",1136,3,7
+2736,"List of Received Recoup Amount",1174,3,7
+1550,"Sponsor Invoice Data Listing",1263,3,7
+1367,"Income Tax Report",1359,3,7
+2759,"Process By Bill",1359,3,7
+3188,"List of Investment Accrual (Posting)",1414,3,7
+3339,"Bank Negara Malaysia (BNM)",1436,3,7
+1467,Religion,1461,3,7
+1995,"Checklist Of Data Transfer",1481,3,7
+1843,"Credit Note",1736,3,7
+2572,"Signature Setup",1786,3,7
+3535,"Voucher Process",1818,3,7
+3430,"Details Transaction",1950,3,7
+3508,"Trial Balance",1950,3,7
+3423,Warrant,1966,3,7
+2847,"Senarai Semak Pembatalan Pendaftaran Aset",1991,3,7
+3341,Closing,2048,3,7
+3039,"Purchase Requisition Cancel",2319,3,7
+2535,"Closing - Attachment 3",2532,3,7
+3106,"Report Vendor Assessment (WPN)",2852,3,7
+1758,"Recurring Contract Setup",1040,3,8
+2500,Counter,1047,3,8
+1073,"Barring Type",1059,3,8
+1571,"Discount Note Form",1061,3,8
+1928,Refund,1097,3,8
+2842,"Shift Day Off",1136,3,8
+1927,Journal,1140,3,8
+1790,"Summary Report Of Fees By Semester",1263,3,8
+3456,"Budget Planning Schedule",1293,3,8
+3191,"List of Accrual (No Posting Number)",1414,3,8
+1410,Table,1436,3,8
+1468,Race,1461,3,8
+1978,"Data Change Checklist (Before Process Payroll)",1481,3,8
+3012,"Budget Planning Allocation 2 List",1574,3,8
+3309,"Loan Deferred Payment",1695,3,8
+1857,"Discount Note",1736,3,8
+1858,Sponsor,1736,3,8
+3507,"Premise Details",1786,3,8
+3424,"Budget Report By PTJ",1966,3,8
+2198,"Laporan Baucar Bayaran",1969,3,8
+2766,"Listing of Payee old",1969,3,8
+2906,"Senarai Aset Alih Tidak Dilulus Untuk Dilupuskan",1991,3,8
+2664,"Daily Summary",2262,3,8
+2762,"Advertisement Complete",2826,3,8
+3018,Commission,2947,3,8
+1074,"Barring Policy",1059,3,9
+1311,"Receipt by Batch Form",1061,3,9
+1287,Cheque,1096,3,9
+1794,"Report of Accommodation Fees  according to Student Accommodation",1263,3,9
+1431,Tenure,1405,3,9
+3319,"Investment Report",1414,3,9
+2153,"Zakat / Waqaf Deduction",1436,3,9
+1469,State,1461,3,9
+1894,"List Of Payment Receiver",1481,3,9
+3013,"Budget Planning Allocation 3 List",1574,3,9
+3302,"Asset Registration Approval (Journal)",1668,3,9
+1875,"Debit Note",1736,3,9
+2337,"Voucher Replace",1818,3,9
+3425,"Budget Report By Account",1966,3,9
+2895,"Bill Report",1969,3,9
+2934,"Senarai Aset Disokong Untuk Pelupusan",1991,3,9
+2665,"Monthly Summary",2262,3,9
+3400,"Debt Movement Report",2292,3,9
+2361,"List of Cancel PR Partial",2319,3,9
+2845,"Generated Offer Letter",2826,3,9
+1075,"Barring Report",1059,3,10
+1298,"Outbound Data Form",1061,3,10
+1639,"Loan Information",1130,3,10
+1795,"Summary Report on Accommodation Fee Charges by Student Accommodation (Inasis)",1263,3,10
+2438,"Other Deduction",1436,3,10
+1474,"Service Scheme",1461,3,10
+1917,Payslip,1481,3,10
+3196,"Dasar Baru / One Off",1574,3,10
+2749,"Monthly Loan",1695,3,10
+2817,"Download Voucher Supplier By Batch",1818,3,10
+2974,"Transaction History",1969,3,10
+3330,"Asset Disposal Report",1991,3,10
+2670,"Cash Balance By Fund",2262,3,10
+3275,"Salary Deduction Calculator",1040,3,11
+1082,"Fee Item",1059,3,11
+1313,"Receipt by Batch Knockoff",1061,3,11
+2717,Listing,1096,3,11
+2496,Cancellation,1097,3,11
+1425,Vouchers,1140,3,11
+1797,"Fee Data Report for Ministry of Higher Education (MYMOHES)",1263,3,11
+1408,Institution,1405,3,11
+1971,"Report Accrual",1414,3,11
+3438,"Laporan Daftar Pelaburan",1414,3,11
+2674,"Tax Rate Calculator",1436,3,11
+2962,"Monthly Invoice",1695,3,11
+3133,"Payee List Report by PTJ",1969,3,11
+2364,"Statistik Reminder",2292,3,11
+3041,"List of PR To Be Cancel Partial",2319,3,11
+2827,"Tender/Quotation Cancellation",2826,3,11
+3280,"Salary Deduction Schedule Listing",1040,3,12
+1083,"Fee Structure",1059,3,12
+1323,"PTPTN Data Form",1061,3,12
+2763,"Banker Cheque & Bank Draft",1096,3,12
+1798," List of Students by Incoming Session Invoice Generated",1263,3,12
+2948,"Activity Mapping",1436,3,12
+3034,"PCB Calculator LHDN",1481,3,12
+3279,"Planning to Initial",1574,3,12
+3347,"Loan Status Complete",1695,3,12
+1860,"Payment Information",1736,3,12
+3534,"Download Voucher By Reference",1818,3,12
+3372,"Buku Daftar Terimaan",1969,3,12
+1514,"Journal to be Reversed",2135,3,12
+3042,"Purchase Requisition Cancel Partial",2319,3,12
+1741,"Update Card Info",1044,3,13
+1084,"Academic Calendar",1059,3,13
+1326,"PTPTN Process Form",1061,3,13
+1848,EFT,1096,3,13
+2067,"Regenerate Schedule",1130,3,13
+2020,"Advance Payment",1149,3,13
+1799,"List of Active Students Not Invoiced",1263,3,13
+2940,"Income Code by Invoice Type",1436,3,13
+3020,"Change EPF Contribution",1436,3,13
+3329,"Salary Grade",1461,3,13
+3296,Report,1574,3,13
+1892,"Advance Payment / Deposit",1736,3,13
+3249,"Cash Receipt Release",1044,3,14
+1192,"Invoice Note",1059,3,14
+1327,"PTPTN Gen Invoice Form",1061,3,14
+3450,"Host To Host (BIMB)",1096,3,14
+1800,"List of Takaful Deduction Students by Admission Session",1263,3,14
+2549,"Journal Log",1481,3,14
+1834,"Bank Account Information / Update Bank Account Information",1736,3,14
+1876,"Voucher Information",1736,3,14
+3546,"Voucher Information Creditor",1818,3,14
+1193,"CN Policy by Event",1059,3,15
+1328,"PTPTN Export Form",1061,3,15
+1897,"Other Payment V2",1096,3,15
+3345,"Other Payment (Update Payment Date)",1096,3,15
+1801,"List of Students by Student Accommodation",1263,3,15
+3069,"Report Deposit",2292,3,15
+1252,"Role SF",1059,3,16
+1335,"Discount Policy Form",1061,3,16
+2326,"Payment Rejected",1096,3,16
+2022,"Generate Autopay File",1140,3,16
+1802,"List of Students By Study Center",1263,3,16
+3222,"Deduction Code by Account Code",1436,3,16
+2675,"Variance By Income Code",1481,3,16
+2081,Listing,2135,3,16
+3369,"Creditor Ageing",2292,3,16
+1253,"Role Configure SF",1059,3,17
+1069,"Sponsor To Student",1061,3,17
+1904,"Payroll Payment",1096,3,17
+2681,"Variance By Type",1481,3,17
+1839,"Good Receive Note List",2087,3,17
+3376,"Debtor Ageing",2292,3,17
+1255,"Workflow Invoice",1059,3,18
+2633,"Payment Notice",1096,3,18
+1804," List of VIVA Students by Graduate School",1263,3,18
+2698,"Allowance and Deduction",1481,3,18
+3385,"Deposit Statement",2292,3,18
+1354,"Discount Type",1059,3,19
+1911,"Non-fee Structure",1059,3,19
+1822,"View Outbound Data",1061,3,19
+2706,"Print SAB By Batch",1096,3,19
+2765,"Monthly Loan",1130,3,19
+1806,"List Of Students According To The Fees Charged",1263,3,19
+2735,Emolument,1481,3,19
+3407,"Advance Ageing",2292,3,19
+2093,"Fee Items",1059,3,20
+2818,"Loan Change Status to Complete",1130,3,20
+1807,"List Of Graduate Students",1263,3,20
+2835,"Deduction List Per Month",1481,3,20
+3433,"Deposit Statement (Management)",2292,3,20
+2750,"Academic Calendar (NEW)",1059,3,21
+2096,"Fee Items Form",1061,3,21
+3538,"Payment Reject Batch",1096,3,21
+3307,"Loan Change Status to Cancel",1130,3,21
+1810,"List of Student Debt According to Student Inasis",1263,3,21
+2913,"Income Type List",1481,3,21
+2834,"CN Policy by Event",1059,3,22
+2819,"Loan Stop Accrual",1130,3,22
+1811," List Of Graduate Student Debt By Year",1263,3,22
+2926,"Laporan Keberhutangan Staff",1481,3,22
+2840,"CN Policy by Event Form",1059,3,23
+3290,"Update Loan Payment",1130,3,23
+1812,"Report Of International Student Debt ",1263,3,23
+1814,"Student Debt List",1263,3,25
+3337,Perjawatan,1481,3,25
+3335,"Senarai Tuntutan Elaun Lebih Masa",1481,3,26
+1816,"List of Students Inasis Students (Inasis)",1263,3,27
+3336,"Laporan Kod Elaun / Potongan",1481,3,27
+1918,"List of Student by Sponsor",1263,3,34
+1954,"Report of Student Debt by Sponsor",1263,3,44
+1923,"List of Student Without Sponsor Invoice",1263,3,47
+2437,"List of Student C1330/C12154",1263,3,48
+2622,"Student Hostel History",1263,3,49
+2528,"List of Cheque Release",1655,3,61
+1720,"Cheque List",1655,3,119
+2064,"Bill Payment Data From Bank",1263,3,123
+2100,"Listing Of Bank Statement",2061,3,123
+2139,"List of Vehicle Information",2138,3,123
+1916,"List of Sponsor",1263,3,124
+2026,"Semakan Pindaan Bill Payment/Presentment ke (Hutang Pelajar/ Pemiutang Pelajar C1330 /Hasil PTJ) - By Batch",1263,3,124
+2029,"Semakan Pindaan Bill Payment/Presentment ke (Hutang Pelajar/ Pemiutang Pelajar C1330 /Hasil PTJ) - By  Date",1263,3,124
+2117,"Invoice Structure",1786,3,124
+2094,"List Of Bank Statement Upload",2061,3,124
+1957,"Staff Overtime Hierarchy",2092,3,124
+1949,"Report of Invoice by Student",1263,3,125
+1956,"Summary Report of Total Sponsorship",1263,3,125
+2008," Report Data Listing",1263,3,125
+2085,"Good Receive Note Cancel",2087,3,125
+2411,"Report of Identified Receipts",2220,3,125
+1924,"List of Claim by Sponsor",1263,3,126
+1965,"CN - Deferment Report",1263,3,126
+1984,"List Of New Registered Student",1263,3,126
+1988,"CN Data Listing",1263,3,126
+2010,"List of Bill Payment/Presentment Batch",1263,3,126
+1303,"New Application",2342,4,1
+1368,"EC Summary CP8C",1367,4,1
+1485,"Payroll Process Daily",1518,4,1
+1562,Location,1677,4,1
+1564,"Asset Dispose Method",1561,4,1
+1849,"EFT Preparation",1848,4,1
+2105,"GCR Calculate",2136,4,1
+2154,Type,2153,4,1
+2327,"Listing Reject",2326,4,1
+2404,"Advance Personnel",2368,4,1
+2421,"Advance Staff (Admin)",2344,4,1
+2426,"Warrant Initial",3423,4,1
+2552,"New of Application Waqaf/Zakat Deduction",3023,4,1
+2589,"Kew Pa 1 - Penerimaan Aset",3531,4,1
+2647,"Senarai Tempoh Masa LPO 			",2810,4,1
+2702,Admin,2285,4,1
+2718,Preparation,2763,4,1
+3010,"Calculation of Commission ",3018,4,1
+3285,"Book Cheque Setup",1287,4,1
+3370,"Creditor Ageing Summary",3369,4,1
+3380,"Individual Subsidiary Ledger",3379,4,1
+3391,"Asset Disposal (Inbound)",3390,4,1
+3394,"Budget Summary By Account Code (WBR072)",3425,4,1
+3408,"Budget Summary By PTJ (WBR071)",3424,4,1
+3451,"List to Transfer",3450,4,1
+3481,"Damage Asset Application",3469,4,1
+3483,"Staff Approved Overtime",1998,4,1
+3492,"Preventive Maintenance Listing ",3491,4,1
+3498,"Corrective Maintenance List",3497,4,1
+3511,"Book Cheque Setup By Fund",1287,4,1
+1200,"List of Activity Advance Application",2342,4,2
+1369,"EC Summary CP8D",1367,4,2
+1791,Others,2022,4,2
+1852,"Batching EFT",1848,4,2
+1980,"Staff Overtime Claim",1998,4,2
+2137,"List of GCR",2136,4,2
+2145,Staff,2690,4,2
+2155,Category,2153,4,2
+2307,"Reject/Replace Payment",2326,4,2
+2429,"Warrant Increment",3423,4,2
+2537,"List of Advance Declaration Application",2536,4,2
+2597,"Kew Pa 2 - Penolakan Aset",3531,4,2
+2625,"Perolehan Melalui Kontrak Pusat & Kontrak Pusat Sistem Panel	",2809,4,2
+2746,"Location Listing",1677,4,2
+2755,"Update Reference",2763,4,2
+2758,"Allocation, Expenditure & Balance of Allocation by Budget Code",3425,4,2
+2814,"Laporan Keseluruhan Perolehan				",2810,4,2
+3011,"Commission to be Paid",3018,4,2
+3022,"List of Application Waqaf / Zakat Deduction",3023,4,2
+3033,"No of Days GCR",2103,4,2
+3118,"Disposal Secretariat Setup",1561,4,2
+3239,"Variation Report (WBR074)",3424,4,2
+3283,"Cheque Processing",1287,4,2
+3381,"All Subsidiary Ledger",3379,4,2
+3427,"Grant Application by Type",3296,4,2
+3448,"Advance Ageing Summary (> 6 Years)",3407,4,2
+3452,"List Transferred ",3450,4,2
+3470,"Damage Report List",3469,4,2
+3493,"Preventive Maintenance Form",3491,4,2
+3499,"Corrective Maintenance Form",3497,4,2
+3518,"Process And Print Bank Cheque",1287,4,2
+1563,"Item LIsting",1677,4,3
+1645,"Asset Account Setup",1561,4,3
+1855,"Payment Batch Form",1848,4,3
+1992,"Kew Pa 3 - Pendaftaran Aset",3531,4,3
+1999,"Staff Collected Hours",1998,4,3
+2120,Others,2690,4,3
+2430,"Warrant Decrement",3423,4,3
+2604,"List of Refund Portal",2285,4,3
+2640,PWR,2344,4,3
+2777,"Batch Listing",2763,4,3
+3288,"Bank Cheque To Print or To Cancel",1287,4,3
+3300,"ABM Justfikasi",3296,4,3
+3360,"List of Paid GCR",2136,4,3
+3409,"Advance Listing",3407,4,3
+3445,"Creditor Ageing Summary ( > 6 Years )",3369,4,3
+3447,"Debtor Ageing Summary ( > 6 Years)",3376,4,3
+3502,"Schedule Maintenance Listing",3491,4,3
+3517,"Transaction Log",3450,4,3
+3519,"Cancel or Post Bank Cheque",1287,4,3
+3533,"Batch Listing",1848,4,3
+1861,"Payment Batch List",1848,4,4
+1996,"Kew Pa 4 - Pendaftaran Inventori",3531,4,4
+2289,"List Of Refund Bill",2285,4,4
+2422,"Journal Payment Reject/Replace",2326,4,4
+2433,"Warrant Virement",3423,4,4
+2455,"Depreciation Group",1561,4,4
+2619,"Manual Journal",2536,4,4
+3137,"Staff Roster Schedule ",1998,4,4
+3284,"Quotation Review",1616,4,4
+3291,"Approved Bank Cheque",1287,4,4
+3298,"ABM 4",3296,4,4
+3371,"Creditor Ageing Details",3369,4,4
+3384,"Vot Book Report (WBR051)",3424,4,4
+3411,"Disabled Screen",2368,4,4
+3437,"Listing Approved Batching EPY",1904,4,4
+3443,"Creditor Ageing Details( > 6 Years)",3369,4,4
+3446,"Debtor Ageing Details ( > 6 Years )",3376,4,4
+2290,"Report of Refund Bill",2285,4,5
+2463,Paid,2344,4,5
+2483,"Depreciation Setup (Tanah)",1561,4,5
+2595,"Kew Pa 5 - Senarai Daftar Aset",3531,4,5
+3065,"Rejected Overtime Claim",1998,4,5
+3297,"ABM 5",3296,4,5
+3375,"Creditor AP Listing",3369,4,5
+3522,"Collected Cheque",1287,4,5
+2466,Accrual,2344,4,6
+2538,"List of Advance Declaration Application (Admin)",2536,4,6
+2596,"Kew Pa 6 - Senarai Daftar Inventori",3531,4,6
+2789,Advance,2690,4,6
+3299,"ABM 7",3296,4,6
+3353,"Input Roster Schedule",1998,4,6
+2007,"Kew Pa 7 - Senarai Aset Alih Mengikut Ruang",3531,4,7
+2293,"Item Main",1561,4,7
+2689,Loan,2690,4,7
+2711,Recoupment,2344,4,7
+2960,"List of Advance Declaration Application (Checker)",2536,4,7
+3308,"Lampiran ABM 7",3296,4,7
+3357,"Input Shift Day Off",1998,4,7
+2324,"List of Advance",2344,4,8
+2781,"Kew Pa 8 -  Laporan Kedudukan Semasa Aset Alih",3531,4,8
+3148,"Role Listing",1561,4,8
+3358,"Staff Shift Day Off",1998,4,8
+2325,"Advance Staff (Generate Bill) ",2344,4,9
+2610,"Kew Pa 9 - Borang Permohonan Pergerakan/Pinjaman Aset Alih",3531,4,9
+2669,"Successful Generated Reminder",2690,4,9
+3338,"Asset Deprecition Scheduler Setup",1561,4,9
+2343,"List of Activity Advance (Unblock)",2344,4,10
+3471,"Asset Verification Officer",1561,4,10
+3500,"Kew Pa 10 - Borang Aduan Kerosakan Aset Alih",3531,4,10
+2517,"Kew Pa 11 - Borang Pemeriksaan Aset",3531,4,11
+3331,"Loan Balance Confirmation",1616,4,11
+3527,"Transfer Cheque List",1287,4,11
+2473,"Received Recoup Amount",2344,4,12
+2643,"Kew Pa 12 - Laporan Pemeriksaan Aset Mengikut Suku Tahun",3531,4,12
+3342,"Full Settlement Amount",1616,4,12
+3536,"Cheque Payment List",1287,4,12
+2782,"Kew Pa 13 - Sijil Tahunan Pemeriksaan Aset Alih",3531,4,13
+2611,"Kew Pa 14 - Senarai Aset Alih Kerajaan Yang Memerlukan Penyelenggaraan Berjadual",3531,4,14
+2832,"List of Advance (Checker)",2344,4,14
+2612,"Kew Pa 15 - Rekod Penyelenggaraan Aset Alih",3531,4,15
+3486,"Kew Pa 16 - Laporan Penyelenggaraan Aset Alih",3531,4,16
+2705,"Kew Pa 17 - Borang Pindahan Aset Alih",3531,4,17
+2783,"Kew Pa 18 - Laporan Pindahan Aset Alih",3531,4,18
+2550,"Kew Pa 19 - Borang Perakuan Lupus (Teknikal)",3531,4,19
+2566,"Kew Pa 20 - Borang Lantikan Lembaga Pemeriksa",3531,4,20
+2551,"Kew Pa 21 - Borang Pelupusan",3531,4,21
+2567,"KewPa 22 - Sijil Penyaksian Pelupusan",3531,4,22
+2577,"Kew Pa 23 - Sijil Pelupusan",3531,4,23
+2854,"Kew Pa 25 - Borang Tender Pelupusan Aset Alih",3531,4,25
+2857,"Kew Pa 27 - Kenyataan Tawaran Sebut Harga Pelupusan Aset Alih",3531,4,27
+2859,"Kew Pa 29 - Jadual Sebut Harga Pelupusan Aset Alih",3531,4,29
+2861,"Kew Pa 31- Senarai Aset Alih Yang Dilelong",3531,4,31
+2784,"Kew Pa 32 - Laporan Pelupusan Aset Alih",3531,4,32
+3515,"Kew Pa 33 - LAPORAN AWAL KEHILANGAN ASET ALIH",3531,4,33
+3512,"Kew Pa 34 - PELANTIKAN JAWATANKUASA PENYIASAT KEHILANGAN ASET ALIH",3531,4,34
+3513,"Kew Pa 35 - LAPORAN AKHIR KEHILANGAN ASET ALIH",3531,4,35
+2988,"Kew Pa 36 - Sijil Hapus Kira Aset",3531,4,36
+3514,"Kew Pa 37 - LAPORAN HAPUS KIRA ASET ALIH",3531,4,37
+2497,BRF,2496,4,61
+2529,"PRAISI Covid-19",1367,4,61
+2527,PRAISI,1367,4,62
+1940,"Transfer Date",1848,4,123
+2373,"Cash Advance Type",2368,4,124
+2369,"Payment Method",2368,4,125
+2230,"Reminder 1",2145,5,1
+2286,"Refund Application",2702,5,1
+2425,"Recoupment (Batch)",2711,5,1
+2231,"Reminder 2",2145,5,2
+2287,"List of Refund",2702,5,2
+2715,"Generate Bill Recoupment",2711,5,2
+2791,"Reminder 1",2789,5,2
+2713,"Recoup Form",2711,5,3
+2792,"Reminder 2",2789,5,3
+2232,"Reminder 3",2145,5,4
+2452,"List of Recoupment",2711,5,5
+2457,Report,2145,5,5
+2760,"Staff Advance Cashbook Report",2711,5,6
+2131,"List Of Outstanding",2230,6,1
+2132,"List of Reminder",2231,6,1
+2133,"List of Reminder",2232,6,1
+2793,"List of Reminder",2791,6,1
+2795,"List of Reminder",2792,6,1
+2266,"Generated Reminder",2231,6,2
+2268,"Generated Reminder",2232,6,2
+2794,"Generated Reminder",2791,6,2
+2796,"Generated Reminder",2792,6,2
+2250,"Generated Reminder",2230,6,3
+2869,"Successful Generated Reminder",2457,6,3
+2256,"By Email",2132,7,1
+2259,"By Email",2133,7,1
+2257,"By Post",2132,7,2
+2258,"By Post",2133,7,2

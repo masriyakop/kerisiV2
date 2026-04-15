@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import {
   Check,
   Eye,
@@ -23,6 +23,14 @@ import {
   XCircle,
   Clock3,
   ListChecks,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  FileDown,
+  FileSpreadsheet,
+  Plus,
+  GripVertical,
 } from "lucide-vue-next";
 
 import AdminLayout from "@/layouts/AdminLayout.vue";
@@ -74,6 +82,382 @@ function demoToast(variant: "success" | "error" | "info") {
     return;
   }
   toast.info("Sync in progress", "Background update is running.");
+}
+
+const tableSearchQuery = ref("");
+const tablePageSize = ref(10);
+const tableCurrentPage = ref(1);
+
+type TableDemoRow = {
+  title: string;
+  author: string;
+  status: "Published" | "Draft" | "Pending";
+  statusClass: string;
+  updated: string;
+};
+
+const tableDemoRows = ref<TableDemoRow[]>([
+  {
+    title: "Welcome Post",
+    author: "Admin",
+    status: "Published",
+    statusClass: "rounded-full bg-slate-900 px-2.5 py-0.5 text-xs font-medium text-white",
+    updated: "2h ago",
+  },
+  {
+    title: "SEO Checklist",
+    author: "Editor",
+    status: "Draft",
+    statusClass: "rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-700",
+    updated: "1d ago",
+  },
+  {
+    title: "Product Launch",
+    author: "Manager",
+    status: "Pending",
+    statusClass: "rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700",
+    updated: "3d ago",
+  },
+  {
+    title: "Quarterly Report",
+    author: "Admin",
+    status: "Published",
+    statusClass: "rounded-full bg-slate-900 px-2.5 py-0.5 text-xs font-medium text-white",
+    updated: "5h ago",
+  },
+  {
+    title: "Brand Guidelines",
+    author: "Editor",
+    status: "Draft",
+    statusClass: "rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-700",
+    updated: "6h ago",
+  },
+  {
+    title: "Holiday Notice",
+    author: "Admin",
+    status: "Published",
+    statusClass: "rounded-full bg-slate-900 px-2.5 py-0.5 text-xs font-medium text-white",
+    updated: "1d ago",
+  },
+  {
+    title: "API Changelog",
+    author: "Editor",
+    status: "Pending",
+    statusClass: "rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700",
+    updated: "2d ago",
+  },
+  {
+    title: "Onboarding Tips",
+    author: "Manager",
+    status: "Published",
+    statusClass: "rounded-full bg-slate-900 px-2.5 py-0.5 text-xs font-medium text-white",
+    updated: "2d ago",
+  },
+  {
+    title: "Archive: 2024 News",
+    author: "Admin",
+    status: "Draft",
+    statusClass: "rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-700",
+    updated: "4d ago",
+  },
+  {
+    title: "Press Kit",
+    author: "Editor",
+    status: "Published",
+    statusClass: "rounded-full bg-slate-900 px-2.5 py-0.5 text-xs font-medium text-white",
+    updated: "5d ago",
+  },
+  {
+    title: "Incident Postmortem",
+    author: "Manager",
+    status: "Draft",
+    statusClass: "rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-700",
+    updated: "1w ago",
+  },
+  {
+    title: "Roadmap Teaser",
+    author: "Admin",
+    status: "Pending",
+    statusClass: "rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700",
+    updated: "1w ago",
+  },
+]);
+
+type TableSortColumn = "no" | "title" | "author" | "status" | "updated";
+type KitchenTableColumn = "no" | "title" | "author" | "status" | "updated" | "actions";
+
+const tableSortColumn = ref<TableSortColumn | null>(null);
+const tableSortDirection = ref<"asc" | "desc">("asc");
+const tableColumnOrder = ref<KitchenTableColumn[]>(["no", "title", "author", "status", "updated", "actions"]);
+const tableHiddenColumns = ref(new Set<KitchenTableColumn>());
+const tableColumnsPanelOpen = ref(false);
+const tableDraggingColumn = ref<KitchenTableColumn | null>(null);
+const tableDragOverColumn = ref<KitchenTableColumn | null>(null);
+
+const tableColumnLabels: Record<KitchenTableColumn, string> = {
+  no: "No.",
+  title: "Title",
+  author: "Author",
+  status: "Status",
+  updated: "Updated",
+  actions: "Actions",
+};
+
+const tableVisibleColumns = computed(() => tableColumnOrder.value.filter((c) => !tableHiddenColumns.value.has(c)));
+const tableHiddenColumnList = computed(() => tableColumnOrder.value.filter((c) => tableHiddenColumns.value.has(c)));
+
+const filteredTableRows = computed(() => {
+  const q = tableSearchQuery.value.trim().toLowerCase();
+  if (!q) return [...tableDemoRows.value];
+  return tableDemoRows.value.filter(
+    (row) =>
+      row.title.toLowerCase().includes(q) ||
+      row.author.toLowerCase().includes(q) ||
+      row.status.toLowerCase().includes(q) ||
+      row.updated.toLowerCase().includes(q),
+  );
+});
+
+function tableDemoRowIndex(row: TableDemoRow): number {
+  return tableDemoRows.value.indexOf(row);
+}
+
+function tableUpdatedRank(s: string): number {
+  const m = /^(\d+)(h|d|w)\s+ago$/.exec(s);
+  if (!m) return 0;
+  const n = Number(m[1]);
+  const u = m[2];
+  if (u === "h") return n;
+  if (u === "d") return n * 100 + 50;
+  return n * 1000 + 500;
+}
+
+function toggleTableSort(col: TableSortColumn) {
+  if (tableSortColumn.value === col) {
+    tableSortDirection.value = tableSortDirection.value === "asc" ? "desc" : "asc";
+  } else {
+    tableSortColumn.value = col;
+    tableSortDirection.value = "asc";
+  }
+  tableCurrentPage.value = 1;
+}
+
+function canMoveTableColumn(col: KitchenTableColumn): boolean {
+  return col !== "no" && col !== "actions";
+}
+
+function canHideTableColumn(col: KitchenTableColumn): boolean {
+  return col !== "no" && col !== "actions";
+}
+
+function hideTableColumn(col: KitchenTableColumn) {
+  if (!canHideTableColumn(col)) return;
+  const next = new Set(tableHiddenColumns.value);
+  next.add(col);
+  tableHiddenColumns.value = next;
+}
+
+function showTableColumn(col: KitchenTableColumn) {
+  if (!tableHiddenColumns.value.has(col)) return;
+  const next = new Set(tableHiddenColumns.value);
+  next.delete(col);
+  tableHiddenColumns.value = next;
+}
+
+function reorderVisibleTableColumns(dragCol: KitchenTableColumn, targetCol: KitchenTableColumn) {
+  const visible = [...tableVisibleColumns.value];
+  const from = visible.indexOf(dragCol);
+  const to = visible.indexOf(targetCol);
+  if (from < 0 || to < 0 || from === to) return;
+  const [moved] = visible.splice(from, 1);
+  visible.splice(to, 0, moved);
+
+  const nextOrder = [...tableColumnOrder.value];
+  let cursor = 0;
+  for (let i = 0; i < nextOrder.length; i += 1) {
+    if (!tableHiddenColumns.value.has(nextOrder[i])) {
+      nextOrder[i] = visible[cursor];
+      cursor += 1;
+    }
+  }
+  tableColumnOrder.value = nextOrder;
+}
+
+function onTableHeaderDragStart(col: KitchenTableColumn, event: DragEvent) {
+  if (!canMoveTableColumn(col)) {
+    event.preventDefault();
+    return;
+  }
+  tableDraggingColumn.value = col;
+  tableDragOverColumn.value = col;
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", col);
+  }
+}
+
+function onTableHeaderDragOver(targetCol: KitchenTableColumn, event: DragEvent) {
+  event.preventDefault();
+  if (!tableDraggingColumn.value || tableDraggingColumn.value === targetCol) return;
+  tableDragOverColumn.value = targetCol;
+}
+
+function onTableHeaderDrop(targetCol: KitchenTableColumn, event: DragEvent) {
+  event.preventDefault();
+  const dragCol = tableDraggingColumn.value;
+  if (!dragCol || dragCol === targetCol) return;
+  reorderVisibleTableColumns(dragCol, targetCol);
+  tableDragOverColumn.value = targetCol;
+}
+
+function onTableHeaderDragEnd() {
+  tableDraggingColumn.value = null;
+  tableDragOverColumn.value = null;
+}
+
+const sortedFilteredTableRows = computed(() => {
+  const rows = [...filteredTableRows.value];
+  const col = tableSortColumn.value;
+  if (!col) return rows;
+  const dir = tableSortDirection.value === "asc" ? 1 : -1;
+  rows.sort((a, b) => {
+    let cmp = 0;
+    if (col === "no") {
+      cmp = tableDemoRowIndex(a) - tableDemoRowIndex(b);
+    } else if (col === "title") {
+      cmp = a.title.localeCompare(b.title, undefined, { sensitivity: "base" });
+    } else if (col === "author") {
+      cmp = a.author.localeCompare(b.author, undefined, { sensitivity: "base" });
+    } else if (col === "status") {
+      cmp = a.status.localeCompare(b.status, undefined, { sensitivity: "base" });
+    } else {
+      cmp = tableUpdatedRank(a.updated) - tableUpdatedRank(b.updated);
+    }
+    return cmp * dir;
+  });
+  return rows;
+});
+
+const tablePageCount = computed(() => Math.max(1, Math.ceil(sortedFilteredTableRows.value.length / tablePageSize.value)));
+
+const pagedTableRows = computed(() => {
+  const start = (tableCurrentPage.value - 1) * tablePageSize.value;
+  return sortedFilteredTableRows.value.slice(start, start + tablePageSize.value);
+});
+
+function tableRowDisplayNo(pageRowIndex: number): number {
+  const globalIndex = (tableCurrentPage.value - 1) * tablePageSize.value + pageRowIndex;
+  return sortedFilteredTableRows.value.length - globalIndex;
+}
+
+watch(
+  () => [sortedFilteredTableRows.value.length, tablePageSize.value] as const,
+  () => {
+    if (tableCurrentPage.value > tablePageCount.value) tableCurrentPage.value = tablePageCount.value;
+    if (tableCurrentPage.value < 1) tableCurrentPage.value = 1;
+  },
+);
+
+watch(tableSearchQuery, () => {
+  tableCurrentPage.value = 1;
+});
+
+function getTableExportRows() {
+  return sortedFilteredTableRows.value.map((row, idx) => ({
+    no: idx + 1,
+    Title: row.title,
+    Author: row.author,
+    Status: row.status,
+    Updated: row.updated,
+  }));
+}
+
+async function handleTableDownloadPDF() {
+  try {
+    const { default: jsPDF } = await import("jspdf");
+    const autoTable = (await import("jspdf-autotable")).default;
+    const data = getTableExportRows();
+    if (data.length === 0) {
+      toast.info("No data", "Nothing to export.");
+      return;
+    }
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Kitchen Sink Table", 105, 15, { align: "center" });
+    autoTable(doc, {
+      head: [["No.", "Title", "Author", "Status", "Updated"]],
+      body: data.map((row) => [row.no, row.Title, row.Author, row.Status, row.Updated]),
+      startY: 22,
+      styles: { fontSize: 9 },
+      headStyles: { fillColor: [30, 41, 59], textColor: [255, 255, 255], fontStyle: "bold" },
+    });
+    doc.save(`Kitchen_Sink_Table_${new Date().toISOString().split("T")[0]}.pdf`);
+    toast.success("PDF downloaded");
+  } catch (e) {
+    const err = e as Error;
+    toast.error("Export failed", err?.message || "PDF export failed.");
+  }
+}
+
+function handleTableDownloadCSV() {
+  try {
+    const data = getTableExportRows();
+    if (data.length === 0) {
+      toast.info("No data", "Nothing to export.");
+      return;
+    }
+    const escape = (value: unknown) => {
+      if (value == null) return "";
+      const str = String(value);
+      return str.includes(",") || str.includes('"') ? `"${str.replace(/"/g, '""')}"` : str;
+    };
+    const headers = ["No.", "Title", "Author", "Status", "Updated"];
+    let csv = headers.map(escape).join(",") + "\n";
+    data.forEach((row) => {
+      csv += [row.no, row.Title, row.Author, row.Status, row.Updated].map(escape).join(",") + "\n";
+    });
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `Kitchen_Sink_Table_${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast.success("CSV downloaded");
+  } catch (e) {
+    const err = e as Error;
+    toast.error("Export failed", err?.message || "CSV export failed.");
+  }
+}
+
+async function handleTableDownloadExcel() {
+  try {
+    const ExcelJS = await import("exceljs");
+    const data = getTableExportRows();
+    if (data.length === 0) {
+      toast.info("No data", "Nothing to export.");
+      return;
+    }
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Kitchen Sink Table");
+    sheet.addRow(["No.", "Title", "Author", "Status", "Updated"]);
+    data.forEach((row) => sheet.addRow([row.no, row.Title, row.Author, row.Status, row.Updated]));
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `Kitchen_Sink_Table_${new Date().toISOString().split("T")[0]}.xlsx`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast.success("Excel downloaded");
+  } catch (e) {
+    const err = e as Error;
+    toast.error("Export failed", err?.message || "Excel export failed.");
+  }
+}
+
+function handleTableAdd() {
+  toast.info("Add action", "Dummy button. In real implementation, open modal or navigate to add page.");
 }
 </script>
 
@@ -682,59 +1066,246 @@ function demoToast(variant: "success" | "error" | "info") {
           <div class="space-y-4 p-4">
             <div>
               <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400">Preview</p>
-              <div class="overflow-x-auto rounded-lg border border-dashed border-slate-300 bg-slate-50/50 p-5">
-                <table class="w-full min-w-175 text-sm">
-                  <thead>
-                    <tr class="border-b border-slate-200">
-                      <th class="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Title</th>
-                      <th class="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Author</th>
-                      <th class="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Status</th>
-                      <th class="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400">Updated</th>
-                      <th class="pb-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-400">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="border-b border-slate-100 transition-colors hover:bg-white">
-                      <td class="py-3 font-medium text-slate-900">Welcome Post</td>
-                      <td class="py-3 text-slate-600">Admin</td>
-                      <td class="py-3"><span class="rounded-full bg-slate-900 px-2.5 py-0.5 text-xs font-medium text-white">Published</span></td>
-                      <td class="py-3 text-slate-500">2h ago</td>
-                      <td class="py-3">
-                        <div class="flex justify-end gap-1">
-                          <button title="View" class="rounded-lg p-2 transition-colors hover:bg-slate-200"><Eye class="h-4 w-4 text-slate-500" /></button>
-                          <button title="Edit" class="rounded-lg p-2 transition-colors hover:bg-slate-200"><Pencil class="h-4 w-4 text-slate-500" /></button>
-                          <button title="Delete" class="rounded-lg p-2 transition-colors hover:bg-red-100"><Trash2 class="h-4 w-4 text-red-500" /></button>
+              <div class="overflow-hidden rounded-lg border border-dashed border-slate-300 bg-slate-50/50">
+                <div class="flex flex-wrap items-end justify-between gap-4 border-b border-slate-200 bg-white/90 px-4 py-2.5">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <label class="text-xs font-medium text-slate-600" for="kitchen-sink-table-page-size">Display</label>
+                    <select
+                      id="kitchen-sink-table-page-size"
+                      v-model.number="tablePageSize"
+                      class="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm shadow-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                    >
+                      <option v-for="n in [5, 10, 25, 50]" :key="n" :value="n">{{ n }}</option>
+                    </select>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <label class="text-xs font-medium text-slate-600" for="kitchen-sink-table-search">Search</label>
+                    <div class="relative w-full max-w-xs min-w-[13rem] shrink-0">
+                      <Search class="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                      <input
+                        id="kitchen-sink-table-search"
+                        v-model="tableSearchQuery"
+                        type="search"
+                        placeholder="Filter rows…"
+                        aria-label="Filter table rows"
+                        class="w-full rounded-lg border border-slate-300 bg-white py-1.5 pl-8 pr-3 text-sm shadow-sm transition-colors focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                      />
+                    </div>
+                    <div v-if="tableHiddenColumnList.length > 0" class="relative">
+                      <button
+                        type="button"
+                        class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium shadow-sm hover:bg-slate-50"
+                        @click="tableColumnsPanelOpen = !tableColumnsPanelOpen"
+                      >
+                        <Columns3 class="h-4 w-4" />
+                        Columns
+                      </button>
+                      <div
+                        v-if="tableColumnsPanelOpen"
+                        class="absolute right-0 z-20 mt-1 w-64 rounded-lg border border-slate-200 bg-white p-3 shadow-lg"
+                        @click.stop
+                      >
+                        <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Hidden columns</p>
+                        <ul class="max-h-56 space-y-1 overflow-y-auto">
+                          <li
+                            v-for="col in tableHiddenColumnList"
+                            :key="col"
+                            class="flex items-center justify-between gap-2 rounded border border-transparent px-1 py-0.5 hover:bg-slate-50"
+                          >
+                            <span class="ml-1 flex flex-1 items-center gap-2 text-xs text-slate-700">{{ tableColumnLabels[col] }}</span>
+                            <button
+                              type="button"
+                              class="rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-50"
+                              @click="showTableColumn(col)"
+                            >
+                              Show
+                            </button>
+                          </li>
+                        </ul>
+                        <div class="mt-2 flex gap-2">
+                          <button
+                            type="button"
+                            class="flex-1 rounded-lg border border-slate-200 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                            :disabled="tableHiddenColumnList.length === 0"
+                            @click="tableHiddenColumnList.forEach(showTableColumn)"
+                          >
+                            Show all
+                          </button>
+                          <button
+                            type="button"
+                            class="flex-1 rounded-lg border border-slate-200 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50"
+                            @click="tableColumnsPanelOpen = false"
+                          >
+                            Close
+                          </button>
                         </div>
-                      </td>
-                    </tr>
-                    <tr class="border-b border-slate-100 transition-colors hover:bg-white">
-                      <td class="py-3 font-medium text-slate-900">SEO Checklist</td>
-                      <td class="py-3 text-slate-600">Editor</td>
-                      <td class="py-3"><span class="rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-700">Draft</span></td>
-                      <td class="py-3 text-slate-500">1d ago</td>
-                      <td class="py-3">
-                        <div class="flex justify-end gap-1">
-                          <button title="View" class="rounded-lg p-2 transition-colors hover:bg-slate-200"><Eye class="h-4 w-4 text-slate-500" /></button>
-                          <button title="Edit" class="rounded-lg p-2 transition-colors hover:bg-slate-200"><Pencil class="h-4 w-4 text-slate-500" /></button>
-                          <button title="Delete" class="rounded-lg p-2 transition-colors hover:bg-red-100"><Trash2 class="h-4 w-4 text-red-500" /></button>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr class="transition-colors hover:bg-white">
-                      <td class="py-3 font-medium text-slate-900">Product Launch</td>
-                      <td class="py-3 text-slate-600">Manager</td>
-                      <td class="py-3"><span class="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700">Pending</span></td>
-                      <td class="py-3 text-slate-500">3d ago</td>
-                      <td class="py-3">
-                        <div class="flex justify-end gap-1">
-                          <button title="View" class="rounded-lg p-2 transition-colors hover:bg-slate-200"><Eye class="h-4 w-4 text-slate-500" /></button>
-                          <button title="Edit" class="rounded-lg p-2 transition-colors hover:bg-slate-200"><Pencil class="h-4 w-4 text-slate-500" /></button>
-                          <button title="Delete" class="rounded-lg p-2 transition-colors hover:bg-red-100"><Trash2 class="h-4 w-4 text-red-500" /></button>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="overflow-x-auto p-5">
+                  <table class="w-full min-w-175 text-sm">
+                    <thead>
+                      <tr class="border-b border-slate-200">
+                        <th
+                          v-for="col in tableVisibleColumns"
+                          :key="col"
+                          scope="col"
+                          class="pb-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-400"
+                          :class="[
+                            col === 'no' ? 'w-14' : '',
+                            col === 'actions' ? 'text-right' : '',
+                            tableDragOverColumn === col && tableDraggingColumn !== col ? 'bg-slate-100' : '',
+                          ]"
+                          :aria-sort="
+                            col === tableSortColumn
+                              ? tableSortDirection === 'asc'
+                                ? 'ascending'
+                                : 'descending'
+                              : 'none'
+                          "
+                          @dragover="onTableHeaderDragOver(col, $event)"
+                          @drop="onTableHeaderDrop(col, $event)"
+                        >
+                          <div :class="['inline-flex items-center gap-1.5', col === 'actions' ? 'justify-end w-full' : '']">
+                            <button
+                              type="button"
+                              class="rounded p-0.5 text-slate-400"
+                              :class="
+                                canMoveTableColumn(col)
+                                  ? 'cursor-grab hover:bg-slate-100 hover:text-slate-700 active:cursor-grabbing'
+                                  : 'cursor-not-allowed opacity-50'
+                              "
+                              :draggable="canMoveTableColumn(col)"
+                              :disabled="!canMoveTableColumn(col)"
+                              :aria-label="`Move ${tableColumnLabels[col]} column`"
+                              @dragstart="onTableHeaderDragStart(col, $event)"
+                              @dragend="onTableHeaderDragEnd"
+                            >
+                              <GripVertical class="h-3.5 w-3.5" />
+                            </button>
+                            <button
+                              v-if="col !== 'actions'"
+                              type="button"
+                              class="inline-flex items-center gap-1 text-slate-400 hover:text-slate-900"
+                              @click="toggleTableSort(col as TableSortColumn)"
+                              @contextmenu.prevent="hideTableColumn(col)"
+                            >
+                              {{ tableColumnLabels[col] }}
+                              <span v-if="tableSortColumn === col" class="text-slate-900">{{ tableSortDirection === "asc" ? "↑" : "↓" }}</span>
+                            </button>
+                            <span v-else>{{ tableColumnLabels[col] }}</span>
+                          </div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-if="pagedTableRows.length === 0">
+                        <td :colspan="Math.max(tableVisibleColumns.length, 1)" class="py-8 text-center text-sm text-slate-500">
+                          No rows match your search.
+                        </td>
+                      </tr>
+                      <tr
+                        v-for="(row, idx) in pagedTableRows"
+                        :key="row.title"
+                        class="border-b border-slate-100 transition-colors last:border-b-0 hover:bg-white"
+                      >
+                        <td v-for="col in tableVisibleColumns" :key="`${row.title}-${col}`" class="py-3">
+                          <template v-if="col === 'no'">
+                            <span class="tabular-nums text-slate-500">{{ tableRowDisplayNo(idx) }}</span>
+                          </template>
+                          <template v-else-if="col === 'title'">
+                            <span class="font-medium text-slate-900">{{ row.title }}</span>
+                          </template>
+                          <template v-else-if="col === 'author'">
+                            <span class="text-slate-600">{{ row.author }}</span>
+                          </template>
+                          <template v-else-if="col === 'status'">
+                            <span :class="row.statusClass">{{ row.status }}</span>
+                          </template>
+                          <template v-else-if="col === 'updated'">
+                            <span class="text-slate-500">{{ row.updated }}</span>
+                          </template>
+                          <template v-else>
+                            <div class="flex justify-end gap-1">
+                              <button type="button" title="View" class="rounded-lg p-2 transition-colors hover:bg-slate-200">
+                                <Eye class="h-4 w-4 text-slate-500" />
+                              </button>
+                              <button type="button" title="Edit" class="rounded-lg p-2 transition-colors hover:bg-slate-200">
+                                <Pencil class="h-4 w-4 text-slate-500" />
+                              </button>
+                              <button type="button" title="Delete" class="rounded-lg p-2 transition-colors hover:bg-red-100">
+                                <Trash2 class="h-4 w-4 text-red-500" />
+                              </button>
+                            </div>
+                          </template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="space-y-2 border-t border-slate-200 bg-white/90 px-4 py-2.5 text-xs text-slate-500">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-slate-500">
+                      Showing
+                      {{ sortedFilteredTableRows.length === 0 ? 0 : (tableCurrentPage - 1) * tablePageSize + 1 }}-{{ Math.min(tableCurrentPage * tablePageSize, sortedFilteredTableRows.length) }}
+                      of {{ sortedFilteredTableRows.length }}
+                    </span>
+                    <div class="flex items-center gap-2">
+                      <button
+                        type="button"
+                        class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium shadow-sm transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        :disabled="tableCurrentPage <= 1 || sortedFilteredTableRows.length === 0"
+                        @click="tableCurrentPage--"
+                      >
+                        Previous
+                      </button>
+                      <span class="rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-medium">{{ tableCurrentPage }} / {{ tablePageCount }}</span>
+                      <button
+                        type="button"
+                        class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium shadow-sm transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        :disabled="tableCurrentPage >= tablePageCount || sortedFilteredTableRows.length === 0"
+                        @click="tableCurrentPage++"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap items-center justify-end gap-2">
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium shadow-sm hover:bg-slate-50"
+                      @click="handleTableDownloadPDF"
+                    >
+                      <Download class="h-3.5 w-3.5" />
+                      PDF
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium shadow-sm hover:bg-slate-50"
+                      @click="handleTableDownloadCSV"
+                    >
+                      <FileDown class="h-3.5 w-3.5" />
+                      CSV
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium shadow-sm hover:bg-slate-50"
+                      @click="handleTableDownloadExcel"
+                    >
+                      <FileSpreadsheet class="h-3.5 w-3.5" />
+                      Excell
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-slate-800"
+                      @click="handleTableAdd"
+                    >
+                      <Plus class="h-3.5 w-3.5" />
+                      Add
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
             <div>

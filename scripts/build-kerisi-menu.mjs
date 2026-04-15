@@ -1,0 +1,189 @@
+/**
+ * Reads client/src/config/kerisi-menu-source.csv → client/src/config/kerisi-menu-migrated.ts
+ * Usage: node scripts/build-kerisi-menu.mjs [path-to.csv]
+ *
+ * Roots: MENUPARENT === 0 (or self-parent). Missing parent rows get a synthetic root;
+ * title from kerisi-missing-parent-titles.json (optional) or inferred from first child titles.
+ */
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const root = path.join(__dirname, "..");
+const defaultCsv = path.join(root, "client/src/config/kerisi-menu-source.csv");
+const outFile = path.join(root, "client/src/config/kerisi-menu-migrated.ts");
+const missingParentTitlesFile = path.join(root, "client/src/config/kerisi-missing-parent-titles.json");
+
+const csvPath = process.argv[2] || defaultCsv;
+
+function loadMissingParentTitles() {
+  try {
+    return JSON.parse(fs.readFileSync(missingParentTitlesFile, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
+function parseCsvLine(line) {
+  const out = [];
+  let cur = "";
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (inQ && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else inQ = !inQ;
+      continue;
+    }
+    if (!inQ && c === ",") {
+      out.push(cur);
+      cur = "";
+      continue;
+    }
+    cur += c;
+  }
+  out.push(cur);
+  return out;
+}
+
+function inferSyntheticTitle(pid, childRows, rowOrder) {
+  if (!childRows.length) return "Menu";
+  const sorted = [...childRows].sort(
+    (a, b) => (rowOrder.get(a.menuId) ?? 0) - (rowOrder.get(b.menuId) ?? 0) || a.menuId - b.menuId,
+  );
+  const labels = sorted.map((r) => (r.title || "").trim()).filter(Boolean);
+  if (labels.length === 0) return "Menu";
+  if (labels.length === 1) return labels[0];
+  if (labels.length === 2) return `${labels[0]} · ${labels[1]}`;
+  return `${labels[0]} · ${labels[1]} …`;
+}
+
+function main() {
+  if (!fs.existsSync(csvPath)) {
+    console.error("CSV not found:", csvPath);
+    process.exit(1);
+  }
+  const missingParentTitles = loadMissingParentTitles();
+  const raw = fs.readFileSync(csvPath, "utf8").replace(/^\uFEFF/, "");
+  const lines = raw.split(/\r?\n/).filter((l) => l.trim().length > 0);
+  if (lines.length < 2) {
+    console.error("CSV has no data rows");
+    process.exit(1);
+  }
+
+  const rowOrder = new Map();
+  const rows = [];
+
+  for (let li = 1; li < lines.length; li++) {
+    const cols = parseCsvLine(lines[li]);
+    if (cols.length < 5) continue;
+    const menuId = Number.parseInt(cols[0].trim(), 10);
+    if (Number.isNaN(menuId)) continue;
+    let title = cols[1].trim();
+    if (title.startsWith('"') && title.endsWith('"')) title = title.slice(1, -1);
+    const parentId = Number.parseInt(cols[2].trim(), 10);
+    if (Number.isNaN(parentId)) continue;
+    const menuOrder = Number.parseInt(cols[4].trim(), 10);
+    rowOrder.set(menuId, Number.isNaN(menuOrder) ? 0 : menuOrder);
+    rows.push({ menuId, title, parentId, virtual: false });
+  }
+
+  const idSet = new Set(rows.map((r) => r.menuId));
+  const missingParents = new Set();
+  for (const r of rows) {
+    if (r.parentId !== 0 && r.parentId !== r.menuId && !idSet.has(r.parentId)) {
+      missingParents.add(r.parentId);
+    }
+  }
+
+  const byParentId = new Map();
+  for (const r of rows) {
+    if (!byParentId.has(r.parentId)) byParentId.set(r.parentId, []);
+    byParentId.get(r.parentId).push(r);
+  }
+
+  for (const pid of missingParents) {
+    const key = String(pid);
+    const mapped = missingParentTitles[key];
+    const kids = byParentId.get(pid) || [];
+    let title =
+      typeof mapped === "string" && mapped.trim()
+        ? mapped.trim()
+        : inferSyntheticTitle(pid, kids, rowOrder);
+
+    rows.push({
+      menuId: pid,
+      title,
+      parentId: 0,
+      virtual: true,
+    });
+    idSet.add(pid);
+  }
+
+  const byId = new Map(rows.map((r) => [r.menuId, r]));
+  const childrenMap = new Map();
+  const roots = [];
+
+  for (const r of rows) {
+    if (r.parentId === 0 || r.parentId === r.menuId) {
+      roots.push(r);
+      continue;
+    }
+    if (!byId.has(r.parentId)) {
+      roots.push(r);
+      continue;
+    }
+    const list = childrenMap.get(r.parentId) || [];
+    list.push(r);
+    childrenMap.set(r.parentId, list);
+  }
+
+  function sortRows(arr) {
+    arr.sort((a, b) => (rowOrder.get(a.menuId) ?? 0) - (rowOrder.get(b.menuId) ?? 0) || a.menuId - b.menuId);
+  }
+
+  sortRows(roots);
+
+  function buildNode(r) {
+    const kids = childrenMap.get(r.menuId) || [];
+    sortRows(kids);
+    const label = r.title || `(Menu ${r.menuId})`;
+    const to = `/admin/kerisi/m/${r.menuId}`;
+    if (kids.length === 0) {
+      return { menuId: r.menuId, label, to };
+    }
+    return {
+      menuId: r.menuId,
+      label,
+      to,
+      children: kids.map(buildNode),
+    };
+  }
+
+  const tree = roots.map(buildNode);
+
+  const header = `/** Auto-generated by scripts/build-kerisi-menu.mjs from kerisi-menu-source.csv — do not edit. */\n\nexport type KerisiMigratedMenuNode = {\n  menuId: number;\n  label: string;\n  to: string;\n  children?: KerisiMigratedMenuNode[];\n};\n\nexport const KERISI_MENU_TREE: KerisiMigratedMenuNode[] = `;
+
+  const body = JSON.stringify(tree, null, 2)
+    .replace(/"menuId":/g, "menuId:")
+    .replace(/"label":/g, "label:")
+    .replace(/"to":/g, "to:")
+    .replace(/"children":/g, "children:");
+
+  fs.writeFileSync(outFile, `${header}${body};\n`, "utf8");
+  console.log(
+    "Wrote",
+    outFile,
+    "roots:",
+    tree.length,
+    "data rows:",
+    rows.filter((r) => !r.virtual).length,
+    "synthetic parents:",
+    missingParents.size,
+  );
+}
+
+main();

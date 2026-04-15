@@ -168,3 +168,193 @@ export type AuditLog = {
   createdAt: string;
   user?: { id: number; name: string; email: string } | null;
 };
+
+export type FundTypeRow = {
+  index: number;
+  ftyFundId: number;
+  ftyFundType: string;
+  ftyFundDesc: string;
+  ftyFundDescEng: string | null;
+  ftyBasis: string;
+  ftyRemark: string | null;
+  ftyStatus: "ACTIVE" | "INACTIVE";
+  ftyStatusValue: number;
+};
+
+export type FundTypeInput = {
+  ftyFundType: string;
+  ftyFundDesc: string;
+  ftyFundDescEng?: string | null;
+  ftyBasis: string;
+  ftyStatus: number;
+  ftyRemark?: string | null;
+};
+
+export type ActivityGroupRow = {
+  activityGroupCode: string;
+  activityGroupDesc: string;
+};
+
+export type ActivitySubgroupRow = {
+  activityGroupCode: string;
+  activitySubgroupCode: string;
+  activitySubgroupDesc: string;
+};
+
+export type ActivitySubsiriRow = {
+  activityGroup: string;
+  activitySubgroupCode: string;
+  activitySubsiriCode: string;
+  activitySubsiriDesc: string;
+  activitySubsiriDescEng: string | null;
+};
+
+export type ActivityTypeRow = {
+  atActivityId: number;
+  activityGroupCode: string;
+  activitySubgroupCode: string;
+  activitySubsiriCode: string;
+  atActivityCode: string;
+  atActivityDescriptionBm: string;
+  atActivityDescriptionEn: string | null;
+  atStatus: "ACTIVE" | "INACTIVE";
+  atStatusValue: "1" | "0";
+};
+
+export type PtjCodeStatus = "ACTIVE" | "INACTIVE";
+
+export type PtjCodeRow = {
+  ounId: number;
+  ounCode: string;
+  ounDesc: string;
+  ounDescBi: string | null;
+  orgCode: string | null;
+  orgDesc: string | null;
+  ounAddress: string | null;
+  ounState: string | null;
+  stStaffIdHead: string | null;
+  stStaffIdSuperior: string | null;
+  ounTelNo: string | null;
+  ounFaxNo: string | null;
+  ounCodeParent: string | null;
+  ounLevel: number;
+  ounStatus: PtjCodeStatus;
+  ounStatusValue: "1" | "0";
+  tanggungStartDate: string | null;
+  tanggungEndDate: string | null;
+  ounShortname: string | null;
+  ounRegion: string | null;
+  lrgRegionDesc: string | null;
+  cnyCountryCode: string | null;
+  cnyCountryDesc: string | null;
+};
+
+export type PtjCodeInput = {
+  ounCode: string;
+  ounDesc: string;
+  ounStatus: PtjCodeStatus;
+  orgCode: string;
+  ounLevel: number;
+  ounCodeParent?: string | null;
+  ounDescBi?: string | null;
+  orgDesc?: string | null;
+  ounAddress?: string | null;
+  ounState?: string | null;
+  stStaffIdHead?: string | null;
+  stStaffIdSuperior?: string | null;
+  ounTelNo?: string | null;
+  ounFaxNo?: string | null;
+  tanggungStartDate?: string | null;
+  tanggungEndDate?: string | null;
+  ounShortname?: string | null;
+  ounRegion?: string | null;
+  cnyCountryCode?: string | null;
+};
+
+export type AccountActivityRow = {
+  no: number;
+  ldeId: number;
+  ldeValue: string;
+  ldeDescription: string;
+  ldeDescription2: string | null;
+  ldeStatus: "ACTIVE" | "INACTIVE";
+};
+
+export type AccountCodeRow = {
+  no: number;
+  acmAcctCode: string;
+  acmAcctDesc: string;
+  acmAcctDescEng: string | null;
+  acmAcctActivity: string | null;
+  acmAcctStatus: "ACTIVE" | "INACTIVE";
+  datecreate: string | null;
+  acmAcctGroup: string | null;
+  acmAcctLevel: number;
+  acmAcctParent: string | null;
+};
+
+export type AccountActivityInput = {
+  ldeValue: string;
+  ldeDescription: string;
+  ldeDescription2?: string | null;
+  ldeStatus: "ACTIVE" | "INACTIVE";
+};
+
+export type AccountCodeInput = {
+  acmAcctCode: string;
+  acmAcctDesc: string;
+  acmAcctDescEng?: string | null;
+  acmAcctStatus: "ACTIVE" | "INACTIVE";
+  acmAcctGroup?: string | null;
+  acmAcctLevel: number;
+  acmAcctActivity?: string | null;
+  acmAcctParent?: string | null;
+};
+
+export type CostCentreRow = {
+  index: number;
+  ccrCostcentreId: number;
+  ccrCostcentre: string;
+  ccrCostcentreDesc: string;
+  ccrCostcentreDescEng: string | null;
+  ounCode: string;
+  ounCodeDesc: string | null;
+  ccrAddress: string | null;
+  ccrHostelCode: string | null;
+  ccrStatus: "ACTIVE" | "INACTIVE";
+  ccrStatusValue: number;
+  ccrFlagSalary: "Y" | "N" | null;
+};
+
+export type CostCentreInput = {
+  ccrCostcentre: string;
+  ccrCostcentreDesc: string;
+  ccrCostcentreDescEng?: string | null;
+  ounCode: string;
+  ccrAddress?: string | null;
+  ccrHostelCode?: string | null;
+  ccrStatus: "ACTIVE" | "INACTIVE";
+  ccrFlagSalary: "Y" | "N";
+};
+
+export type CascadeStructureRow = {
+  oucOunitCostcentreId: number;
+  ftyFundType: string;
+  ftyFundDesc: string | null;
+  atActivityCode: string;
+  atActivityDescriptionBm: string | null;
+  ounCode: string;
+  ounDesc: string | null;
+  ccrCostcentre: string;
+  ccrCostcentreDesc: string | null;
+  oucStatus: "ACTIVE" | "INACTIVE";
+  oucStatusValue: number;
+};
+
+export type CascadeStructureInput = {
+  ftyFundType: string;
+  atActivityCode: string;
+  ounCode: string;
+  ccrCostcentre: string;
+  oucStatus: "ACTIVE" | "INACTIVE";
+};

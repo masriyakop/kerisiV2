@@ -1,12 +1,28 @@
 import { apiRequest } from "./client";
 import type {
   AuditLog,
+  ActivityGroupRow,
+  AccountActivityInput,
+  AccountActivityRow,
+  AccountCodeInput,
+  AccountCodeRow,
+  ActivitySubgroupRow,
+  ActivitySubsiriRow,
+  ActivityTypeRow,
   Category,
   CategoryInput,
+  CascadeStructureInput,
+  CascadeStructureRow,
+  CostCentreInput,
+  CostCentreRow,
+  FundTypeInput,
+  FundTypeRow,
   Media,
   MediaMetadataInput,
   Page,
   PageInput,
+  PtjCodeInput,
+  PtjCodeRow,
   Post,
   PostInput,
   PublicSiteSettings,
@@ -206,4 +222,241 @@ export async function updateDevelopersGuide(content: string) {
     method: "PUT",
     body: JSON.stringify({ content }),
   });
+}
+
+export async function listFundTypes(params = "") {
+  return apiRequest<{ data: FundTypeRow[]; meta: Record<string, unknown> }>(`/api/fund-types${params}`);
+}
+
+export async function getFundType(id: number) {
+  return apiRequest<{ data: { id: number; ftyFundType: string; ftyFundDesc: string; ftyFundDescEng: string | null; ftyBasis: string; ftyStatus: number; ftyRemark: string | null } }>(`/api/fund-types/${id}`);
+}
+
+export async function createFundType(input: FundTypeInput) {
+  return apiRequest<{ data: { id: number } }>("/api/fund-types", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateFundType(id: number, input: FundTypeInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/fund-types/${id}`, { method: "PUT", body: JSON.stringify(input) });
+}
+
+export async function getFundTypeOptions() {
+  return apiRequest<{
+    data: {
+      smartFilter: {
+        fundType: { id: string; label: string }[];
+        basis: { id: string; label: string }[];
+        status: { id: string; label: string }[];
+      };
+      popupModal: {
+        basis: { id: string; label: string }[];
+        status: { id: number; label: string }[];
+      };
+    };
+  }>("/api/fund-types/options");
+}
+
+export async function listActivityCodeLevel(params = "") {
+  return apiRequest<{ data: ActivityGroupRow[] | ActivitySubgroupRow[] | ActivitySubsiriRow[] | ActivityTypeRow[] }>(
+    `/api/setup/activity-code${params}`,
+  );
+}
+
+export async function createActivityGroup(input: { activityGroupCode: string; activityGroupDesc: string }) {
+  return apiRequest<{ data: { success: boolean } }>("/api/setup/activity-code/group", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateActivityGroup(code: string, input: { activityGroupDesc: string }) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/activity-code/group/${encodeURIComponent(code)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function deleteActivityGroup(code: string) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/activity-code/group/${encodeURIComponent(code)}`, { method: "DELETE" });
+}
+
+export async function createActivitySubgroup(input: { activityGroupCode: string; activitySubgroupCode: string; activitySubgroupDesc: string }) {
+  return apiRequest<{ data: { success: boolean } }>("/api/setup/activity-code/subgroup", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateActivitySubgroup(code: string, input: { activityGroupCode: string; activitySubgroupDesc: string }) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/activity-code/subgroup/${encodeURIComponent(code)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function deleteActivitySubgroup(code: string, activityGroupCode: string) {
+  const params = new URLSearchParams({ activityGroupCode });
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/activity-code/subgroup/${encodeURIComponent(code)}?${params.toString()}`, { method: "DELETE" });
+}
+
+export async function createActivitySubsiri(input: {
+  activityGroup: string;
+  activitySubgroupCode: string;
+  activitySubsiriCode: string;
+  activitySubsiriDesc: string;
+  activitySubsiriDescEng?: string;
+}) {
+  return apiRequest<{ data: { success: boolean } }>("/api/setup/activity-code/subsiri", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateActivitySubsiri(
+  code: string,
+  input: { activityGroup: string; activitySubgroupCode: string; activitySubsiriDesc: string; activitySubsiriDescEng?: string },
+) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/activity-code/subsiri/${encodeURIComponent(code)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function deleteActivitySubsiri(code: string, activityGroup: string, activitySubgroupCode: string) {
+  const params = new URLSearchParams({ activityGroup, activitySubgroupCode });
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/activity-code/subsiri/${encodeURIComponent(code)}?${params.toString()}`, { method: "DELETE" });
+}
+
+export async function createActivityType(input: {
+  activityGroupCode: string;
+  activitySubgroupCode: string;
+  activitySubsiriCode: string;
+  atActivityCode: string;
+  atActivityDescriptionBm: string;
+  atActivityDescriptionEn?: string;
+  atStatus: "ACTIVE" | "INACTIVE";
+}) {
+  return apiRequest<{ data: { id: number } }>("/api/setup/activity-code/activity-type", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateActivityType(
+  id: number,
+  input: { atActivityDescriptionBm: string; atActivityDescriptionEn?: string; atStatus: "ACTIVE" | "INACTIVE" },
+) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/activity-code/activity-type/${id}`, { method: "PUT", body: JSON.stringify(input) });
+}
+
+export async function deleteActivityType(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/activity-code/activity-type/${id}`, { method: "DELETE" });
+}
+
+export async function listPtjCodeLevel(params = "") {
+  return apiRequest<{ data: PtjCodeRow[] }>(`/api/setup/ptj-code${params}`);
+}
+
+export async function createPtjCode(input: PtjCodeInput) {
+  return apiRequest<{ data: { ounId: number; ounCode: string } }>("/api/setup/ptj-code", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updatePtjCode(code: string, input: Partial<PtjCodeInput>) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/ptj-code/${encodeURIComponent(code)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function deletePtjCode(code: string) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/ptj-code/${encodeURIComponent(code)}`, { method: "DELETE" });
+}
+
+export async function listAccountCodeLevel(params = "") {
+  return apiRequest<{ data: AccountActivityRow[] | AccountCodeRow[] }>(`/api/setup/account-code${params}`);
+}
+
+export async function createAccountCode(input: AccountCodeInput) {
+  return apiRequest<{ data: { success: boolean } }>("/api/setup/account-code", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateAccountCode(code: string, input: Partial<AccountCodeInput>) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/account-code/${encodeURIComponent(code)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function deleteAccountCode(code: string) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/account-code/${encodeURIComponent(code)}`, { method: "DELETE" });
+}
+
+export async function createAccountActivity(input: AccountActivityInput) {
+  return apiRequest<{ data: { ldeId: number } }>("/api/setup/account-code/activity", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateAccountActivity(id: number, input: AccountActivityInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/account-code/activity/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function deleteAccountActivity(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/account-code/activity/${id}`, { method: "DELETE" });
+}
+
+export async function listCostCentres(params = "") {
+  return apiRequest<{ data: CostCentreRow[]; meta: Record<string, unknown> }>(`/api/setup/cost-centre${params}`);
+}
+
+export async function getCostCentre(id: number) {
+  return apiRequest<{ data: CostCentreRow }>(`/api/setup/cost-centre/${id}`);
+}
+
+export async function createCostCentre(input: CostCentreInput) {
+  return apiRequest<{ data: { id: number } }>("/api/setup/cost-centre", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateCostCentre(id: number, input: CostCentreInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/cost-centre/${id}`, { method: "PUT", body: JSON.stringify(input) });
+}
+
+export async function getCostCentreOptions() {
+  return apiRequest<{
+    data: {
+      smartFilter: { costCentre: { id: string; label: string }[]; ptjCode: { id: string; label: string }[]; status: { id: string; label: string }[] };
+      popupModal: {
+        ptjCode: { id: string; label: string }[];
+        status: { id: string; label: string }[];
+        flagSalary: { id: string; label: string }[];
+      };
+    };
+  }>("/api/setup/cost-centre/options");
+}
+
+export async function listCascadeStructures(params = "") {
+  return apiRequest<{ data: CascadeStructureRow[]; meta: Record<string, unknown> }>(`/api/setup/cascade-structure${params}`);
+}
+
+export async function getCascadeStructure(id: number) {
+  return apiRequest<{ data: CascadeStructureRow }>(`/api/setup/cascade-structure/${id}`);
+}
+
+export async function createCascadeStructure(input: CascadeStructureInput) {
+  return apiRequest<{ data: { id: number } }>("/api/setup/cascade-structure", { method: "POST", body: JSON.stringify(input) });
+}
+
+export async function updateCascadeStructure(id: number, input: CascadeStructureInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/cascade-structure/${id}`, { method: "PUT", body: JSON.stringify(input) });
+}
+
+export async function getCascadeStructureOptions(ptjCode = "") {
+  const params = ptjCode ? `?ptjCode=${encodeURIComponent(ptjCode)}` : "";
+  return apiRequest<{
+    data: {
+      smartFilter: {
+        fund: { id: string; label: string }[];
+        activity: { id: string; label: string }[];
+        ptj: { id: string; label: string }[];
+        costCenter: { id: string; label: string }[];
+        status: { id: string; label: string }[];
+      };
+      popupModal: {
+        fund: { id: string; label: string }[];
+        activity: { id: string; label: string }[];
+        ptj: { id: string; label: string }[];
+        costCenter: { id: string; label: string }[];
+        status: { id: string; label: string }[];
+      };
+    };
+  }>(`/api/setup/cascade-structure/options${params}`);
 }

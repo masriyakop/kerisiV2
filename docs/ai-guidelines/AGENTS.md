@@ -418,6 +418,29 @@ export type {Resource} = {Resource}Input & {
 - Meta: `requiresAuth: true` for protected pages, `guestOnly: true` for login
 - `meta.title` sets document title via `afterEach` hook
 
+### Kerisi / FIMS setup list pages (search & smart filter when migrating)
+
+Admin setup screens migrated in the Kerisi/FIMS style (hierarchical or flat code tables: Cost Centre, Cascade Structure, Fund Type, Account Code, Activity Code, PTJ Code, and similar) MUST follow the **debounced search** pattern below. If the page has a **Filter** button, also follow the **smart filter modal** rules in this section (do not ship a Filter control without a visible dialog).
+
+**Vue (`client/src/views/*.vue`):**
+
+- Do **not** require **Enter** as the only way to search. Debounce server refetch (~350 ms) when the user types.
+- Use `type="search"`, a clear placeholder (e.g. “Filter rows…”), and a **clear (X)** that empties the term and refetches.
+- **Enter** should still run search **immediately** (flush debounce / same fetch as the debounced path).
+- Multi-level pages: one debounce timer per search field; clear all timers in `onUnmounted`.
+
+**Smart filter (Filter button next to search):**
+
+- If a **Filter** control toggles `showSmartFilter`, you MUST render a **modal** (e.g. `<Teleport to="body">` + `v-if="showSmartFilter"`) with fields bound to `smartFilter`, **Reset** (clear `smartFilter` keys), and **OK** (`applySmartFilter`: set `page` to 1, close dialog, refetch list). Do not set `showSmartFilter = true` without any visible panel — that is a silent no-op.
+- **References:** `CostCentreView.vue`, `CascadeStructureView.vue`, `FundTypeView.vue`.
+
+**Laravel list endpoints (`q` or agreed param name):**
+
+- Filtering MUST be **case-insensitive** on string columns: lowercased needle, compare with `LOWER(IFNULL(column, '')) LIKE ?` (or DB-appropriate equivalent), not raw `LIKE "%{$q}%"` on mixed-case data.
+- Escape LIKE metacharacters in the user needle: `%`, `_`, and `\` (e.g. build `'%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $needle) . '%'`).
+
+**Concrete references (search + `q` on API):** `CostCentreView.vue`, `CascadeStructureView.vue`, `FundTypeView.vue`, `AccountCodeView.vue`, `ActivityCodeView.vue`, `PtjCodeView.vue` and matching `app/Http/Controllers/Api/*Controller.php` list methods. **Smart filter modal pattern:** `CostCentreView.vue`, `CascadeStructureView.vue`, `FundTypeView.vue`.
+
 ---
 
 ## API Design Rules
