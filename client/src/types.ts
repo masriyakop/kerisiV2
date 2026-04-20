@@ -311,6 +311,36 @@ export type AccountCodeInput = {
   acmAcctParent?: string | null;
 };
 
+export type AccountCodePpiRow = {
+  index: number;
+  acmAcctCode: string;
+  acmAcctDesc: string;
+  acmAcctLevel: string | number | null;
+  acmAcctActivity: string | null;
+  acmAcctType: string | null;
+  fundType: string | null;
+  acmBehavior: string | null;
+  acmAcctStatus: "ACTIVE" | "INACTIVE";
+};
+
+export type AccountCodePpiOption = { id: string; label: string };
+
+export type AccountCodePpiOptions = {
+  topFilter: {
+    fundType: AccountCodePpiOption[];
+    accountType: AccountCodePpiOption[];
+    accountClass: AccountCodePpiOption[];
+    accountCode: AccountCodePpiOption[];
+  };
+  smartFilter: {
+    accountCode: AccountCodePpiOption[];
+    accountDesc: AccountCodePpiOption[];
+    accountLevel: AccountCodePpiOption[];
+    statementItem: AccountCodePpiOption[];
+    status: AccountCodePpiOption[];
+  };
+};
+
 export type CostCentreRow = {
   index: number;
   ccrCostcentreId: number;
@@ -357,4 +387,159 @@ export type CascadeStructureInput = {
   ounCode: string;
   ccrCostcentre: string;
   oucStatus: "ACTIVE" | "INACTIVE";
+};
+
+export type BudgetMovementType = "increment" | "decrement" | "virement";
+
+export type BudgetMovementRow = {
+  index: number;
+  bmmBudgetMovementId: string;
+  bmmBudgetMovementNo: string | null;
+  bmmYear: string | number | null;
+  qbuQuarterId: string | number | null;
+  bmmTransType: "INCREMENT" | "DECREMENT" | "VIREMENT" | null;
+  bmmMovementType: string | null;
+  bmmTotalAmt: string | number | null;
+  bmmStatus: string | null;
+  bmmReason: string | null;
+  bmmDescription: string | null;
+  bmmEndorseDoc: string | null;
+  createdby: string | null;
+  updatedby: string | null;
+  date: string | null;
+};
+
+export type BudgetMovementOption = { id: string; label: string };
+
+export type BudgetMovementOptions = {
+  smartFilter: {
+    year: BudgetMovementOption[];
+    status: BudgetMovementOption[];
+    movementType: BudgetMovementOption[];
+  };
+};
+
+// FIMS Budget Monitoring (PAGEID 1201 / MENUID 1471). Read-only aggregated list
+// derived from the legacy API_BUDGET_MONITORING BL.
+export type BudgetMonitoringRow = {
+  index: number;
+  sbgBudgetId: string | number | null;
+  bdgYear: string | number | null;
+  bdgStatus: string | null;
+  budgetid: string | null;
+  bdgBalCarryforward: number;
+  bdgTopupAmt: number;
+  bdgInitialAmt: number;
+  bdgAdditionalAmt: number;
+  bdgVirementAmt: number;
+  bdgAllocatedAmt: number;
+  bdgLockAmt: number;
+  bdgPreRequestAmt: number;
+  bdgRequestAmt: number;
+  bdgCommitAmt: number;
+  bdgExpensesAmt: number;
+  bdgBalanceAmt: number;
+  ftyFundType: string | null;
+  ftyFundDesc: string | null;
+  atActivityCode: string | null;
+  atActivityDesc: string | null;
+  ounCode: string | null;
+  ounDesc: string | null;
+  ccrCostcentre: string | null;
+  ccrCostcentreDesc: string | null;
+  lbcBudgetCode: string | null;
+  acmAcctDesc: string | null;
+  bdgClosing: string | null;
+  bdgClosingBy: string | null;
+};
+
+export type BudgetMonitoringFooter = {
+  bdgBalCarryforward: number;
+  bdgTopupAmt: number;
+  bdgInitialAmt: number;
+  bdgAdditionalAmt: number;
+  bdgVirementAmt: number;
+  bdgAllocatedAmt: number;
+  bdgLockAmt: number;
+  bdgPreRequestAmt: number;
+  bdgRequestAmt: number;
+  bdgCommitAmt: number;
+  bdgExpensesAmt: number;
+  bdgBalanceAmt: number;
+};
+
+export type BudgetLookupOption = { id: string; label: string };
+
+export type BudgetPtjOption = BudgetLookupOption & { level?: number | string | null };
+
+export type BudgetMonitoringOptions = {
+  topFilter: {
+    year: BudgetLookupOption[];
+    fund: BudgetLookupOption[];
+    ptjLevel: BudgetLookupOption[];
+    ptj: BudgetPtjOption[];
+    costCentre: BudgetLookupOption[];
+  };
+  smartFilter: {
+    status: BudgetLookupOption[];
+  };
+};
+
+// FIMS Budget Initial V2 (PAGEID 1264 / MENUID 1541). Shape mirrors the
+// legacy datatable columns (dt_bi / dt_key) sourced from BUDGET.json and
+// backed by `budget_allocation_master` joined on `quarter_budget`.
+export type BudgetInitialRow = {
+  index: number;
+  id: number | null;
+  years: string | null;
+  quarter: string | null;
+  quarterId: string | null;
+  descr: string | null;
+  allocateNo: string | null;
+  endorse: string | null;
+  amt: number | null;
+  stat: string | null;
+  date: string | null;
+  cancelRemark: string | null;
+};
+
+export type BudgetInitialQuarterOption = BudgetLookupOption & {
+  year?: string | null;
+};
+
+export type BudgetInitialOptions = {
+  smartFilter: {
+    year: BudgetLookupOption[];
+    quarter: BudgetInitialQuarterOption[];
+    status: BudgetLookupOption[];
+  };
+};
+
+// FIMS Budget Closing (PAGEID 1953 / MENUID 2389 & 3154). Form page; backend
+// process/reverse are stubs (501) pending the server-side BL.
+export type BudgetClosingActivityOption = BudgetLookupOption & {
+  activityGroupCode?: string | null;
+  activitySubgroupCode?: string | null;
+};
+
+export type BudgetClosingSubgroupOption = BudgetLookupOption & {
+  activityGroupCode?: string | null;
+};
+
+export type BudgetClosingOptions = {
+  filter: {
+    year: BudgetLookupOption[];
+    fund: BudgetLookupOption[];
+    activityGroup: BudgetLookupOption[];
+    activitySubgroup: BudgetClosingSubgroupOption[];
+    activityCode: BudgetClosingActivityOption[];
+  };
+};
+
+export type BudgetClosingPayload = {
+  closingYear: string;
+  fundBudgetClosing: string;
+  activityGroup?: string | null;
+  activitySubgroup?: string | null;
+  atActivityCodeTop?: string | null;
 };

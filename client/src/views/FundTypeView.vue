@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from "vue";
 import { Download, FileDown, FileSpreadsheet, Filter, MoreVertical, Plus, Search, X } from "lucide-vue-next";
 
@@ -182,10 +182,7 @@ async function exportExcel() {
     ws.addRow(["No", ...columns]);
 
     (data as Record<string, unknown>[]).forEach((row, idx) => {
-      const values = columns.map((c) => {
-        const mapKey = c.toLowerCase();
-        return (row[mapKey] ?? row[c] ?? "") as string | number;
-      });
+      const values = columns.map((c) => (row[c] ?? "") as string | number);
       ws.addRow([idx + 1, ...values]);
     });
 

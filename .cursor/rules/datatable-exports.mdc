@@ -1,0 +1,157 @@
+---
+description: Datatable export (PDF/CSV/Excel) key-consistency rule for Kerisi/FIMS list pages
+globs: client/src/**/*.vue,client/src/composables/useDatatableFeatures.ts
+alwaysApply: false
+---
+
+# Datatable exports must use one key scheme end-to-end
+
+Any Vue component that exposes `getExportConfig()` to `useDatatableFeatures`
+(PDF/CSV/Excel) MUST return `columns` and `data` where every cell can be looked
+up as `row[columns[i]]`. If the keys diverge, the composable's `formatCell`
+falls through to `""` and exports render empty rows (as happened on the Fund
+Type page — PDF header showed raw keys like `descMalay`, all rows blank).
+
+The same invariant applies to in-view Excel exporters (e.g.
+`FundTypeView.exportExcel`) that consume `cfg.columns` and `cfg.data`. Do NOT
+use a `toLowerCase()` / alternate-key fallback to paper over a mismatch — fix
+the source.
+
+## ✅ Correct pattern
+
+```ts
+// In the child datatable component (e.g. FundTypeSmartFilterTable.vue)
+function getExportConfig(): DatatableExportConfig | null {
+  const exportColKeys = visibleColumns.value
+    .map((c) => c.key)
+    .filter((k) => k !== "no" && k !== "action");
+
+  const keyToLabel: Record<string, string> = {
+    fundType: "Fund Type",
+    descMalay: "Description (Malay)",
+    // ...
+  };
+  const keyToValue: Record<string, (r: Row) => string | number> = {
+    fundType: (r) => r.ftyFundType ?? "",
+    descMalay: (r) => r.ftyFundDesc ?? "",
+    // ...
+  };
+
+  const columns = exportColKeys.map((k) => keyToLabel[k] ?? k);
+  const data = sortedRows.value.map((r) => {
+    const row: Record<string, unknown> = {};
+    exportColKeys.forEach((k) => {
+      const label = keyToLabel[k] ?? k;
+      row[label] = keyToValue[k]?.(r) ?? "";
+    });
+    return row;
+  });
+
+  return { columns, data }; // columns[i] === every Object.keys(data[n])[i]
+}
+```
+
+```ts
+// Excel consumer in the view — single lookup, no fallback gymnastics
+data.forEach((row, idx) => {
+  const values = columns.map((c) => (row[c] ?? "") as string | number);
+  ws.addRow([idx + 1, ...values]);
+});
+```
+
+## ❌ Avoid
+
+- `columns` built from one scheme (column keys) while `data` is keyed by
+  another (spaces/lowercase) — causes empty PDF/CSV/Excel rows.
+- `labelsMap` keyed by the data keys while `columns` uses column keys —
+  `labelsMap[exportCol]` silently returns `undefined`.
+- Excel exporters that try `row[c.toLowerCase()] ?? row[c]` to patch over a
+  key mismatch. Fix `getExportConfig()` instead.
+
+## Every export button must actually do something
+
+Recurring regression on list pages: one or more of the PDF / CSV / Excel /
+Add buttons renders but has no `@click` handler, or has no `type="button"`
+and accidentally submits. Treat this as a checklist item, not optional.
+
+```html
+<!-- ✅ GOOD: all four footer buttons wired + explicit type -->
+<button type="button" @click="handleDownloadPDF">PDF</button>
+<button type="button" @click="handleDownloadCSV">CSV</button>
+<button type="button" @click="exportExcel">Excel</button>
+<button type="button" @click="openCreate">Add</button>
+```
+
+```html
+<!-- ❌ BAD: seen in CostCentreView — Excel button had no handler,
+     PDF/CSV/Add had no `type="button"`, so the browser defaulted to
+     `type="submit"` and PDF silently stopped firing. -->
+<button @click="handleDownloadPDF">PDF</button>
+<button><FileSpreadsheet />Excell</button>
+```
+
+## Export columns must cover every visible data column
+
+`defaultExportColumns` + `getFilteredList()` (or the child's
+`getExportConfig()`) MUST include every non-`No`/non-`Action` column that the
+datatable renders. Exporting a strict subset surprises users ("PDF looks
+wrong / data missing"). This has regressed twice already — **Cost Centre**
+(exported 4 of 9 columns) and **Cascade Structure** (exported 5 of 9, all
+`*Desc` columns missing from PDF/CSV). Do NOT ship a list page where the
+export column count is smaller than the visible table's data column count.
+Build the list once and share it:
+
+```ts
+const exportColumns = [
+  "Code", "Description (Malay)", "Description (English)",
+  "PTJ", "PTJ Description", "Address", "Hostel Code", "Status",
+];
+
+function toExportRow(r: Row): Record<string, string | number> {
+  return {
+    Code: r.ccrCostcentre ?? "",
+    "Description (Malay)": r.ccrCostcentreDesc ?? "",
+    // ... one key per exportColumns entry, same labels
+  };
+}
+
+useDatatableFeatures({
+  defaultExportColumns: exportColumns,
+  getFilteredList: () => rows.value.map(toExportRow),
+  // ...
+});
+
+async function exportExcel() {
+  // reuse exportColumns + toExportRow — NEVER re-declare columns here
+  rows.value.forEach((r, idx) => {
+    const row = toExportRow(r);
+    ws.addRow([idx + 1, ...exportColumns.map((c) => row[c] ?? "")]);
+  });
+}
+```
+
+Reusing `exportColumns` + `toExportRow` across PDF/CSV/Excel is how you
+guarantee the three formats stay in sync — no divergent column lists, no
+drift when a new column is added to the table.
+
+## Self-check before shipping any `list of ...` page
+
+- [ ] `columns` and `Object.keys(data[0])` are element-wise equal.
+- [ ] `exportColumns` covers every visible data column on the datatable
+      (excluding `No` and `Action`).
+- [ ] PDF / CSV / Excel / Add buttons each have `type="button"` and a
+      non-empty `@click` handler. No dead buttons.
+- [ ] PDF / CSV / Excel all use the same `exportColumns` + row-mapper
+      (don't re-declare columns inside `exportExcel`).
+- [ ] Hiding a column removes it from both `columns` and each `data` row.
+- [ ] PDF header shows the human label (e.g. "Description (Malay)"), never
+      the raw key (`descMalay`).
+- [ ] Smoke-tested PDF, CSV and Excel with ≥1 row — values populated,
+      column count matches the on-screen datatable.
+
+Reference: `client/src/components/fims/FundTypeSmartFilterTable.vue` →
+`getExportConfig()`; `client/src/views/CostCentreView.vue` and
+`client/src/views/CascadeStructureView.vue` →
+`exportColumns` + `toExportRow` + `exportExcel` (canonical shared-list pattern);
+`client/src/composables/useDatatableFeatures.ts` →
+`handleDownloadPDF` / `handleDownloadCSV` / `formatCell`.

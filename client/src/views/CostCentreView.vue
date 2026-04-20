@@ -9,7 +9,6 @@ import { useToast } from "@/composables/useToast";
 import type { CostCentreInput, CostCentreRow } from "@/types";
 
 const toast = useToast();
-const datatableRef = ref<DatatableRefApi | null>(null);
 const rows = ref<CostCentreRow[]>([]);
 const page = ref(1);
 const limit = ref(10);
@@ -51,16 +50,69 @@ async function saveItem() {
   await loadRows();
   toast.success("Saved");
 }
+const exportColumns = [
+  "Code",
+  "Description (Malay)",
+  "Description (English)",
+  "PTJ",
+  "PTJ Description",
+  "Address",
+  "Hostel Code",
+  "Status",
+];
+
+function toExportRow(r: CostCentreRow): Record<string, string | number> {
+  return {
+    Code: r.ccrCostcentre ?? "",
+    "Description (Malay)": r.ccrCostcentreDesc ?? "",
+    "Description (English)": r.ccrCostcentreDescEng ?? "",
+    PTJ: r.ounCode ?? "",
+    "PTJ Description": r.ounCodeDesc ?? "",
+    Address: r.ccrAddress ?? "",
+    "Hostel Code": r.ccrHostelCode ?? "",
+    Status: r.ccrStatus ?? "",
+  };
+}
+
+const datatableRef = ref<DatatableRefApi | null>(null);
 const { templateFileInputRef, onTemplateFileChange, handleDownloadPDF, handleDownloadCSV } = useDatatableFeatures({
   pageName: "Cost Centre",
   apiDataPath: "/setup/cost-centre",
-  defaultExportColumns: ["Code", "Description (Malay)", "PTJ", "Status"],
-  getFilteredList: () => rows.value.map((r) => ({ Code: r.ccrCostcentre, "Description (Malay)": r.ccrCostcentreDesc, PTJ: r.ounCode, Status: r.ccrStatus })),
+  defaultExportColumns: exportColumns,
+  getFilteredList: () => rows.value.map(toExportRow),
   datatableRef,
   searchKeyword: q,
   smartFilter,
   applyFilters: () => void loadRows(),
 });
+
+async function exportExcel() {
+  try {
+    if (rows.value.length === 0) {
+      toast.info("No data", "There is nothing to export.");
+      return;
+    }
+    const ExcelJS = await import("exceljs");
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet("Cost Centre");
+    ws.addRow(["No", ...exportColumns]);
+    rows.value.forEach((r, idx) => {
+      const row = toExportRow(r);
+      ws.addRow([idx + 1, ...exportColumns.map((c) => row[c] ?? "")]);
+    });
+    const buf = await wb.xlsx.writeBuffer();
+    const blob = new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Cost_Centre_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Excel downloaded");
+  } catch (e) {
+    toast.error("Export failed", e instanceof Error ? e.message : "Excel export failed.");
+  }
+}
 
 let searchDebounce: ReturnType<typeof setTimeout> | null = null;
 watch(q, () => {
@@ -141,10 +193,10 @@ onUnmounted(() => {
             </div>
           </div>
           <div class="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 pt-3">
-            <button class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium" @click="handleDownloadPDF"><Download class="h-3.5 w-3.5" />PDF</button>
-            <button class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium" @click="handleDownloadCSV"><FileDown class="h-3.5 w-3.5" />CSV</button>
-            <button class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium"><FileSpreadsheet class="h-3.5 w-3.5" />Excell</button>
-            <button class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white" @click="openCreate"><Plus class="h-3.5 w-3.5" />Add</button>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50" @click="handleDownloadPDF"><Download class="h-3.5 w-3.5" />PDF</button>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50" @click="handleDownloadCSV"><FileDown class="h-3.5 w-3.5" />CSV</button>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium hover:bg-slate-50" @click="exportExcel"><FileSpreadsheet class="h-3.5 w-3.5" />Excel</button>
+            <button type="button" class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-slate-800" @click="openCreate"><Plus class="h-3.5 w-3.5" />Add</button>
           </div>
         </div>
       </article>

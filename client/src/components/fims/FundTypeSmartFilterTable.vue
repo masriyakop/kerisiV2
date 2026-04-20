@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { ChevronUp, ChevronDown, Columns3 } from "lucide-vue-next";
 import type { DatatableExportConfig, DatatableTemplateState } from "@/composables/useDatatableFeatures";
@@ -210,30 +210,36 @@ function applyTemplateState(t: Partial<DatatableTemplateState> & { columnOrder?:
 }
 
 function getExportConfig(): DatatableExportConfig | null {
-  const exportCols = visibleColumns.value
+  const exportColKeys = visibleColumns.value
     .map((c) => c.key)
     .filter((k) => k !== "no" && k !== "action");
 
-  const data = sortedRows.value.map((r) => ({
-    fundType: r.ftyFundType,
-    "description (malay)": r.ftyFundDesc,
-    "description (english)": r.ftyFundDescEng ?? "",
-    "type basis": r.ftyBasis,
-    status: r.ftyStatus,
-  }));
-
-  const labelsMap: Record<string, string> = {
+  const keyToLabel: Record<string, string> = {
     fundType: "Fund Type",
-    "description (malay)": "Description (Malay)",
-    "description (english)": "Description (English)",
-    "type basis": "Type Basis",
+    descMalay: "Description (Malay)",
+    descEnglish: "Description (English)",
+    typeBasis: "Type Basis",
     status: "Status",
   };
-
-  return {
-    columns: exportCols.map((k) => labelsMap[k] || k),
-    data,
+  const keyToValue: Record<string, (r: FundTypeRow) => string | number> = {
+    fundType: (r) => r.ftyFundType ?? "",
+    descMalay: (r) => r.ftyFundDesc ?? "",
+    descEnglish: (r) => r.ftyFundDescEng ?? "",
+    typeBasis: (r) => r.ftyBasis ?? "",
+    status: (r) => r.ftyStatus ?? "",
   };
+
+  const columns = exportColKeys.map((k) => keyToLabel[k] ?? k);
+  const data = sortedRows.value.map((r) => {
+    const row: Record<string, unknown> = {};
+    exportColKeys.forEach((k) => {
+      const label = keyToLabel[k] ?? k;
+      row[label] = keyToValue[k] ? keyToValue[k](r) : "";
+    });
+    return row;
+  });
+
+  return { columns, data };
 }
 
 defineExpose({ getTemplateState, applyTemplateState, getExportConfig });
