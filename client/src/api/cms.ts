@@ -6,9 +6,20 @@ import type {
   AccountActivityRow,
   AccountCodeInput,
   AccountCodeRow,
+  AccountCodePpiRow,
+  AccountCodePpiOptions,
   ActivitySubgroupRow,
   ActivitySubsiriRow,
   ActivityTypeRow,
+  BudgetClosingOptions,
+  BudgetClosingPayload,
+  BudgetInitialOptions,
+  BudgetInitialRow,
+  BudgetMonitoringOptions,
+  BudgetMonitoringRow,
+  BudgetMovementOptions,
+  BudgetMovementRow,
+  BudgetMovementType,
   Category,
   CategoryInput,
   CascadeStructureInput,
@@ -394,6 +405,14 @@ export async function deleteAccountActivity(id: number) {
   return apiRequest<{ data: { success: boolean } }>(`/api/setup/account-code/activity/${id}`, { method: "DELETE" });
 }
 
+export async function listAccountCodePpi(params = "") {
+  return apiRequest<{ data: AccountCodePpiRow[]; meta: Record<string, unknown> }>(`/api/setup/account-code-ppi${params}`);
+}
+
+export async function getAccountCodePpiOptions() {
+  return apiRequest<{ data: AccountCodePpiOptions }>("/api/setup/account-code-ppi/options");
+}
+
 export async function listCostCentres(params = "") {
   return apiRequest<{ data: CostCentreRow[]; meta: Record<string, unknown> }>(`/api/setup/cost-centre${params}`);
 }
@@ -437,6 +456,62 @@ export async function createCascadeStructure(input: CascadeStructureInput) {
 
 export async function updateCascadeStructure(id: number, input: CascadeStructureInput) {
   return apiRequest<{ data: { success: boolean } }>(`/api/setup/cascade-structure/${id}`, { method: "PUT", body: JSON.stringify(input) });
+}
+
+// FIMS Budget (Increment / Decrement / Virement) — read-only list.
+export async function listBudgetMovements(type: BudgetMovementType, params = "") {
+  return apiRequest<{ data: BudgetMovementRow[]; meta: Record<string, unknown> }>(
+    `/api/budget/movements/${encodeURIComponent(type)}${params}`,
+  );
+}
+
+export async function getBudgetMovement(id: string | number) {
+  return apiRequest<{ data: BudgetMovementRow }>(`/api/budget/movements/show/${encodeURIComponent(String(id))}`);
+}
+
+export async function getBudgetMovementOptions(type: BudgetMovementType) {
+  return apiRequest<{ data: BudgetMovementOptions }>(`/api/budget/movements/${encodeURIComponent(type)}/options`);
+}
+
+// FIMS Budget Monitoring (PAGEID 1201 / MENUID 1471) — read-only aggregated list.
+export async function listBudgetMonitoring(params = "") {
+  return apiRequest<{ data: BudgetMonitoringRow[]; meta: Record<string, unknown> }>(
+    `/api/budget/monitoring${params}`,
+  );
+}
+
+export async function getBudgetMonitoringOptions() {
+  return apiRequest<{ data: BudgetMonitoringOptions }>("/api/budget/monitoring/options");
+}
+
+// FIMS Budget Initial V2 (PAGEID 1264 / MENUID 1541) — stubbed list (backend BL missing).
+export async function listBudgetInitial(params = "") {
+  return apiRequest<{ data: BudgetInitialRow[]; meta: Record<string, unknown> }>(
+    `/api/budget/initial${params}`,
+  );
+}
+
+export async function getBudgetInitialOptions() {
+  return apiRequest<{ data: BudgetInitialOptions }>("/api/budget/initial/options");
+}
+
+// FIMS Budget Closing (PAGEID 1953) — options + process/reverse stubs.
+export async function getBudgetClosingOptions() {
+  return apiRequest<{ data: BudgetClosingOptions }>("/api/budget/closing/options");
+}
+
+export async function budgetClosingProcess(payload: BudgetClosingPayload) {
+  return apiRequest<{ data: unknown }>("/api/budget/closing/process", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function budgetClosingReverse(payload: BudgetClosingPayload) {
+  return apiRequest<{ data: unknown }>("/api/budget/closing/reverse", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function getCascadeStructureOptions(ptjCode = "") {

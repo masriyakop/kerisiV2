@@ -27,3 +27,4 @@ Thumbs.db
 /_reference
 /.git.backup*
 database/database.sqlite
+/.cursor/

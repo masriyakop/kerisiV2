@@ -3,7 +3,12 @@
 use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\ActivityCodeController;
 use App\Http\Controllers\Api\AccountCodeController;
+use App\Http\Controllers\Api\AccountCodePpiController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BudgetClosingController;
+use App\Http\Controllers\Api\BudgetInitialController;
+use App\Http\Controllers\Api\BudgetMonitoringController;
+use App\Http\Controllers\Api\BudgetMovementController;
 use App\Http\Controllers\Api\CascadeStructureController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CostCentreController;
@@ -77,6 +82,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/setup/account-code', [AccountCodeController::class, 'store']);
     Route::put('/setup/account-code/{code}', [AccountCodeController::class, 'update']);
     Route::delete('/setup/account-code/{code}', [AccountCodeController::class, 'destroy']);
+    Route::get('/setup/account-code-ppi/options', [AccountCodePpiController::class, 'options']);
+    Route::get('/setup/account-code-ppi', [AccountCodePpiController::class, 'index']);
     Route::get('/setup/ptj-code', [PtjCodeController::class, 'index']);
     Route::post('/setup/ptj-code', [PtjCodeController::class, 'store']);
     Route::put('/setup/ptj-code/{code}', [PtjCodeController::class, 'update']);
@@ -86,6 +93,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/setup/cost-centre/{id}', [CostCentreController::class, 'show']);
     Route::post('/setup/cost-centre', [CostCentreController::class, 'store']);
     Route::put('/setup/cost-centre/{id}', [CostCentreController::class, 'update']);
+    // FIMS Budget (Increment / Decrement / Virement) list screens. Read-only; the
+    // add/edit/cancel actions live on editor pages that are not yet migrated.
+    Route::get('/budget/movements/{type}/options', [BudgetMovementController::class, 'options'])
+        ->whereIn('type', ['increment', 'decrement', 'virement']);
+    Route::get('/budget/movements/{type}', [BudgetMovementController::class, 'index'])
+        ->whereIn('type', ['increment', 'decrement', 'virement']);
+    Route::get('/budget/movements/show/{id}', [BudgetMovementController::class, 'show']);
+
+    // FIMS Budget Monitoring (PAGEID 1201 / MENUID 1471) – read-only aggregated list.
+    Route::get('/budget/monitoring/options', [BudgetMonitoringController::class, 'options']);
+    Route::get('/budget/monitoring', [BudgetMonitoringController::class, 'index']);
+
+    // FIMS Budget Initial V2 (PAGEID 1264 / MENUID 1541) – documented stub; legacy
+    // BL SWS_DT_BUDGET_INITIAL_V2 was not shipped in the migration export.
+    Route::get('/budget/initial/options', [BudgetInitialController::class, 'options']);
+    Route::get('/budget/initial', [BudgetInitialController::class, 'index']);
+
+    // FIMS Budget Closing (PAGEID 1953 / MENUID 2389) – filter + Start/Reverse
+    // Process buttons. Server-side BL NAD_API_BUDGET_BUDGETCLOSING is not ported;
+    // the process/reverse endpoints return 501 with an explanatory payload.
+    Route::get('/budget/closing/options', [BudgetClosingController::class, 'options']);
+    Route::post('/budget/closing/process', [BudgetClosingController::class, 'process']);
+    Route::post('/budget/closing/reverse', [BudgetClosingController::class, 'reverse']);
+
     Route::get('/setup/cascade-structure/options', [CascadeStructureController::class, 'options']);
     Route::get('/setup/cascade-structure', [CascadeStructureController::class, 'index']);
     Route::get('/setup/cascade-structure/{id}', [CascadeStructureController::class, 'show']);
