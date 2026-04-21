@@ -543,3 +543,288 @@ export type BudgetClosingPayload = {
   activitySubgroup?: string | null;
   atActivityCodeTop?: string | null;
 };
+
+// ─── FIMS Cashbook ──────────────────────────────────────────────────────────
+// Lookup option shape shared by Cashbook smart-filter / popup-modal dropdowns.
+export type CashbookOption<TId = string | number> = { id: TId; label: string };
+
+// Bank Setup (PAGEID 2680 / MENUID 3246) — table lookup_bank_main.
+export type BankSetupRow = {
+  index: number;
+  lbmBankCode: string;
+  lbmBankName: string;
+  isBankMain: "Y" | "N" | null;
+  mainBankLabel: "YES" | "NO";
+  lbmStatus: "ACTIVE" | "INACTIVE";
+  lbmStatusValue: number;
+  updatedDate: string | null;
+};
+
+export type BankSetupInput = {
+  lbmBankCode?: string;
+  lbmBankName: string;
+  isBankMain: "Y" | "N";
+  lbmStatus: 0 | 1;
+};
+
+export type BankSetupOptions = {
+  smartFilter: {
+    bankCode: CashbookOption[];
+    isBankMain: CashbookOption[];
+    status: CashbookOption[];
+  };
+  popupModal: {
+    isBankMain: CashbookOption[];
+    status: CashbookOption<number>[];
+  };
+};
+
+// Bank Master (PAGEID 1682 / MENUID 2036) — table bank_master.
+export type BankMasterRow = {
+  index: number;
+  bnmBankId: number;
+  bnmBankCodeMain: string | null;
+  bnmBankCode: string;
+  bnmBankDesc: string;
+  bnmShortname: string | null;
+  bnmBankAddress: string | null;
+  bnmAddressCity: string | null;
+  bnmContactPerson: string | null;
+  bnmBranchName: string | null;
+  bnmOfficeTelno: string | null;
+  bnmOfficeFaxno: string | null;
+  bnmUrlAddress: string | null;
+  bnmSwiftCode: string | null;
+  bnmBusinessNature: string | null;
+};
+
+export type BankMasterInput = {
+  bnmBankCode: string;
+  bnmBankCodeMain?: string | null;
+  bnmBankDesc: string;
+  bnmShortname?: string | null;
+  bnmBankAddress: string;
+  bnmAddressCity?: string | null;
+  bnmContactPerson: string;
+  bnmBranchName?: string | null;
+  bnmOfficeTelno?: string | null;
+  bnmOfficeFaxno?: string | null;
+  bnmUrlAddress: string;
+  bnmSwiftCode: string;
+  bnmBusinessNature?: string | null;
+};
+
+export type BankMasterOptions = {
+  smartFilter: {
+    bankCode: CashbookOption[];
+    mainBank: CashbookOption[];
+  };
+  popupModal: {
+    mainBank: CashbookOption[];
+  };
+};
+
+// Bank Account (PAGEID 1736 / MENUID 2097) — table bank_detl + joins.
+export type BankAccountRow = {
+  index: number;
+  bndBankDetlId: number;
+  bnmBankDesc: string | null;
+  bndBankAcctno: string | null;
+  acmAcctCode: string | null;
+  acmAcctDesc: string | null;
+  bndStatus: "ACTIVE" | "INACTIVE";
+  bndStatusValue: number;
+  createdby: string | null;
+};
+
+export type BankAccountDetail = {
+  bndBankDetlId: number;
+  bnmBankId: number;
+  bnmBankCode: string | null;
+  bnmBankDesc: string | null;
+  bndBankAcctno: string | null;
+  acmAcctCode: string | null;
+  acmAcctDesc: string | null;
+  ounCode: string | null;
+  bndStatus: number;
+  bndIsBankMain: "Y" | "N";
+};
+
+export type BankAccountInput = {
+  bnmBankId: number | string;
+  bndBankAcctno: string;
+  acmAcctCode: string;
+  ounCode?: string | null;
+  bndStatus: 0 | 1;
+  bndIsBankMain: "Y" | "N";
+};
+
+export type BankAccountUpdateInput = {
+  bndBankAcctno: string;
+  ounCode?: string | null;
+  bndStatus: 0 | 1;
+  bndIsBankMain: "Y" | "N";
+};
+
+export type BankAccountOptions = {
+  smartFilter: {
+    bankName: CashbookOption<number>[];
+    status: CashbookOption[];
+  };
+  popupModal: {
+    bankName: CashbookOption<number>[];
+    accountCode: (CashbookOption & { desc?: string | null })[];
+    ptj: CashbookOption[];
+    isBankMain: CashbookOption[];
+    status: CashbookOption<number>[];
+  };
+};
+
+// List Of Cashbook DAILY/MONTHLY (PAGEID 1397/2024 / MENUID 1702/2471).
+export type CashbookListRow = {
+  index: number;
+  cbkRefId: string;
+  acmAcctCodeBank: string;
+  cbkTransPeriod: string | null;
+  cbkTransRef: string | null;
+  cbkTransDate: string | null;
+  cbkDebitAmt: number;
+  cbkCreditAmt: number;
+  cbkPaytoName: string;
+  cbkReconStatus: "MATCHED" | "UNMATCHED" | string;
+  cbkReconFlag: string;
+  cbkSubsystemId: string | null;
+  cbkType: string;
+};
+
+export type CashbookListType = "DAILY" | "MONTHLY";
+
+export type CashbookListOptions = {
+  smartFilter: {
+    accountCode: CashbookOption[];
+    period: CashbookOption[];
+    reconStatus: CashbookOption[];
+    reconFlag: CashbookOption[];
+    type: CashbookOption[];
+  };
+};
+
+// ─── FIMS Account Payable ───────────────────────────────────────────────────
+// Shared lookup option shape for AP dropdowns.
+export type ApOption<TId = string | number> = { id: TId; label: string };
+
+// Payee Registration (Others) — PAGEID 1403 / MENUID 1711 (read-only).
+export type PayeeRegistrationRow = {
+  index: number;
+  vcsId: string;
+  vcsVendorCode: string | null;
+  vcsVendorName: string | null;
+  vcsAddr1: string | null;
+  vcsAddr2: string | null;
+  vcsAddr3: string | null;
+  vcsTown: string | null;
+  state: string | null;
+  vcsState: string | null;
+  vendorBank: string | null;
+  vcsVendorBank: string | null;
+  vcsBankAccno: string | null;
+  vcsBillerCode: string | null;
+  vcsTelNo: string | null;
+  vcsEmailAddress: string | null;
+  vcsContactPerson: string | null;
+  vcsIcNo: string | null;
+  vcsRegistrationNo: string | null;
+  vcsVendorStatus: "ACTIVE" | "INACTIVE";
+  vcsVendorStatusValue: number;
+};
+
+export type PayeeRegistrationOptions = {
+  smartFilter: {
+    payeeCode: ApOption[];
+    state: ApOption[];
+    status: ApOption[];
+    yearRegister: ApOption<number>[];
+  };
+};
+
+// Utility Registration — PAGEID 2881 / MENUID 3466.
+export type UtilityRegistrationRow = {
+  index: number;
+  vcsId: string;
+  vcsVendorCode: string | null;
+  vcsVendorName: string | null;
+  vcsBillerCode: string | null;
+  vcsVendorStatus: "ACTIVE" | "INACTIVE";
+  vcsVendorStatusValue: number;
+};
+
+export type UtilityRegistrationDetail = {
+  vcsId: string;
+  vcsVendorCode: string | null;
+  vcsVendorName: string;
+  vcsBillerCode: string;
+  vcsVendorStatus: number;
+};
+
+export type UtilityRegistrationInput = {
+  vcsVendorName: string;
+  vcsBillerCode: string;
+  vcsVendorStatus: 0 | 1;
+};
+
+// Account Bank by Payee — PAGEID 2262 / MENUID 2751 (read-only).
+export type AccountBankPayeeType = "A" | "B" | "CDG" | "E" | "F";
+
+export type AccountBankByPayeeGenericRow = {
+  index: number;
+  name: string;
+  status: string | null;
+  acctCode: string | null;
+  acctName: string | null;
+  acctNo: string | null;
+};
+
+export type AccountBankByPayeeSponsorRow = {
+  index: number;
+  spnSponsorCode: string;
+  spnSponsorName: string | null;
+  spnBankNameCd: string | null;
+  spnBankAccNo: string | null;
+  spnAddress1: string | null;
+  spnAddress2: string | null;
+  spnCity: string | null;
+  spnPostcode: string | null;
+  spnState: string | null;
+  spnContactPerson: string | null;
+  spnContactNo: string | null;
+};
+
+export type AccountBankByPayeeInvestmentRow = {
+  index: number;
+  iitInstCode: string;
+  iitInstName: string | null;
+  bnmBankCode: string | null;
+  bnmShortname: string | null;
+  bankName: string | null;
+  iitAddress1: string | null;
+  iitAddress2: string | null;
+  iitAddress3: string | null;
+  iitCity: string | null;
+  iitPcode: string | null;
+  iitState: string | null;
+  iitCountry: string | null;
+};
+
+export type AccountBankByPayeeOptions = {
+  payeeType: ApOption[];
+  smartFilter: {
+    name?: ApOption[];
+    status?: ApOption[];
+    accountName?: ApOption[];
+    sponsorCode?: ApOption[];
+    sponsorName?: ApOption[];
+    bankName?: ApOption[];
+    instCode?: ApOption[];
+    bankCode?: ApOption[];
+  };
+};

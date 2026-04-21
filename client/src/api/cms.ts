@@ -1,7 +1,26 @@
 import { apiRequest } from "./client";
 import type {
+  AccountBankByPayeeGenericRow,
+  AccountBankByPayeeInvestmentRow,
+  AccountBankByPayeeOptions,
+  AccountBankByPayeeSponsorRow,
+  AccountBankPayeeType,
   AuditLog,
   ActivityGroupRow,
+  BankAccountDetail,
+  BankAccountInput,
+  BankAccountOptions,
+  BankAccountRow,
+  BankAccountUpdateInput,
+  BankMasterInput,
+  BankMasterOptions,
+  BankMasterRow,
+  BankSetupInput,
+  BankSetupOptions,
+  BankSetupRow,
+  CashbookListOptions,
+  CashbookListRow,
+  CashbookListType,
   AccountActivityInput,
   AccountActivityRow,
   AccountCodeInput,
@@ -32,6 +51,8 @@ import type {
   MediaMetadataInput,
   Page,
   PageInput,
+  PayeeRegistrationOptions,
+  PayeeRegistrationRow,
   PtjCodeInput,
   PtjCodeRow,
   Post,
@@ -43,6 +64,9 @@ import type {
   StorefrontMenuItem,
   UserDetail,
   UserInput,
+  UtilityRegistrationDetail,
+  UtilityRegistrationInput,
+  UtilityRegistrationRow,
 } from "@/types";
 import type { AdminMenuPrefs } from "@/config/admin-menu";
 
@@ -534,4 +558,156 @@ export async function getCascadeStructureOptions(ptjCode = "") {
       };
     };
   }>(`/api/setup/cascade-structure/options${params}`);
+}
+
+// ─── FIMS Cashbook ─────────────────────────────────────────────────────────
+// Bank Setup (PAGEID 2680 / MENUID 3246)
+export async function listBankSetup(params = "") {
+  return apiRequest<{ data: BankSetupRow[]; meta: Record<string, unknown> }>(`/api/cashbook/bank-setup${params}`);
+}
+
+export async function getBankSetupOptions() {
+  return apiRequest<{ data: BankSetupOptions }>("/api/cashbook/bank-setup/options");
+}
+
+export async function getBankSetup(code: string) {
+  return apiRequest<{ data: { lbmBankCode: string; lbmBankName: string; isBankMain: "Y" | "N" | null; lbmStatus: number } }>(
+    `/api/cashbook/bank-setup/${encodeURIComponent(code)}`,
+  );
+}
+
+export async function createBankSetup(input: BankSetupInput) {
+  return apiRequest<{ data: { lbmBankCode: string } }>("/api/cashbook/bank-setup", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateBankSetup(code: string, input: BankSetupInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/cashbook/bank-setup/${encodeURIComponent(code)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// Bank Master (PAGEID 1682 / MENUID 2036)
+export async function listBankMaster(params = "") {
+  return apiRequest<{ data: BankMasterRow[]; meta: Record<string, unknown> }>(`/api/cashbook/bank-master${params}`);
+}
+
+export async function getBankMasterOptions() {
+  return apiRequest<{ data: BankMasterOptions }>("/api/cashbook/bank-master/options");
+}
+
+export async function getBankMaster(id: number) {
+  return apiRequest<{ data: BankMasterRow & { bnmAddressCountry: string | null; bnmAddressPostcode: string | null } }>(
+    `/api/cashbook/bank-master/${id}`,
+  );
+}
+
+export async function createBankMaster(input: BankMasterInput) {
+  return apiRequest<{ data: { bnmBankId: number } }>("/api/cashbook/bank-master", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateBankMaster(id: number, input: BankMasterInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/cashbook/bank-master/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// Bank Account (PAGEID 1736 / MENUID 2097)
+export async function listBankAccount(params = "") {
+  return apiRequest<{ data: BankAccountRow[]; meta: Record<string, unknown> }>(`/api/cashbook/bank-account${params}`);
+}
+
+export async function getBankAccountOptions() {
+  return apiRequest<{ data: BankAccountOptions }>("/api/cashbook/bank-account/options");
+}
+
+export async function getBankAccount(id: number) {
+  return apiRequest<{ data: BankAccountDetail }>(`/api/cashbook/bank-account/${id}`);
+}
+
+export async function createBankAccount(input: BankAccountInput) {
+  return apiRequest<{ data: { bndBankDetlId: number } }>("/api/cashbook/bank-account", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateBankAccount(id: number, input: BankAccountUpdateInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/cashbook/bank-account/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// List Of Cashbook DAILY|MONTHLY (PAGEID 1397/2024 / MENUID 1702/2471)
+export async function listCashbookList(type: CashbookListType, params = "") {
+  return apiRequest<{ data: CashbookListRow[]; meta: Record<string, unknown> }>(
+    `/api/cashbook/list/${type.toLowerCase()}${params}`,
+  );
+}
+
+export async function getCashbookListOptions(type: CashbookListType) {
+  return apiRequest<{ data: CashbookListOptions }>(`/api/cashbook/list/${type.toLowerCase()}/options`);
+}
+
+// ─── FIMS Account Payable ───────────────────────────────────────────────────
+// Payee Registration (Others) — PAGEID 1403 / MENUID 1711 (read-only listing).
+export async function listPayeeRegistration(params = "") {
+  return apiRequest<{ data: PayeeRegistrationRow[]; meta: Record<string, unknown> }>(
+    `/api/account-payable/payee-registration${params}`,
+  );
+}
+
+export async function getPayeeRegistrationOptions() {
+  return apiRequest<{ data: PayeeRegistrationOptions }>("/api/account-payable/payee-registration/options");
+}
+
+// Utility Registration — PAGEID 2881 / MENUID 3466 (list + inline add/edit).
+export async function listUtilityRegistration(params = "") {
+  return apiRequest<{ data: UtilityRegistrationRow[]; meta: Record<string, unknown> }>(
+    `/api/account-payable/utility-registration${params}`,
+  );
+}
+
+export async function getUtilityRegistration(id: string | number) {
+  return apiRequest<{ data: UtilityRegistrationDetail }>(`/api/account-payable/utility-registration/${id}`);
+}
+
+export async function createUtilityRegistration(input: UtilityRegistrationInput) {
+  return apiRequest<{ data: { vcsId: string; vcsVendorCode: string } }>(
+    "/api/account-payable/utility-registration",
+    { method: "POST", body: JSON.stringify(input) },
+  );
+}
+
+export async function updateUtilityRegistration(id: string | number, input: UtilityRegistrationInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/account-payable/utility-registration/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// Account Bank by Payee — PAGEID 2262 / MENUID 2751 (read-only, payee-type driven).
+export async function getAccountBankByPayeeOptions(payeeType?: AccountBankPayeeType) {
+  const suffix = payeeType ? `?payee_type=${payeeType}` : "";
+  return apiRequest<{ data: AccountBankByPayeeOptions }>(
+    `/api/account-payable/account-bank-by-payee/options${suffix}`,
+  );
+}
+
+export async function listAccountBankByPayee(params = "") {
+  return apiRequest<{
+    data:
+      | AccountBankByPayeeGenericRow[]
+      | AccountBankByPayeeSponsorRow[]
+      | AccountBankByPayeeInvestmentRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/account-payable/account-bank-by-payee${params}`);
 }
