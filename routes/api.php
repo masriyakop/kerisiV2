@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\ActivityCodeController;
 use App\Http\Controllers\Api\AccountBankByPayeeController;
+use App\Http\Controllers\Api\AccountBankUpdatedController;
 use App\Http\Controllers\Api\AccountCodeController;
 use App\Http\Controllers\Api\AccountCodePpiController;
 use App\Http\Controllers\Api\AuthController;
@@ -152,9 +153,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // FIMS Account Payable — Payee Registration (read-only), Utility Registration
     // (list + inline add/edit via popup modal), Account Bank by Payee (read-only,
-    // payee-type driven). See the respective controllers for full details. The
-    // "Account Bank Updated" page (MENUID 2078) was intentionally skipped per
-    // scope decision.
+    // payee-type driven), Account Bank Updated (payee-driven list of bills/vouchers
+    // whose bank details drift from the payee master + bulk re-sync). See the
+    // respective controllers for full details.
     Route::get('/account-payable/payee-registration/options', [PayeeRegistrationController::class, 'options']);
     Route::get('/account-payable/payee-registration', [PayeeRegistrationController::class, 'index']);
 
@@ -165,6 +166,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/account-payable/account-bank-by-payee/options', [AccountBankByPayeeController::class, 'options']);
     Route::get('/account-payable/account-bank-by-payee', [AccountBankByPayeeController::class, 'index']);
+
+    Route::get('/account-payable/account-bank-updated/options', [AccountBankUpdatedController::class, 'options']);
+    Route::get('/account-payable/account-bank-updated/bills', [AccountBankUpdatedController::class, 'listBills']);
+    Route::get('/account-payable/account-bank-updated/vouchers', [AccountBankUpdatedController::class, 'listVouchers']);
+    Route::post('/account-payable/account-bank-updated/bills/process', [AccountBankUpdatedController::class, 'processBills']);
+    Route::post('/account-payable/account-bank-updated/vouchers/process', [AccountBankUpdatedController::class, 'processVouchers']);
 
     Route::get('/setup/cascade-structure/options', [CascadeStructureController::class, 'options']);
     Route::get('/setup/cascade-structure', [CascadeStructureController::class, 'index']);

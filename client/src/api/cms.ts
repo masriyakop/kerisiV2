@@ -5,6 +5,12 @@ import type {
   AccountBankByPayeeOptions,
   AccountBankByPayeeSponsorRow,
   AccountBankPayeeType,
+  AccountBankUpdatedBillRow,
+  AccountBankUpdatedOptions,
+  AccountBankUpdatedPayeeType,
+  AccountBankUpdatedProcessInput,
+  AccountBankUpdatedProcessResult,
+  AccountBankUpdatedVoucherRow,
   AuditLog,
   ActivityGroupRow,
   BankAccountDetail,
@@ -710,4 +716,39 @@ export async function listAccountBankByPayee(params = "") {
       | AccountBankByPayeeInvestmentRow[];
     meta: Record<string, unknown>;
   }>(`/api/account-payable/account-bank-by-payee${params}`);
+}
+
+// Account Bank Updated — PAGEID 1719 / MENUID 2078. Bills + vouchers whose
+// line-level bank account drifts from the payee master, with bulk resync.
+export async function getAccountBankUpdatedOptions(payeeType?: AccountBankUpdatedPayeeType) {
+  const suffix = payeeType ? `?payee_type=${payeeType}` : "";
+  return apiRequest<{ data: AccountBankUpdatedOptions }>(
+    `/api/account-payable/account-bank-updated/options${suffix}`,
+  );
+}
+
+export async function listAccountBankUpdatedBills(params = "") {
+  return apiRequest<{ data: AccountBankUpdatedBillRow[]; meta: Record<string, unknown> }>(
+    `/api/account-payable/account-bank-updated/bills${params}`,
+  );
+}
+
+export async function listAccountBankUpdatedVouchers(params = "") {
+  return apiRequest<{ data: AccountBankUpdatedVoucherRow[]; meta: Record<string, unknown> }>(
+    `/api/account-payable/account-bank-updated/vouchers${params}`,
+  );
+}
+
+export async function processAccountBankUpdatedBills(input: AccountBankUpdatedProcessInput) {
+  return apiRequest<{ data: AccountBankUpdatedProcessResult }>(
+    "/api/account-payable/account-bank-updated/bills/process",
+    { method: "POST", body: JSON.stringify(input) },
+  );
+}
+
+export async function processAccountBankUpdatedVouchers(input: AccountBankUpdatedProcessInput) {
+  return apiRequest<{ data: AccountBankUpdatedProcessResult }>(
+    "/api/account-payable/account-bank-updated/vouchers/process",
+    { method: "POST", body: JSON.stringify(input) },
+  );
 }

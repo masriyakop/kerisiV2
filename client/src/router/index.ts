@@ -47,6 +47,7 @@ import CashbookListView from "@/views/CashbookListView.vue";
 import PayeeRegistrationView from "@/views/PayeeRegistrationView.vue";
 import UtilityRegistrationView from "@/views/UtilityRegistrationView.vue";
 import AccountBankByPayeeView from "@/views/AccountBankByPayeeView.vue";
+import AccountBankUpdatedView from "@/views/AccountBankUpdatedView.vue";
 import StorefrontHomeView from "@/views/StorefrontHomeView.vue";
 import StorefrontPageView from "@/views/StorefrontPageView.vue";
 import { useAuthStore } from "@/stores/auth";
@@ -151,11 +152,12 @@ const router = createRouter({
     { path: "/admin/kerisi/m/1702", name: "kerisi-cashbook-daily", component: CashbookListView, props: { type: "DAILY" }, meta: { requiresAuth: true, title: "List Of CashBook (Daily)" } },
     { path: "/admin/kerisi/m/2471", name: "kerisi-cashbook-monthly", component: CashbookListView, props: { type: "MONTHLY" }, meta: { requiresAuth: true, title: "List Of Cashbook (Monthly)" } },
     // FIMS Account Payable — Payee Registration (MENUID 1711), Utility
-    // Registration (MENUID 3466), Account Bank by Payee (MENUID 2751).
-    // The "Account Bank Updated" page (MENUID 2078) was intentionally skipped.
+    // Registration (MENUID 3466), Account Bank by Payee (MENUID 2751),
+    // Account Bank Updated (MENUID 2078).
     { path: "/admin/kerisi/m/1711", name: "kerisi-ap-payee-registration", component: PayeeRegistrationView, meta: { requiresAuth: true, title: "Payee Registration" } },
     { path: "/admin/kerisi/m/3466", name: "kerisi-ap-utility-registration", component: UtilityRegistrationView, meta: { requiresAuth: true, title: "Utility Registration" } },
     { path: "/admin/kerisi/m/2751", name: "kerisi-ap-account-bank-by-payee", component: AccountBankByPayeeView, meta: { requiresAuth: true, title: "Account Bank By Payee" } },
+    { path: "/admin/kerisi/m/2078", name: "kerisi-ap-account-bank-updated", component: AccountBankUpdatedView, meta: { requiresAuth: true, title: "Account Bank Updated" } },
     { path: "/admin/kerisi/m/:menuId", name: "kerisi-menu", component: ComingSoonView, meta: { requiresAuth: true, title: "KERISI" } },
     { path: "/admin/kitchen-sink", name: "kitchen-sink", component: KitchenSinkView, meta: { requiresAuth: true, title: "Kitchen Sink" } },
     { path: "/admin/kitchen-sink/forms", name: "kitchen-forms", component: KitchenFormsView, meta: { requiresAuth: true, title: "Forms" } },

@@ -828,3 +828,52 @@ export type AccountBankByPayeeOptions = {
     bankCode?: ApOption[];
   };
 };
+
+// Account Bank Updated — PAGEID 1719 / MENUID 2078. Payee-type + payee-ID
+// driven lists of bills / vouchers whose line-level bank details drift from
+// the payee master, with bulk resync actions.
+export type AccountBankUpdatedPayeeType = "A" | "B" | "C" | "D" | "E" | "G";
+
+export type AccountBankUpdatedOptions = {
+  payeeType: ApOption[];
+  ids: ApOption[];
+};
+
+export type AccountBankUpdatedBillRow = {
+  index: number;
+  billId: string;
+  billNo: string | null;
+  billDesc: string | null;
+  payeeType: string | null;
+  payeeId: string | null;
+  payeeName: string | null;
+  currentBank: string | null;
+  currentAccNo: string | null;
+  newBank: string | null;
+  newAccNo: string | null;
+};
+
+export type AccountBankUpdatedVoucherRow = {
+  index: number;
+  voucherId: string;
+  voucherNo: string | null;
+  voucherDesc: string | null;
+  payeeType: string | null;
+  payeeId: string | null;
+  payeeName: string | null;
+  currentBank: string | null;
+  currentAccNo: string | null;
+  newBank: string | null;
+  newAccNo: string | null;
+};
+
+export type AccountBankUpdatedProcessInput = {
+  payeeType: AccountBankUpdatedPayeeType;
+  ids: string[];
+};
+
+export type AccountBankUpdatedProcessResult = {
+  success: boolean;
+  affected: number;
+  message: string;
+};

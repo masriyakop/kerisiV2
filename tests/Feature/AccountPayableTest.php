@@ -10,6 +10,7 @@ use Tests\TestCase;
  *   - Payee Registration       (MENUID 1711)  read-only
  *   - Utility Registration     (MENUID 3466)  list + modal CRUD
  *   - Account Bank by Payee    (MENUID 2751)  read-only, payee-type driven
+ *   - Account Bank Updated     (MENUID 2078)  bills/vouchers + bulk update
  *
  * These endpoints read from the external FIMS schema (mysql_secondary) which
  * is not provisioned in the test SQLite in-memory database, so only the auth
@@ -65,5 +66,30 @@ class AccountPayableTest extends TestCase
     public function test_account_bank_by_payee_options_requires_authentication(): void
     {
         $this->assertUnauthorized('GET', '/api/account-payable/account-bank-by-payee/options');
+    }
+
+    public function test_account_bank_updated_options_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/account-payable/account-bank-updated/options');
+    }
+
+    public function test_account_bank_updated_bills_list_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/account-payable/account-bank-updated/bills');
+    }
+
+    public function test_account_bank_updated_vouchers_list_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/account-payable/account-bank-updated/vouchers');
+    }
+
+    public function test_account_bank_updated_bills_process_requires_authentication(): void
+    {
+        $this->assertUnauthorized('POST', '/api/account-payable/account-bank-updated/bills/process');
+    }
+
+    public function test_account_bank_updated_vouchers_process_requires_authentication(): void
+    {
+        $this->assertUnauthorized('POST', '/api/account-payable/account-bank-updated/vouchers/process');
     }
 }
