@@ -543,3 +543,207 @@ export type BudgetClosingPayload = {
   activitySubgroup?: string | null;
   atActivityCodeTop?: string | null;
 };
+
+// Letter Phrase setup (PAGEID 2911 / MENUID 3506). Legacy BL
+// SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API. Backend returns snake_case
+// identifiers that `CamelCaseMiddleware` rewrites to camelCase.
+export type LetterPhraseRow = {
+  index: number;
+  lpmValue: string;
+  lpmValueDescBm: string | null;
+  lpmValueDesc: string | null;
+  lpmCode: string;
+};
+
+export type LetterPhraseDetail = {
+  lpmValue: string;
+  lpmValueDescBm: string | null;
+  lpmValueDesc: string | null;
+};
+
+export type LetterPhraseInput = {
+  lpmValueDescBm: string;
+  lpmValueDesc?: string | null;
+};
+
+// HOD, VC & TNC setup (PAGEID 1715 / MENUID 2073). Legacy BL API_VC_TNC_SETUP.
+// Fields mirror the controller response; `oun_extended_field` JSON is flattened
+// into `stStaffNameSuperior` / `stStaffTitleSuperior` on the detail endpoint.
+export type VcTncRow = {
+  index: number;
+  id: number;
+  ounCode: string;
+  ounDesc: string | null;
+  stStaffIdHead: string | null;
+  stStaffIdHeadLabel: string | null;
+  stStaffIdSuperior: string | null;
+  stStaffIdSuperiorLabel: string | null;
+};
+
+export type VcTncDetail = {
+  id: number;
+  ounCode: string;
+  ounDesc: string | null;
+  stStaffIdHead: string | null;
+  stStaffIdHeadLabel: string | null;
+  stStaffIdSuperior: string | null;
+  stStaffNameSuperior: string | null;
+  stStaffTitleSuperior: string | null;
+};
+
+export type VcTncSuperiorOption = {
+  id: string;
+  label: string;
+  title: string | null;
+  staffName: string | null;
+};
+
+export type VcTncOptions = {
+  popupModal: {
+    superior: VcTncSuperiorOption[];
+  };
+};
+
+// "Cek yang mungkin error" (PAGEID 2253 / MENUID 2740). Legacy BL
+// MM_API_MAINTANANCE_CEKERROR — seven read-only diagnostic datatables that
+// surface orphaned bills / vouchers / payments / receipts. Keys mirror the
+// backend snake_case names after `CamelCaseMiddleware` rewrite.
+export type CheckErrorBillMasterRow = {
+  index: number;
+  bimBillsId: string | number | null;
+  bimBillsNo: string | null;
+  bimBillsType: string | null;
+  bimBillAmt: number | string | null;
+  bimStatus: string | null;
+  bimPaytoId: string | null;
+  bimPaytoType: string | null;
+  bimPaytoName: string | null;
+  bimPaytoAddress: string | null;
+  createdby: string | null;
+  updatedby: string | null;
+  bimSystemId: string | number | null;
+  bimPayeeCount: number | string | null;
+};
+
+export type CheckErrorVoucherDetailRow = {
+  index: number;
+  vmaVoucherId: string | number | null;
+  dt: number;
+  cr: number;
+  beza: number;
+};
+
+export type CheckErrorVoucherMasterRow = {
+  index: number;
+  vmaVoucherId: string | number | null;
+  vmaVoucherNo: string | null;
+  vmaVchStatus: string | null;
+  vmaPaytoType: string | null;
+  vmaPaytoId: string | null;
+  vmaPaytoName: string | null;
+};
+
+export type CheckErrorPayment2PelikRow = {
+  index: number;
+  prePaymentRecordId: string | number | null;
+  prePaymentNo: string | null;
+  preModType: string | null;
+};
+
+export type CheckErrorPaymentPelikRow = {
+  index: number;
+  vmaVoucherId: string | number | null;
+  vmaVoucherNo: string | null;
+  vdePaymentNo: string | null;
+};
+
+export type CheckErrorUrlBrfHilangRow = {
+  index: number;
+  wtkApplicationId: string | null;
+  wtkTaskId: string | number | null;
+  wtkProcessId: string | null;
+  wtkWorkflowCode: string | null;
+  wtkTaskName: string | null;
+  wtkTaskUrl: string | null;
+  wtkStatus: string | null;
+  createdby: string | null;
+};
+
+export type CheckErrorResitRow = {
+  index: number;
+  pdeDocumentNo: string | null;
+  pdeReference: string | null;
+  pdeEntAmt: number;
+};
+
+// Setup Carian Structure Budget (PAGEID 2664 / MENUID 3224). Legacy BL
+// MM_API_GLOBAL_SETUPCARIANSBG — two datatables plus Semi-Strict and
+// CustomWF Bill Setup forms.
+export type JenisCarianRow = {
+  index: number;
+  sbssId: number;
+  sbssType: string;
+  sbssStatus: string;
+};
+
+export type JenisCarianDetail = {
+  sbssId: number;
+  sbssType: string;
+  sbssStatus: string;
+};
+
+export type BillsSetupRow = {
+  index: number;
+  bisId: number;
+  bisType: string;
+  bisStatus: string;
+};
+
+export type BillsSetupDetail = {
+  bisId: number;
+  bisType: string;
+  bisStatus: string;
+};
+
+export type BudgetStructureSearchOptions = {
+  jenisCarianModal: {
+    status: BudgetLookupOption[];
+  };
+  billSetupModal: {
+    status: BudgetLookupOption[];
+  };
+  semiStrict: {
+    column: BudgetLookupOption[];
+    level: BudgetLookupOption[];
+  };
+  billsCustomWf: {
+    sequence: BudgetLookupOption[];
+  };
+};
+
+export type BudgetStructureSearchForms = {
+  semiStrict: {
+    sbssColumnSelection: string | null;
+    sbssLevelSelection: string | null;
+  };
+  billsCustomWf: {
+    bisSequenceLevel: string | null;
+  };
+};
+
+export type JenisCarianInput = {
+  sbssStatus: "ACTIVE" | "INACTIVE";
+};
+
+export type BillsSetupInput = {
+  bisStatus: "ACTIVE" | "INACTIVE";
+};
+
+export type SemiStrictInput = {
+  sbssColumnSelection: "ACCOUNT" | "ACTIVITY";
+  sbssLevelSelection: string;
+};
+
+export type BillsCustomWfInput = {
+  bisSequenceLevel: string;
+};

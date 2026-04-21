@@ -1,0 +1,68 @@
+{
+  "page": {
+    "MENUID": 3506,
+    "PAGEID": 2911,
+    "PAGETITLE": "Letter Phrase",
+    "PAGEBREADCRUMBS": "Setup and Maintenance / Letter Phrase",
+    "BL_preprocess_total": 1,
+    "BL_onload_total": 4
+  },
+  "components": [
+    {
+      "COMPONENTID": 9374,
+      "COMPONENTTITLE": "Letter Phrase",
+      "COMPONENTTYPE": "form",
+      "DatatableColumnDetails": "{\"dt_bi\": null, \"dt_bm\": null, \"dt_js\": null, \"dt_key\": null, \"dt_ajax\": \"api/SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API?LetterPhrase=1\", \"dt_post\": null, \"dt_sort\": null, \"dt_bInfo\": \"false\", \"dt_class\": null, \"dt_print\": \"false\", \"dt_filter\": \"default\", \"dt_bRefresh\": \"false\", \"dt_bPaginate\": \"false\", \"dt_saveState\": \"false\", \"dt_pageLength\": \"\", \"dt_aLengthMenu\": \"5,10,25,50,100\", \"dt_freeze_left\": \"0\", \"dt_freeze_right\": \"0\", \"dt_bLengthChange\": \"false\"}",
+      "API_URL": "\"api/SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API?LetterPhrase=1\"",
+      "API_BL_NAME": "SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API",
+      "formItems": [
+        {
+          "title": "Code",
+          "type": "text",
+          "cssClass": null,
+          "additionalAttr": "disabled=\"true\"",
+          "defaultVal": null,
+          "lookupQuery": null,
+          "isDisable": null
+        },
+        {
+          "title": "Phrase Malay",
+          "type": "text",
+          "cssClass": null,
+          "additionalAttr": null,
+          "defaultVal": null,
+          "lookupQuery": null,
+          "isDisable": null
+        },
+        {
+          "title": "Phrase English",
+          "type": "text",
+          "cssClass": null,
+          "additionalAttr": null,
+          "defaultVal": null,
+          "lookupQuery": null,
+          "isDisable": null
+        },
+        {
+          "title": null,
+          "type": "custom",
+          "cssClass": "force-one-column full-no-label",
+          "additionalAttr": null,
+          "defaultVal": "<div class='modal-footer'>\r\n\t<button type='button' class='btn btn-danger' data-dismiss='modal'>Cancel</button>\r\n\t<button type='button' class='btn btn-primary' id ='btn_saveMed' onclick='btnSaveMed()'>Save</button>\r\n</div>",
+          "lookupQuery": null,
+          "isDisable": null
+        }
+      ]
+    },
+    {
+      "COMPONENTID": 9380,
+      "COMPONENTTITLE": "Letter Phrase Details",
+      "COMPONENTTYPE": "datatable",
+      "DatatableColumnDetails": "{\"dt_bi\": [\"No\", \"Value\", \"Value Desc BM\", \"Value Desc\", \"Code\", \"Action\"], \"dt_bm\": [\"No\", \"Value\", \"Value Desc BM\", \"Value Desc\", \"Code\", \"Action\"], \"dt_js\": [\"return row.index \", \"\", \"\", \"\", \"\", \"return `\\r\\n<a data-toggle=\\\"tooltip\\\" title=\\\"Edit\\\" onclick=\\\"edit('`+row.lpm_value+`')\\\"><i class=\\\"fas fa-edit\\\"></i></a>\\r\\n<a data-toggle=\\\"tooltip\\\" title=\\\"Delete\\\" onclick=\\\"listing.deleteWarning('`+row.lpm_value+`')\\\"><i class=\\\"fas fa-trash-alt\\\"></i></a>`\"], \"dt_key\": [\"\", \"lpm_value\", \"lpm_value_desc_bm\", \"lpm_value_desc\", \"lpm_code\", \"\"], \"dt_ajax\": \"api/SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API?dt_list=1\", \"dt_post\": null, \"dt_sort\": [\"unsortable\", \"default\", \"default\", \"default\", \"default\", \"unsortable\"], \"dt_bInfo\": \"true\", \"dt_class\": [\"\", \"\", \"\", \"\", \"\", \"\"], \"dt_print\": \"false\", \"dt_filter\": \"default\", \"dt_bRefresh\": \"false\", \"dt_bPaginate\": \"true\", \"dt_saveState\": \"false\", \"dt_pageLength\": \"5\", \"dt_aLengthMenu\": \"5,10,25,50,100\", \"dt_freeze_left\": \"0\", \"dt_freeze_right\": \"0\", \"dt_bLengthChange\": \"true\"}",
+      "API_URL": "\"api/SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API?dt_list=1\"",
+      "API_BL_NAME": "SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API",
+      "formItems": []
+    }
+  ],
+  "blDetails": "<?php\r\n\r\ninclude 'userinfo.php';\r\n\r\nif($_GET['dt_list']){\r\n\r\n\t//============================================================ common filter\r\n\t$common = \"\tfrom \".DB2.\".lookup_parameter_main where \r\n\t            lpm_code='PHRASE'\r\n\t\";\r\n\t\r\n\t//============================================================ record count\r\n\t$sqlcount = \"SELECT COUNT(*) C $common\";\r\n\t$recordsFiltered = executeQueryV2($sqlcount)[0]['C'];\r\n\r\n\t//============================================================ main sql\r\n\t$sql = \"select lpm_value , \r\n\t               lpm_value_desc_bm , \r\n\t\t\t\t   lpm_value_desc , \r\n\t\t\t\t   lpm_code\r\n\t\t\t$common\r\n\t\t\tORDER BY {$_POST['orderBy'][0]} {$_POST['orderBy'][1]}\r\n\t\t\tLIMIT \".$_POST['start'].\", \".$_POST['length'].\"\r\n\t\";\r\n\t$data = executeQueryV2($sql);\r\n\r\n\t//============================================================ finally\r\n\treturn [\r\n\t\t'draw' => $_POST['draw'],\r\n\t\t'recordsFiltered' => $recordsFiltered,\r\n\t\t'data' => $data\r\n\t];\r\n\r\n}\r\n\r\nif ($_GET['phraseinfo']){\r\n\t// var_dump($_GET['lpm_value']);\r\n\t// die();\r\n\t// ============================================================ main sql\r\n    $sql = \"select lpm_value lpm_value, \r\n\t               lpm_value_desc_bm lpm_value_desc_bm, \r\n\t\t\t\t   lpm_value_desc lpm_value_desc\r\n            from \".DB2.\".lookup_parameter_main where lpm_code= ?\r\n    \";\r\n    $rsdata = executeQueryV2($sql,[$_GET['lpm_value']])[0];\r\n\r\n    return [   \r\n\t\t'LPM_VALUE' \t\t\t=> $rsdata['lpm_value'],\r\n\t\t'LPM_VALUE_DESC_BM' \t=> $rsdata['lpm_value_desc_bm'],\r\n\t\t'LPM_VALUE_DESC' \t\t=> $rsdata['lpm_value_desc']\r\n\t];\r\n}\r\n\r\n//=================================== process med\r\nif($_GET['save_med']){\r\n\r\n    $sqlsave = \"UPDATE \".DB2.\".lookup_parameter_main\r\n\t\t\t\t\t\t  SET \r\n\t\t\t\t\t\t\tlpm_value_desc_bm \t= ?,\r\n\t\t\t\t\t\t\tlpm_value_desc \t\t= ?\r\n\t\t\t\t\t\t\tWHERE LPM_VALUE = ?\r\n\t\t\t\";\r\n\t\t$rssave = executeQueryV2($sqlsave, [$_POST['detail']['lpm_value_desc_bm'], $_POST['detail']['lpm_value_desc'], $_POST['detail']['lpm_value']]);\r\n\r\n\t\treturn[\r\n\t\t\t\"status\" => \"ok\",\r\n\t\t\t'successmessage' => 'Succesfully update your data.'\r\n    \t];\r\n\r\n\r\n}"
+}

@@ -11,6 +11,10 @@ import type {
   ActivitySubgroupRow,
   ActivitySubsiriRow,
   ActivityTypeRow,
+  BillsCustomWfInput,
+  BillsSetupDetail,
+  BillsSetupInput,
+  BillsSetupRow,
   BudgetClosingOptions,
   BudgetClosingPayload,
   BudgetInitialOptions,
@@ -20,14 +24,29 @@ import type {
   BudgetMovementOptions,
   BudgetMovementRow,
   BudgetMovementType,
+  BudgetStructureSearchForms,
+  BudgetStructureSearchOptions,
   Category,
   CategoryInput,
   CascadeStructureInput,
   CascadeStructureRow,
+  CheckErrorBillMasterRow,
+  CheckErrorPayment2PelikRow,
+  CheckErrorPaymentPelikRow,
+  CheckErrorResitRow,
+  CheckErrorUrlBrfHilangRow,
+  CheckErrorVoucherDetailRow,
+  CheckErrorVoucherMasterRow,
   CostCentreInput,
   CostCentreRow,
   FundTypeInput,
   FundTypeRow,
+  JenisCarianDetail,
+  JenisCarianInput,
+  JenisCarianRow,
+  LetterPhraseDetail,
+  LetterPhraseInput,
+  LetterPhraseRow,
   Media,
   MediaMetadataInput,
   Page,
@@ -39,10 +58,14 @@ import type {
   PublicSiteSettings,
   Role,
   RoleInput,
+  SemiStrictInput,
   SettingsPayload,
   StorefrontMenuItem,
   UserDetail,
   UserInput,
+  VcTncDetail,
+  VcTncOptions,
+  VcTncRow,
 } from "@/types";
 import type { AdminMenuPrefs } from "@/config/admin-menu";
 
@@ -534,4 +557,155 @@ export async function getCascadeStructureOptions(ptjCode = "") {
       };
     };
   }>(`/api/setup/cascade-structure/options${params}`);
+}
+
+// Letter Phrase setup (PAGEID 2911 / MENUID 3506). Read-only listing with
+// an edit-only popup modal — legacy BL never exposed add or delete.
+export async function listLetterPhrases(params = "") {
+  return apiRequest<{ data: LetterPhraseRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/letter-phrase${params}`,
+  );
+}
+
+export async function getLetterPhrase(lpmValue: string) {
+  return apiRequest<{ data: LetterPhraseDetail }>(
+    `/api/setup/letter-phrase/${encodeURIComponent(lpmValue)}`,
+  );
+}
+
+export async function updateLetterPhrase(lpmValue: string, input: LetterPhraseInput) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/setup/letter-phrase/${encodeURIComponent(lpmValue)}`,
+    { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+// HOD, VC & TNC setup (PAGEID 1715 / MENUID 2073).
+export async function listVcTnc(params = "") {
+  return apiRequest<{ data: VcTncRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/vc-tnc${params}`,
+  );
+}
+
+export async function getVcTnc(id: number) {
+  return apiRequest<{ data: VcTncDetail }>(`/api/setup/vc-tnc/${id}`);
+}
+
+export async function getVcTncOptions() {
+  return apiRequest<{ data: VcTncOptions }>("/api/setup/vc-tnc/options");
+}
+
+export async function updateVcTnc(id: number, input: { stStaffIdSuperior: string }) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/setup/vc-tnc/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// "Cek yang mungkin error" (PAGEID 2253 / MENUID 2740).
+export async function listCheckErrorBillMaster(params = "") {
+  return apiRequest<{ data: CheckErrorBillMasterRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/check-error/bill-master${params}`,
+  );
+}
+
+export async function listCheckErrorVoucherDetail(params = "") {
+  return apiRequest<{ data: CheckErrorVoucherDetailRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/check-error/voucher-detail${params}`,
+  );
+}
+
+export async function listCheckErrorVoucherMaster(params = "") {
+  return apiRequest<{ data: CheckErrorVoucherMasterRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/check-error/voucher-master${params}`,
+  );
+}
+
+export async function listCheckErrorPaymentPelik(params = "") {
+  return apiRequest<{ data: CheckErrorPaymentPelikRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/check-error/payment-record-pelik${params}`,
+  );
+}
+
+export async function listCheckErrorPayment2Pelik(params = "") {
+  return apiRequest<{ data: CheckErrorPayment2PelikRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/check-error/payment-record-pelik2${params}`,
+  );
+}
+
+export async function listCheckErrorUrlBrfHilang(params = "") {
+  return apiRequest<{ data: CheckErrorUrlBrfHilangRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/check-error/url-brf-hilang${params}`,
+  );
+}
+
+export async function listCheckErrorResit(params = "") {
+  return apiRequest<{ data: CheckErrorResitRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/check-error/resit-no-allocate${params}`,
+  );
+}
+
+// Setup Carian Structure Budget (PAGEID 2664 / MENUID 3224).
+export async function getBudgetStructureSearchOptions() {
+  return apiRequest<{ data: BudgetStructureSearchOptions }>(
+    "/api/setup/budget-structure-search/options",
+  );
+}
+
+export async function getBudgetStructureSearchForms() {
+  return apiRequest<{ data: BudgetStructureSearchForms }>(
+    "/api/setup/budget-structure-search/forms",
+  );
+}
+
+export async function listJenisCarian(params = "") {
+  return apiRequest<{ data: JenisCarianRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/budget-structure-search/jenis-carian${params}`,
+  );
+}
+
+export async function getJenisCarian(id: number) {
+  return apiRequest<{ data: JenisCarianDetail }>(
+    `/api/setup/budget-structure-search/jenis-carian/${id}`,
+  );
+}
+
+export async function updateJenisCarian(id: number, input: JenisCarianInput) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/setup/budget-structure-search/jenis-carian/${id}`,
+    { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+export async function listBillsSetup(params = "") {
+  return apiRequest<{ data: BillsSetupRow[]; meta: Record<string, unknown> }>(
+    `/api/setup/budget-structure-search/bills-setup${params}`,
+  );
+}
+
+export async function getBillsSetup(id: number) {
+  return apiRequest<{ data: BillsSetupDetail }>(
+    `/api/setup/budget-structure-search/bills-setup/${id}`,
+  );
+}
+
+export async function updateBillsSetup(id: number, input: BillsSetupInput) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/setup/budget-structure-search/bills-setup/${id}`,
+    { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+export async function saveSemiStrict(input: SemiStrictInput) {
+  return apiRequest<{ data: { success: boolean } }>(
+    "/api/setup/budget-structure-search/semi-strict",
+    { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+export async function saveBillsCustomWf(input: BillsCustomWfInput) {
+  return apiRequest<{ data: { success: boolean } }>(
+    "/api/setup/budget-structure-search/custom-wf",
+    { method: "PUT", body: JSON.stringify(input) },
+  );
 }
