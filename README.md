@@ -17,6 +17,12 @@ composer dev
 
 That runs Laravel (`php artisan serve`), the queue worker (`php artisan queue:listen`), and the Vue client dev server (`npm --prefix client run dev`) together via `concurrently`. Stop with `Ctrl+C` in that terminal.
 
+### Start client only
+
+```bash
+npm --prefix client run dev
+```
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

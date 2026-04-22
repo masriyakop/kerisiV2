@@ -544,336 +544,206 @@ export type BudgetClosingPayload = {
   atActivityCodeTop?: string | null;
 };
 
-// ─── FIMS Cashbook ──────────────────────────────────────────────────────────
-// Lookup option shape shared by Cashbook smart-filter / popup-modal dropdowns.
-export type CashbookOption<TId = string | number> = { id: TId; label: string };
-
-// Bank Setup (PAGEID 2680 / MENUID 3246) — table lookup_bank_main.
-export type BankSetupRow = {
+// Letter Phrase setup (PAGEID 2911 / MENUID 3506). Legacy BL
+// SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API. Backend returns snake_case
+// identifiers that `CamelCaseMiddleware` rewrites to camelCase.
+export type LetterPhraseRow = {
   index: number;
-  lbmBankCode: string;
-  lbmBankName: string;
-  isBankMain: "Y" | "N" | null;
-  mainBankLabel: "YES" | "NO";
-  lbmStatus: "ACTIVE" | "INACTIVE";
-  lbmStatusValue: number;
-  updatedDate: string | null;
+  lpmValue: string;
+  lpmValueDescBm: string | null;
+  lpmValueDesc: string | null;
+  lpmCode: string;
 };
 
-export type BankSetupInput = {
-  lbmBankCode?: string;
-  lbmBankName: string;
-  isBankMain: "Y" | "N";
-  lbmStatus: 0 | 1;
+export type LetterPhraseDetail = {
+  lpmValue: string;
+  lpmValueDescBm: string | null;
+  lpmValueDesc: string | null;
 };
 
-export type BankSetupOptions = {
-  smartFilter: {
-    bankCode: CashbookOption[];
-    isBankMain: CashbookOption[];
-    status: CashbookOption[];
-  };
+export type LetterPhraseInput = {
+  lpmValueDescBm: string;
+  lpmValueDesc?: string | null;
+};
+
+// HOD, VC & TNC setup (PAGEID 1715 / MENUID 2073). Legacy BL API_VC_TNC_SETUP.
+// Fields mirror the controller response; `oun_extended_field` JSON is flattened
+// into `stStaffNameSuperior` / `stStaffTitleSuperior` on the detail endpoint.
+export type VcTncRow = {
+  index: number;
+  id: number;
+  ounCode: string;
+  ounDesc: string | null;
+  stStaffIdHead: string | null;
+  stStaffIdHeadLabel: string | null;
+  stStaffIdSuperior: string | null;
+  stStaffIdSuperiorLabel: string | null;
+};
+
+export type VcTncDetail = {
+  id: number;
+  ounCode: string;
+  ounDesc: string | null;
+  stStaffIdHead: string | null;
+  stStaffIdHeadLabel: string | null;
+  stStaffIdSuperior: string | null;
+  stStaffNameSuperior: string | null;
+  stStaffTitleSuperior: string | null;
+};
+
+export type VcTncSuperiorOption = {
+  id: string;
+  label: string;
+  title: string | null;
+  staffName: string | null;
+};
+
+export type VcTncOptions = {
   popupModal: {
-    isBankMain: CashbookOption[];
-    status: CashbookOption<number>[];
+    superior: VcTncSuperiorOption[];
   };
 };
 
-// Bank Master (PAGEID 1682 / MENUID 2036) — table bank_master.
-export type BankMasterRow = {
+// "Cek yang mungkin error" (PAGEID 2253 / MENUID 2740). Legacy BL
+// MM_API_MAINTANANCE_CEKERROR — seven read-only diagnostic datatables that
+// surface orphaned bills / vouchers / payments / receipts. Keys mirror the
+// backend snake_case names after `CamelCaseMiddleware` rewrite.
+export type CheckErrorBillMasterRow = {
   index: number;
-  bnmBankId: number;
-  bnmBankCodeMain: string | null;
-  bnmBankCode: string;
-  bnmBankDesc: string;
-  bnmShortname: string | null;
-  bnmBankAddress: string | null;
-  bnmAddressCity: string | null;
-  bnmContactPerson: string | null;
-  bnmBranchName: string | null;
-  bnmOfficeTelno: string | null;
-  bnmOfficeFaxno: string | null;
-  bnmUrlAddress: string | null;
-  bnmSwiftCode: string | null;
-  bnmBusinessNature: string | null;
+  bimBillsId: string | number | null;
+  bimBillsNo: string | null;
+  bimBillsType: string | null;
+  bimBillAmt: number | string | null;
+  bimStatus: string | null;
+  bimPaytoId: string | null;
+  bimPaytoType: string | null;
+  bimPaytoName: string | null;
+  bimPaytoAddress: string | null;
+  createdby: string | null;
+  updatedby: string | null;
+  bimSystemId: string | number | null;
+  bimPayeeCount: number | string | null;
 };
 
-export type BankMasterInput = {
-  bnmBankCode: string;
-  bnmBankCodeMain?: string | null;
-  bnmBankDesc: string;
-  bnmShortname?: string | null;
-  bnmBankAddress: string;
-  bnmAddressCity?: string | null;
-  bnmContactPerson: string;
-  bnmBranchName?: string | null;
-  bnmOfficeTelno?: string | null;
-  bnmOfficeFaxno?: string | null;
-  bnmUrlAddress: string;
-  bnmSwiftCode: string;
-  bnmBusinessNature?: string | null;
-};
-
-export type BankMasterOptions = {
-  smartFilter: {
-    bankCode: CashbookOption[];
-    mainBank: CashbookOption[];
-  };
-  popupModal: {
-    mainBank: CashbookOption[];
-  };
-};
-
-// Bank Account (PAGEID 1736 / MENUID 2097) — table bank_detl + joins.
-export type BankAccountRow = {
+export type CheckErrorVoucherDetailRow = {
   index: number;
-  bndBankDetlId: number;
-  bnmBankDesc: string | null;
-  bndBankAcctno: string | null;
-  acmAcctCode: string | null;
-  acmAcctDesc: string | null;
-  bndStatus: "ACTIVE" | "INACTIVE";
-  bndStatusValue: number;
+  vmaVoucherId: string | number | null;
+  dt: number;
+  cr: number;
+  beza: number;
+};
+
+export type CheckErrorVoucherMasterRow = {
+  index: number;
+  vmaVoucherId: string | number | null;
+  vmaVoucherNo: string | null;
+  vmaVchStatus: string | null;
+  vmaPaytoType: string | null;
+  vmaPaytoId: string | null;
+  vmaPaytoName: string | null;
+};
+
+export type CheckErrorPayment2PelikRow = {
+  index: number;
+  prePaymentRecordId: string | number | null;
+  prePaymentNo: string | null;
+  preModType: string | null;
+};
+
+export type CheckErrorPaymentPelikRow = {
+  index: number;
+  vmaVoucherId: string | number | null;
+  vmaVoucherNo: string | null;
+  vdePaymentNo: string | null;
+};
+
+export type CheckErrorUrlBrfHilangRow = {
+  index: number;
+  wtkApplicationId: string | null;
+  wtkTaskId: string | number | null;
+  wtkProcessId: string | null;
+  wtkWorkflowCode: string | null;
+  wtkTaskName: string | null;
+  wtkTaskUrl: string | null;
+  wtkStatus: string | null;
   createdby: string | null;
 };
 
-export type BankAccountDetail = {
-  bndBankDetlId: number;
-  bnmBankId: number;
-  bnmBankCode: string | null;
-  bnmBankDesc: string | null;
-  bndBankAcctno: string | null;
-  acmAcctCode: string | null;
-  acmAcctDesc: string | null;
-  ounCode: string | null;
-  bndStatus: number;
-  bndIsBankMain: "Y" | "N";
-};
-
-export type BankAccountInput = {
-  bnmBankId: number | string;
-  bndBankAcctno: string;
-  acmAcctCode: string;
-  ounCode?: string | null;
-  bndStatus: 0 | 1;
-  bndIsBankMain: "Y" | "N";
-};
-
-export type BankAccountUpdateInput = {
-  bndBankAcctno: string;
-  ounCode?: string | null;
-  bndStatus: 0 | 1;
-  bndIsBankMain: "Y" | "N";
-};
-
-export type BankAccountOptions = {
-  smartFilter: {
-    bankName: CashbookOption<number>[];
-    status: CashbookOption[];
-  };
-  popupModal: {
-    bankName: CashbookOption<number>[];
-    accountCode: (CashbookOption & { desc?: string | null })[];
-    ptj: CashbookOption[];
-    isBankMain: CashbookOption[];
-    status: CashbookOption<number>[];
-  };
-};
-
-// List Of Cashbook DAILY/MONTHLY (PAGEID 1397/2024 / MENUID 1702/2471).
-export type CashbookListRow = {
+export type CheckErrorResitRow = {
   index: number;
-  cbkRefId: string;
-  acmAcctCodeBank: string;
-  cbkTransPeriod: string | null;
-  cbkTransRef: string | null;
-  cbkTransDate: string | null;
-  cbkDebitAmt: number;
-  cbkCreditAmt: number;
-  cbkPaytoName: string;
-  cbkReconStatus: "MATCHED" | "UNMATCHED" | string;
-  cbkReconFlag: string;
-  cbkSubsystemId: string | null;
-  cbkType: string;
+  pdeDocumentNo: string | null;
+  pdeReference: string | null;
+  pdeEntAmt: number;
 };
 
-export type CashbookListType = "DAILY" | "MONTHLY";
+// Setup Carian Structure Budget (PAGEID 2664 / MENUID 3224). Legacy BL
+// MM_API_GLOBAL_SETUPCARIANSBG — two datatables plus Semi-Strict and
+// CustomWF Bill Setup forms.
+export type JenisCarianRow = {
+  index: number;
+  sbssId: number;
+  sbssType: string;
+  sbssStatus: string;
+};
 
-export type CashbookListOptions = {
-  smartFilter: {
-    accountCode: CashbookOption[];
-    period: CashbookOption[];
-    reconStatus: CashbookOption[];
-    reconFlag: CashbookOption[];
-    type: CashbookOption[];
+export type JenisCarianDetail = {
+  sbssId: number;
+  sbssType: string;
+  sbssStatus: string;
+};
+
+export type BillsSetupRow = {
+  index: number;
+  bisId: number;
+  bisType: string;
+  bisStatus: string;
+};
+
+export type BillsSetupDetail = {
+  bisId: number;
+  bisType: string;
+  bisStatus: string;
+};
+
+export type BudgetStructureSearchOptions = {
+  jenisCarianModal: {
+    status: BudgetLookupOption[];
+  };
+  billSetupModal: {
+    status: BudgetLookupOption[];
+  };
+  semiStrict: {
+    column: BudgetLookupOption[];
+    level: BudgetLookupOption[];
+  };
+  billsCustomWf: {
+    sequence: BudgetLookupOption[];
   };
 };
 
-// ─── FIMS Account Payable ───────────────────────────────────────────────────
-// Shared lookup option shape for AP dropdowns.
-export type ApOption<TId = string | number> = { id: TId; label: string };
-
-// Payee Registration (Others) — PAGEID 1403 / MENUID 1711 (read-only).
-export type PayeeRegistrationRow = {
-  index: number;
-  vcsId: string;
-  vcsVendorCode: string | null;
-  vcsVendorName: string | null;
-  vcsAddr1: string | null;
-  vcsAddr2: string | null;
-  vcsAddr3: string | null;
-  vcsTown: string | null;
-  state: string | null;
-  vcsState: string | null;
-  vendorBank: string | null;
-  vcsVendorBank: string | null;
-  vcsBankAccno: string | null;
-  vcsBillerCode: string | null;
-  vcsTelNo: string | null;
-  vcsEmailAddress: string | null;
-  vcsContactPerson: string | null;
-  vcsIcNo: string | null;
-  vcsRegistrationNo: string | null;
-  vcsVendorStatus: "ACTIVE" | "INACTIVE";
-  vcsVendorStatusValue: number;
-};
-
-export type PayeeRegistrationOptions = {
-  smartFilter: {
-    payeeCode: ApOption[];
-    state: ApOption[];
-    status: ApOption[];
-    yearRegister: ApOption<number>[];
+export type BudgetStructureSearchForms = {
+  semiStrict: {
+    sbssColumnSelection: string | null;
+    sbssLevelSelection: string | null;
+  };
+  billsCustomWf: {
+    bisSequenceLevel: string | null;
   };
 };
 
-// Utility Registration — PAGEID 2881 / MENUID 3466.
-export type UtilityRegistrationRow = {
-  index: number;
-  vcsId: string;
-  vcsVendorCode: string | null;
-  vcsVendorName: string | null;
-  vcsBillerCode: string | null;
-  vcsVendorStatus: "ACTIVE" | "INACTIVE";
-  vcsVendorStatusValue: number;
+export type JenisCarianInput = {
+  sbssStatus: "ACTIVE" | "INACTIVE";
 };
 
-export type UtilityRegistrationDetail = {
-  vcsId: string;
-  vcsVendorCode: string | null;
-  vcsVendorName: string;
-  vcsBillerCode: string;
-  vcsVendorStatus: number;
+export type BillsSetupInput = {
+  bisStatus: "ACTIVE" | "INACTIVE";
 };
 
-export type UtilityRegistrationInput = {
-  vcsVendorName: string;
-  vcsBillerCode: string;
-  vcsVendorStatus: 0 | 1;
+export type SemiStrictInput = {
+  sbssColumnSelection: "ACCOUNT" | "ACTIVITY";
+  sbssLevelSelection: string;
 };
 
-// Account Bank by Payee — PAGEID 2262 / MENUID 2751 (read-only).
-export type AccountBankPayeeType = "A" | "B" | "CDG" | "E" | "F";
-
-export type AccountBankByPayeeGenericRow = {
-  index: number;
-  name: string;
-  status: string | null;
-  acctCode: string | null;
-  acctName: string | null;
-  acctNo: string | null;
-};
-
-export type AccountBankByPayeeSponsorRow = {
-  index: number;
-  spnSponsorCode: string;
-  spnSponsorName: string | null;
-  spnBankNameCd: string | null;
-  spnBankAccNo: string | null;
-  spnAddress1: string | null;
-  spnAddress2: string | null;
-  spnCity: string | null;
-  spnPostcode: string | null;
-  spnState: string | null;
-  spnContactPerson: string | null;
-  spnContactNo: string | null;
-};
-
-export type AccountBankByPayeeInvestmentRow = {
-  index: number;
-  iitInstCode: string;
-  iitInstName: string | null;
-  bnmBankCode: string | null;
-  bnmShortname: string | null;
-  bankName: string | null;
-  iitAddress1: string | null;
-  iitAddress2: string | null;
-  iitAddress3: string | null;
-  iitCity: string | null;
-  iitPcode: string | null;
-  iitState: string | null;
-  iitCountry: string | null;
-};
-
-export type AccountBankByPayeeOptions = {
-  payeeType: ApOption[];
-  smartFilter: {
-    name?: ApOption[];
-    status?: ApOption[];
-    accountName?: ApOption[];
-    sponsorCode?: ApOption[];
-    sponsorName?: ApOption[];
-    bankName?: ApOption[];
-    instCode?: ApOption[];
-    bankCode?: ApOption[];
-  };
-};
-
-// Account Bank Updated — PAGEID 1719 / MENUID 2078. Payee-type + payee-ID
-// driven lists of bills / vouchers whose line-level bank details drift from
-// the payee master, with bulk resync actions.
-export type AccountBankUpdatedPayeeType = "A" | "B" | "C" | "D" | "E" | "G";
-
-export type AccountBankUpdatedOptions = {
-  payeeType: ApOption[];
-  ids: ApOption[];
-};
-
-export type AccountBankUpdatedBillRow = {
-  index: number;
-  billId: string;
-  billNo: string | null;
-  billDesc: string | null;
-  payeeType: string | null;
-  payeeId: string | null;
-  payeeName: string | null;
-  currentBank: string | null;
-  currentAccNo: string | null;
-  newBank: string | null;
-  newAccNo: string | null;
-};
-
-export type AccountBankUpdatedVoucherRow = {
-  index: number;
-  voucherId: string;
-  voucherNo: string | null;
-  voucherDesc: string | null;
-  payeeType: string | null;
-  payeeId: string | null;
-  payeeName: string | null;
-  currentBank: string | null;
-  currentAccNo: string | null;
-  newBank: string | null;
-  newAccNo: string | null;
-};
-
-export type AccountBankUpdatedProcessInput = {
-  payeeType: AccountBankUpdatedPayeeType;
-  ids: string[];
-};
-
-export type AccountBankUpdatedProcessResult = {
-  success: boolean;
-  affected: number;
-  message: string;
+export type BillsCustomWfInput = {
+  bisSequenceLevel: string;
 };

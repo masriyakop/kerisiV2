@@ -40,14 +40,10 @@ import BudgetMovementView from "@/views/BudgetMovementView.vue";
 import BudgetMonitoringView from "@/views/BudgetMonitoringView.vue";
 import BudgetInitialView from "@/views/BudgetInitialView.vue";
 import BudgetClosingView from "@/views/BudgetClosingView.vue";
-import BankSetupView from "@/views/BankSetupView.vue";
-import BankMasterView from "@/views/BankMasterView.vue";
-import BankAccountView from "@/views/BankAccountView.vue";
-import CashbookListView from "@/views/CashbookListView.vue";
-import PayeeRegistrationView from "@/views/PayeeRegistrationView.vue";
-import UtilityRegistrationView from "@/views/UtilityRegistrationView.vue";
-import AccountBankByPayeeView from "@/views/AccountBankByPayeeView.vue";
-import AccountBankUpdatedView from "@/views/AccountBankUpdatedView.vue";
+import LetterPhraseView from "@/views/LetterPhraseView.vue";
+import VcTncView from "@/views/VcTncView.vue";
+import CheckErrorView from "@/views/CheckErrorView.vue";
+import BudgetStructureSearchView from "@/views/BudgetStructureSearchView.vue";
 import StorefrontHomeView from "@/views/StorefrontHomeView.vue";
 import StorefrontPageView from "@/views/StorefrontPageView.vue";
 import { useAuthStore } from "@/stores/auth";
@@ -143,21 +139,13 @@ const router = createRouter({
     { path: "/admin/kerisi/m/1541", name: "kerisi-budget-initial", component: BudgetInitialView, meta: { requiresAuth: true, title: "Budget Initial" } },
     { path: "/admin/kerisi/m/2389", name: "kerisi-budget-closing", component: BudgetClosingView, meta: { requiresAuth: true, title: "Budget Closing" } },
     { path: "/admin/kerisi/m/3154", name: "kerisi-budget-closing-alias", component: BudgetClosingView, meta: { requiresAuth: true, title: "Budget Closing" } },
-    // FIMS Cashbook — Bank Setup (PAGEID 2680), Bank Master (PAGEID 1682),
-    // Bank Account (PAGEID 1736), List of Cashbook Daily (PAGEID 1397) and
-    // Monthly (PAGEID 2024). Daily/Monthly reuse CashbookListView via prop.
-    { path: "/admin/kerisi/m/3246", name: "kerisi-bank-setup", component: BankSetupView, meta: { requiresAuth: true, title: "Bank Setup" } },
-    { path: "/admin/kerisi/m/2036", name: "kerisi-bank-master", component: BankMasterView, meta: { requiresAuth: true, title: "Bank Master" } },
-    { path: "/admin/kerisi/m/2097", name: "kerisi-bank-account", component: BankAccountView, meta: { requiresAuth: true, title: "Bank Account" } },
-    { path: "/admin/kerisi/m/1702", name: "kerisi-cashbook-daily", component: CashbookListView, props: { type: "DAILY" }, meta: { requiresAuth: true, title: "List Of CashBook (Daily)" } },
-    { path: "/admin/kerisi/m/2471", name: "kerisi-cashbook-monthly", component: CashbookListView, props: { type: "MONTHLY" }, meta: { requiresAuth: true, title: "List Of Cashbook (Monthly)" } },
-    // FIMS Account Payable — Payee Registration (MENUID 1711), Utility
-    // Registration (MENUID 3466), Account Bank by Payee (MENUID 2751),
-    // Account Bank Updated (MENUID 2078).
-    { path: "/admin/kerisi/m/1711", name: "kerisi-ap-payee-registration", component: PayeeRegistrationView, meta: { requiresAuth: true, title: "Payee Registration" } },
-    { path: "/admin/kerisi/m/3466", name: "kerisi-ap-utility-registration", component: UtilityRegistrationView, meta: { requiresAuth: true, title: "Utility Registration" } },
-    { path: "/admin/kerisi/m/2751", name: "kerisi-ap-account-bank-by-payee", component: AccountBankByPayeeView, meta: { requiresAuth: true, title: "Account Bank By Payee" } },
-    { path: "/admin/kerisi/m/2078", name: "kerisi-ap-account-bank-updated", component: AccountBankUpdatedView, meta: { requiresAuth: true, title: "Account Bank Updated" } },
+    // FIMS setup & maintenance pages migrated from legacy PAGE_SETUP_MAINTENANCE
+    // (level 2) — MENUID maps to legacy MENUID and keeps URL parity with the
+    // generic `/admin/kerisi/m/:menuId` pattern used by the sidebar.
+    { path: "/admin/kerisi/m/3506", name: "kerisi-letter-phrase", component: LetterPhraseView, meta: { requiresAuth: true, title: "Letter Phrase" } },
+    { path: "/admin/kerisi/m/2073", name: "kerisi-vc-tnc", component: VcTncView, meta: { requiresAuth: true, title: "HOD, VC & TNC" } },
+    { path: "/admin/kerisi/m/2740", name: "kerisi-check-error", component: CheckErrorView, meta: { requiresAuth: true, title: "Cek yang mungkin error" } },
+    { path: "/admin/kerisi/m/3224", name: "kerisi-budget-structure-search", component: BudgetStructureSearchView, meta: { requiresAuth: true, title: "Setup Carian Structure Budget" } },
     { path: "/admin/kerisi/m/:menuId", name: "kerisi-menu", component: ComingSoonView, meta: { requiresAuth: true, title: "KERISI" } },
     { path: "/admin/kitchen-sink", name: "kitchen-sink", component: KitchenSinkView, meta: { requiresAuth: true, title: "Kitchen Sink" } },
     { path: "/admin/kitchen-sink/forms", name: "kitchen-forms", component: KitchenFormsView, meta: { requiresAuth: true, title: "Forms" } },

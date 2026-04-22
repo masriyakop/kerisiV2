@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrganizationUnit extends Model
 {
-    use HasFactory, Auditable;
+    use Auditable, HasFactory;
 
     protected $connection = 'mysql_secondary';
 
@@ -41,6 +41,9 @@ class OrganizationUnit extends Model
         'oun_shortname',
         'oun_region',
         'cny_country_code',
+        'oun_extended_field',
+        'createdby',
+        'updatedby',
         'createddate',
         'updateddate',
     ];

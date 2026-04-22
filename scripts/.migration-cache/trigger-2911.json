@@ -1,0 +1,13 @@
+[
+  {
+    "TRIGGER_ID": 6231,
+    "TRIGGER_TYPE": "JS",
+    "TRIGGER_EVENT": "onload",
+    "TRIGGER_BL": "SZ_SETUPANDMAINTENANCE_LETTERPHRASE_JS",
+    "TRIGGER_ITEM_TYPE": "page",
+    "PAGEID": 2911,
+    "TRIGGER_ORDER": 1,
+    "TRIGGER_STATUS": 1,
+    "BLDETAIL": "window['edit'] = function edit(targetID){\r\n\ttargetedID = targetID\r\n\r\n\tjQuery.get(\"api/SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API?phraseinfo=1&lpm_value=\"+targetedID, function(data) {\r\n\t\t\r\n\t\t$('#lpm_value').val(data.LPM_VALUE);\r\n\t\t$('#lpm_value_desc_bm').val(data.LPM_VALUE_DESC_BM);\r\n\t\t$('#lpm_value_desc').val(data.LPM_VALUE_DESC);\r\n\t\r\n\t\t$('#letter_pharse').modal('show');\r\n\t})\r\n}\r\n\r\n//=================================================== save med\r\nbtnSaveMed = function (){\r\n\r\n\t// console.log('MASUK');\r\n\tif(formValidate('#letter_pharse')){\r\n\t\t$('#btn_saveMed').toggleSpinner()\r\n\t\tvar detail = $('#letter_pharse :input').serializeJson()\r\n\t\t$.post(\"api/SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API?save_med=1\", {detail: detail}, function(data){\r\n\t\t\tif(data.status=='ok'){\r\n\t\t\t\tshowModal({\r\n\t\t\t\t\ttype: \"alert\",\r\n\t\t\t\t\tcontent: data.successmessage, \r\n\t\t\t\t\tsize: \"sm\",\r\n\r\n\t\t\t\t\tonclick: function() {\r\n\t\t\t\t\t\tlocation.reload();\r\n\t\t\t\t\t}\r\n\t\t\t\t});\r\n\t\t\t\t$('#dt_list').DataTable().ajax.reload();\r\n\t\t\t\t$('#btn_saveMed').toggleSpinner()\r\n\t\t\t}\r\n\t\t\telse{\r\n\t\t\t\t$('#btn_saveMed').toggleSpinner()\r\n\t\t\t\tshowModal({\r\n\t\t\t\t\ttype: \"danger\",\r\n\t\t\t\t\tcontent: data.msgError,\r\n\t\t\t\t\tsize: \"sm\",\r\n\t\t\t\t})\r\n\t\t\t}\r\n\t\t}, \"json\");\t\r\n\t}\r\n\telse{\r\n\t\t$('#btn_saveMed').toggleSpinner()\r\n\t\tshowModal({\r\n\t\t\ttype: \"danger\",\r\n\t\t\tcontent: LANG_VALIDATE_VALUEMISSING,\r\n\t\t\tsize: \"sm\",\r\n\t\t})\r\n\t}\r\n}"
+  }
+]
