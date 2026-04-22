@@ -2,14 +2,20 @@
 
 use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\ActivityCodeController;
+use App\Http\Controllers\Api\AccountBankByPayeeController;
+use App\Http\Controllers\Api\AccountBankUpdatedController;
 use App\Http\Controllers\Api\AccountCodeController;
 use App\Http\Controllers\Api\AccountCodePpiController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BankAccountController;
+use App\Http\Controllers\Api\BankMasterController;
+use App\Http\Controllers\Api\BankSetupController;
 use App\Http\Controllers\Api\BudgetClosingController;
 use App\Http\Controllers\Api\BudgetInitialController;
 use App\Http\Controllers\Api\BudgetMonitoringController;
 use App\Http\Controllers\Api\BudgetMovementController;
 use App\Http\Controllers\Api\CascadeStructureController;
+use App\Http\Controllers\Api\CashbookListController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CostCentreController;
 use App\Http\Controllers\Api\DashboardController;
@@ -19,6 +25,7 @@ use App\Http\Controllers\Api\FundTypeController;
 use App\Http\Controllers\Api\LetterPhraseController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\PageController;
+use App\Http\Controllers\Api\PayeeRegistrationController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PtjCodeController;
 use App\Http\Controllers\Api\PublicController;
@@ -120,6 +127,54 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/budget/closing/options', [BudgetClosingController::class, 'options']);
     Route::post('/budget/closing/process', [BudgetClosingController::class, 'process']);
     Route::post('/budget/closing/reverse', [BudgetClosingController::class, 'reverse']);
+
+    // FIMS Cashbook (Bank Setup / Bank Master / Bank Account / List Of Cashbook)
+    // — see app/Http/Controllers/Api/{BankSetupController,BankMasterController,
+    // BankAccountController,CashbookListController}.php for the per-page details.
+    Route::get('/cashbook/bank-setup/options', [BankSetupController::class, 'options']);
+    Route::get('/cashbook/bank-setup', [BankSetupController::class, 'index']);
+    Route::get('/cashbook/bank-setup/{code}', [BankSetupController::class, 'show']);
+    Route::post('/cashbook/bank-setup', [BankSetupController::class, 'store']);
+    Route::put('/cashbook/bank-setup/{code}', [BankSetupController::class, 'update']);
+
+    Route::get('/cashbook/bank-master/options', [BankMasterController::class, 'options']);
+    Route::get('/cashbook/bank-master', [BankMasterController::class, 'index']);
+    Route::get('/cashbook/bank-master/{id}', [BankMasterController::class, 'show'])->whereNumber('id');
+    Route::post('/cashbook/bank-master', [BankMasterController::class, 'store']);
+    Route::put('/cashbook/bank-master/{id}', [BankMasterController::class, 'update'])->whereNumber('id');
+
+    Route::get('/cashbook/bank-account/options', [BankAccountController::class, 'options']);
+    Route::get('/cashbook/bank-account', [BankAccountController::class, 'index']);
+    Route::get('/cashbook/bank-account/{id}', [BankAccountController::class, 'show'])->whereNumber('id');
+    Route::post('/cashbook/bank-account', [BankAccountController::class, 'store']);
+    Route::put('/cashbook/bank-account/{id}', [BankAccountController::class, 'update'])->whereNumber('id');
+
+    Route::get('/cashbook/list/{type}/options', [CashbookListController::class, 'options'])
+        ->whereIn('type', ['daily', 'monthly', 'DAILY', 'MONTHLY']);
+    Route::get('/cashbook/list/{type}', [CashbookListController::class, 'index'])
+        ->whereIn('type', ['daily', 'monthly', 'DAILY', 'MONTHLY']);
+
+    // FIMS Account Payable — Payee Registration (read-only), Utility Registration
+    // (list + inline add/edit via popup modal), Account Bank by Payee (read-only,
+    // payee-type driven), Account Bank Updated (payee-driven list of bills/vouchers
+    // whose bank details drift from the payee master + bulk re-sync). See the
+    // respective controllers for full details.
+    Route::get('/account-payable/payee-registration/options', [PayeeRegistrationController::class, 'options']);
+    Route::get('/account-payable/payee-registration', [PayeeRegistrationController::class, 'index']);
+
+    Route::get('/account-payable/utility-registration', [UtilityRegistrationController::class, 'index']);
+    Route::get('/account-payable/utility-registration/{id}', [UtilityRegistrationController::class, 'show'])->whereNumber('id');
+    Route::post('/account-payable/utility-registration', [UtilityRegistrationController::class, 'store']);
+    Route::put('/account-payable/utility-registration/{id}', [UtilityRegistrationController::class, 'update'])->whereNumber('id');
+
+    Route::get('/account-payable/account-bank-by-payee/options', [AccountBankByPayeeController::class, 'options']);
+    Route::get('/account-payable/account-bank-by-payee', [AccountBankByPayeeController::class, 'index']);
+
+    Route::get('/account-payable/account-bank-updated/options', [AccountBankUpdatedController::class, 'options']);
+    Route::get('/account-payable/account-bank-updated/bills', [AccountBankUpdatedController::class, 'listBills']);
+    Route::get('/account-payable/account-bank-updated/vouchers', [AccountBankUpdatedController::class, 'listVouchers']);
+    Route::post('/account-payable/account-bank-updated/bills/process', [AccountBankUpdatedController::class, 'processBills']);
+    Route::post('/account-payable/account-bank-updated/vouchers/process', [AccountBankUpdatedController::class, 'processVouchers']);
 
     Route::get('/setup/cascade-structure/options', [CascadeStructureController::class, 'options']);
     Route::get('/setup/cascade-structure', [CascadeStructureController::class, 'index']);
