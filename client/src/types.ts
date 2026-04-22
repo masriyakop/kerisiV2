@@ -1720,3 +1720,112 @@ export type CcCustomerOption = {
   label: string;
   name: string;
 };
+
+// ─── FIMS Portal ───────────────────────────────────────────────────────────
+// Read-only self-service listings for vendors/debtors logged into the Portal.
+
+// Debtor Portal > List of Profile Update Application (PAGEID 2155 / MENUID 2608).
+// Source: BL MZ_BL_DEBTOR_PORTAL_LIST.
+export type DebtorProfileUpdateRow = {
+  index: number;
+  vendorCode: string;
+  vendorName: string | null;
+  vendorStatus: "ACTIVE" | "NON-ACTIVE";
+  isCreditor: "YES" | "NO";
+  bankName: string | null;
+  bankAccountNo: string | null;
+  statusUpdateDebtor: string | null;
+  createdDate: string | null;
+};
+
+// Vendor Portal > Tender/Quotation List (PAGEID 2278 / MENUID 2767).
+// Source: BL NF_BL_PURCHASING_VENDOR_PORTAL_TENDER.
+export type TenderQuotationRow = {
+  index: number;
+  tenderId: number;
+  tenderNo: string | null;
+  briefingRefNo: string | null;
+  tenderType: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  title: string | null;
+  estimatedAmount: number | null;
+  amountDoc: number | null;
+  status: string | null;
+  briefingCloseDate: string | null;
+  tenderOpenStart: string | null;
+  tenderOpenClose: string | null;
+  editable: boolean;
+};
+
+// Result of the vendor status pre-check used by the Buy Document flow.
+export type VendorStatusCheck = {
+  vendorCode: string | null;
+  restrictedStatus: string | null;
+  canBuyDocument: boolean;
+};
+
+// Vendor Portal > Online Registration Fee History (PAGEID 1654 / MENUID 2003).
+// Source BL NF_BL_VENDOR_ONLINE_PAYMENT is unavailable; shape is derived from
+// the legacy datatable spec and the commented-out SQL inside the Tender BL.
+export type VendorRegistrationFeeStatus =
+  | "Successful"
+  | "Pending"
+  | "Unsuccessful"
+  | "Pending Authorization";
+
+export type VendorRegistrationFeeRow = {
+  index: number;
+  checkoutDate: string | null;
+  transactionDate: string | null;
+  referenceNo: string | null;
+  receiptNo: string | null;
+  creditorId: string | null;
+  vendorName: string | null;
+  description: string | null;
+  transactionAmount: number | null;
+  statusCode: string;
+  statusDesc: VendorRegistrationFeeStatus;
+};
+
+// Debtor Portal > Financial Information > Reminder (MENUID 2584).
+// Legacy BL: NF_BL_DEBTOR_PORTAL_REMINDER.
+export type DebtorReminderRow = {
+  index: number;
+  id: number;
+  invoiceNo: string | null;
+  amountOutstanding: string | null;
+  reminderDate: string | null;
+  reminderBil: number | null;
+  emailAddress: string | null;
+  notificationMethod: string | null;
+  custInvoiceId: number | null;
+};
+
+// Debtor Portal > Financial Information > Debtors Statement (MENUID 2267).
+// Legacy BL: NF_BL_DP_DEBTORS_STATEMENT. `outstanding` and `advance` are
+// running totals computed server-side from the ordered ledger.
+export type DebtorStatementRow = {
+  index: number;
+  transactionDate: string | null;
+  documentNo: string | null;
+  refNo: string | null;
+  description: string | null;
+  debit: number;
+  credit: number;
+  cn: number;
+  dn: number;
+  dc: number;
+  advance: number;
+  outstanding: number;
+};
+
+export type DebtorStatementFooter = {
+  debit: number;
+  credit: number;
+  cn: number;
+  dn: number;
+  dc: number;
+  advance: number;
+  balance: number;
+};

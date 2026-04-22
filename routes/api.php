@@ -27,6 +27,9 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DebitNoteController;
 use App\Http\Controllers\Api\DebitNoteFormController;
 use App\Http\Controllers\Api\DebtorController;
+use App\Http\Controllers\Api\DebtorProfileUpdateController;
+use App\Http\Controllers\Api\DebtorReminderController;
+use App\Http\Controllers\Api\DebtorStatementController;
 use App\Http\Controllers\Api\DepositController;
 use App\Http\Controllers\Api\DepositFormController;
 use App\Http\Controllers\Api\DevelopersGuideController;
@@ -46,9 +49,11 @@ use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
+use App\Http\Controllers\Api\TenderQuotationController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UtilityRegistrationController;
 use App\Http\Controllers\Api\VcTncController;
+use App\Http\Controllers\Api\VendorRegistrationFeeHistoryController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes (no auth)
@@ -302,6 +307,30 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/credit-control/deposit-form/{id}', [DepositFormController::class, 'show'])->whereNumber('id');
     Route::put('/credit-control/deposit-form/{id}', [DepositFormController::class, 'update'])->whereNumber('id');
     Route::put('/credit-control/deposit-form/{id}/detail/{detailId}', [DepositFormController::class, 'updateDetail'])->whereNumber('id')->whereNumber('detailId');
+
+    // Portal pages — read-only vendor/debtor self-service listings.
+    // Debtor Portal > List of Profile Update Application (PAGEID 2155 / MENUID 2608).
+    // Legacy BL: MZ_BL_DEBTOR_PORTAL_LIST (?dtListing=1).
+    Route::get('/portal/debtor/profile-update-applications', [DebtorProfileUpdateController::class, 'index']);
+
+    // Debtor Portal > Financial Information > Reminder (MENUID 2584).
+    // Legacy BL: NF_BL_DEBTOR_PORTAL_REMINDER.
+    Route::get('/portal/debtor/reminders', [DebtorReminderController::class, 'index']);
+
+    // Debtor Portal > Financial Information > Debtors Statement (MENUID 2267).
+    // Legacy BL: NF_BL_DP_DEBTORS_STATEMENT (running-balance AR ledger).
+    Route::get('/portal/debtor/statement', [DebtorStatementController::class, 'index']);
+
+    // Vendor Portal > Tender/Quotation List (PAGEID 2278 / MENUID 2767).
+    // Legacy BL: NF_BL_PURCHASING_VENDOR_PORTAL_TENDER (?ListOfTender=1, ?check=1).
+    Route::get('/portal/vendor/tenders', [TenderQuotationController::class, 'index']);
+    Route::get('/portal/vendor/tenders/check-status', [TenderQuotationController::class, 'checkVendorStatus']);
+
+    // Vendor Portal > Online Registration Fee History (PAGEID 1654 / MENUID 2003).
+    // Legacy BL: NF_BL_VENDOR_ONLINE_PAYMENT (source not available); read-only
+    // listing reconstructed from the frontend column spec + commented legacy
+    // joins embedded in BL NF_BL_PURCHASING_VENDOR_PORTAL_TENDER.
+    Route::get('/portal/vendor/registration-fees', [VendorRegistrationFeeHistoryController::class, 'index']);
 
     Route::get('/setup/cascade-structure/options', [CascadeStructureController::class, 'options']);
     Route::get('/setup/cascade-structure', [CascadeStructureController::class, 'index']);

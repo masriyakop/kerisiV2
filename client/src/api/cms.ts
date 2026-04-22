@@ -41,6 +41,7 @@ import type {
   SaveCreditNoteResponse,
   SaveDebitNoteResponse,
   DebtorOptions,
+  DebtorProfileUpdateRow,
   DebtorRow,
   DiscountNoteRow,
   DiscountInvoiceLinesResponse,
@@ -124,11 +125,20 @@ import type {
   SemiStrictInput,
   SettingsPayload,
   StorefrontMenuItem,
+  DebtorReminderRow,
+  DebtorStatementFooter,
+  DebtorStatementRow,
+  TenderQuotationRow,
+  UtilityRegistrationDetail,
+  UtilityRegistrationInput,
+  UtilityRegistrationRow,
   UserDetail,
   UserInput,
   VcTncDetail,
   VcTncOptions,
   VcTncRow,
+  VendorRegistrationFeeRow,
+  VendorStatusCheck,
 } from "@/types";
 import type { AdminMenuPrefs } from "@/config/admin-menu";
 
@@ -1495,4 +1505,47 @@ export async function searchDepositFormCustomer(query = "", limit = 20) {
   return apiRequest<{ data: CcCustomerOption[] }>(
     `/api/credit-control/deposit-form/search-customer?${params.toString()}`,
   );
+}
+
+// ─── FIMS Portal ───────────────────────────────────────────────────────────
+// Read-only self-service listings for vendors/debtors logged into the Portal.
+
+// Debtor Portal > List of Profile Update Application (MENUID 2608)
+export async function listDebtorProfileUpdates(params = "") {
+  return apiRequest<{ data: DebtorProfileUpdateRow[]; meta: Record<string, unknown> }>(
+    `/api/portal/debtor/profile-update-applications${params}`,
+  );
+}
+
+// Vendor Portal > Tender/Quotation List (MENUID 2767)
+export async function listPortalTenders(params = "") {
+  return apiRequest<{ data: TenderQuotationRow[]; meta: Record<string, unknown> }>(
+    `/api/portal/vendor/tenders${params}`,
+  );
+}
+
+export async function checkPortalVendorStatus() {
+  return apiRequest<{ data: VendorStatusCheck }>("/api/portal/vendor/tenders/check-status");
+}
+
+// Vendor Portal > Online Registration Fee History (MENUID 2003)
+export async function listPortalRegistrationFees(params = "") {
+  return apiRequest<{ data: VendorRegistrationFeeRow[]; meta: Record<string, unknown> }>(
+    `/api/portal/vendor/registration-fees${params}`,
+  );
+}
+
+// Debtor Portal > Financial Information > Reminder (MENUID 2584).
+export async function listDebtorReminders(params = "") {
+  return apiRequest<{ data: DebtorReminderRow[]; meta: Record<string, unknown> }>(
+    `/api/portal/debtor/reminders${params}`,
+  );
+}
+
+// Debtor Portal > Financial Information > Debtors Statement (MENUID 2267).
+export async function listDebtorStatement(params = "") {
+  return apiRequest<{
+    data: DebtorStatementRow[];
+    meta: Record<string, unknown> & { footer?: DebtorStatementFooter };
+  }>(`/api/portal/debtor/statement${params}`);
 }
