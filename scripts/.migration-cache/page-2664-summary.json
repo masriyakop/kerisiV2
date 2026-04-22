@@ -1,0 +1,152 @@
+{
+  "page": {
+    "MENUID": 3224,
+    "PAGEID": 2664,
+    "PAGETITLE": "Setup Carian Structure Budget",
+    "PAGEBREADCRUMBS": "<back></back> Setup and Maintenance / Setup Carian Structure Budget",
+    "BL_preprocess_total": 1,
+    "BL_onload_total": 4
+  },
+  "components": [
+    {
+      "COMPONENTID": 8376,
+      "COMPONENTTITLE": "List Jenis Carian Structure Budget",
+      "COMPONENTTYPE": "datatable",
+      "DatatableColumnDetails": "{\"dt_bi\": [\"No\", \"Jenis Carian\", \"Status\", \"Action\"], \"dt_bm\": [\"No\", \"Jenis Carian\", \"Status\", \"Tindakan\"], \"dt_js\": [\"return row.index \", \"\", \"\", \"return `\\r\\n<a data-toggle=\\\"tooltip\\\" title=\\\"Edit\\\" onclick=\\\"listing.editModalSBG(`+row.sbss_id+`)\\\"><i class=\\\"fas fa-edit\\\"></i></a>\\r\\n`\"], \"dt_key\": [\"\", \"sbss_type\", \"sbss_status\", \"\"], \"dt_ajax\": \"api/MM_API_GLOBAL_SETUPCARIANSBG?dt_listing=1\", \"dt_post\": null, \"dt_sort\": [\"unsortable\", \"default\", \"default\", \"unsortable\"], \"dt_bInfo\": \"true\", \"dt_class\": [\"small-column\", \"\", \"\", \"action-column\"], \"dt_print\": \"false\", \"dt_filter\": \"default\", \"dt_bPaginate\": \"true\", \"dt_pageLength\": \"5\", \"dt_aLengthMenu\": \"5,10,25,50,100\", \"dt_freeze_left\": \"0\", \"dt_freeze_right\": \"0\", \"dt_bLengthChange\": \"false\"}",
+      "API_URL": "\"api/MM_API_GLOBAL_SETUPCARIANSBG?dt_listing=1\"",
+      "API_BL_NAME": "MM_API_GLOBAL_SETUPCARIANSBG",
+      "formItems": []
+    },
+    {
+      "COMPONENTID": 8377,
+      "COMPONENTTITLE": "Jenis Carian",
+      "COMPONENTTYPE": "form (Popup Modal)",
+      "DatatableColumnDetails": null,
+      "API_URL": null,
+      "API_BL_NAME": null,
+      "formItems": [
+        {
+          "title": "Jenis Carian",
+          "type": "text",
+          "cssClass": null,
+          "additionalAttr": "disabled",
+          "defaultVal": null,
+          "lookupQuery": "",
+          "isDisable": null
+        },
+        {
+          "title": "Status",
+          "type": "dropdown",
+          "cssClass": "",
+          "additionalAttr": "",
+          "defaultVal": "",
+          "lookupQuery": "SELECT 'ACTIVE' flc_id, 'ACTIVE' flc_name",
+          "isDisable": null
+        },
+        {
+          "title": null,
+          "type": "custom",
+          "cssClass": "force-one-column full-no-label",
+          "additionalAttr": null,
+          "defaultVal": "<div class='modal-footer'>\n\t<button type='button' class='btn btn-danger' data-dismiss='modal'>Cancel</button>\n\t<button type='button' class='btn btn-primary' onclick='listing.saveModal()'>Save</button>\n</div>",
+          "lookupQuery": null,
+          "isDisable": null
+        }
+      ]
+    },
+    {
+      "COMPONENTID": 8412,
+      "COMPONENTTITLE": "Semi Strict Setup",
+      "COMPONENTTYPE": "form",
+      "DatatableColumnDetails": null,
+      "API_URL": null,
+      "API_BL_NAME": null,
+      "formItems": [
+        {
+          "title": "Column Selected",
+          "type": "dropdown",
+          "cssClass": null,
+          "additionalAttr": null,
+          "defaultVal": null,
+          "lookupQuery": "SELECT 'ACCOUNT' flc_id, 'Account' flc_name FROM dual UNION\r\nSELECT 'ACTIVITY' flc_id, 'Activity' flc_name FROM dual",
+          "isDisable": null
+        },
+        {
+          "title": "Level Selected",
+          "type": "dropdown",
+          "cssClass": null,
+          "additionalAttr": null,
+          "defaultVal": null,
+          "lookupQuery": "SELECT '1' flc_id, '1' flc_name FROM dual UNION\r\nSELECT '2' flc_id, '2' flc_name FROM dual UNION\r\nSELECT '3' flc_id, '3' flc_name FROM dual UNION\r\nSELECT '4' flc_id, '4' flc_name FROM dual UNION\r\nSELECT '5' flc_id, '5' flc_name FROM dual UNION\r\nSELECT '6' flc_id, '6' flc_name FROM dual",
+          "isDisable": null
+        }
+      ]
+    },
+    {
+      "COMPONENTID": 8468,
+      "COMPONENTTITLE": "Bill Setup",
+      "COMPONENTTYPE": "datatable",
+      "DatatableColumnDetails": "{\"dt_bi\": [\"No\", \"Type\", \"Status\", \"Action\"], \"dt_bm\": [\"No\", \"Type\", \"Status\", \"Tindakan\"], \"dt_js\": [\"return row.index \", \"\", \"\", \"return `\\r\\n<a data-toggle=\\\"tooltip\\\" title=\\\"Edit\\\" onclick=\\\"listing.editBillSetup(`+row.bis_id+`)\\\"><i class=\\\"fas fa-edit\\\"></i></a>\\r\\n`\"], \"dt_key\": [\"\", \"bis_type\", \"bis_status\", \"\"], \"dt_ajax\": \"api/MM_API_GLOBAL_SETUPCARIANSBG?billSetup=1\", \"dt_post\": null, \"dt_sort\": [\"unsortable\", \"asc\", \"default\", \"unsortable\"], \"dt_bInfo\": \"true\", \"dt_class\": [\"small-column\", \"\", \"\", \"action-column\"], \"dt_print\": \"false\", \"dt_filter\": \"default\", \"dt_bPaginate\": \"true\", \"dt_pageLength\": \"5\", \"dt_aLengthMenu\": \"5,10,25,50,100\", \"dt_freeze_left\": \"0\", \"dt_freeze_right\": \"0\", \"dt_bLengthChange\": \"false\"}",
+      "API_URL": "\"api/MM_API_GLOBAL_SETUPCARIANSBG?billSetup=1\"",
+      "API_BL_NAME": "MM_API_GLOBAL_SETUPCARIANSBG",
+      "formItems": []
+    },
+    {
+      "COMPONENTID": 8470,
+      "COMPONENTTITLE": "Bill Setup Modal",
+      "COMPONENTTYPE": "form (Popup Modal)",
+      "DatatableColumnDetails": null,
+      "API_URL": null,
+      "API_BL_NAME": null,
+      "formItems": [
+        {
+          "title": "Type",
+          "type": "text",
+          "cssClass": "",
+          "additionalAttr": "disabled",
+          "defaultVal": "",
+          "lookupQuery": "",
+          "isDisable": null
+        },
+        {
+          "title": "Status",
+          "type": "dropdown",
+          "cssClass": null,
+          "additionalAttr": null,
+          "defaultVal": null,
+          "lookupQuery": "SELECT 'ACTIVE' flc_id, 'ACTIVE' flc_name UNION\r\nSELECT 'INACTIVE' flc_id, 'INACTIVE' flc_name",
+          "isDisable": null
+        },
+        {
+          "title": null,
+          "type": "custom",
+          "cssClass": "force-one-column full-no-label",
+          "additionalAttr": null,
+          "defaultVal": "<div class='modal-footer'>\n\t<button type='button' class='btn btn-danger' data-dismiss='modal'>Cancel</button>\n\t<button type='button' class='btn btn-primary' onclick='listing.billSetupSave()'>Save</button>\n</div>",
+          "lookupQuery": null,
+          "isDisable": null
+        }
+      ]
+    },
+    {
+      "COMPONENTID": 8492,
+      "COMPONENTTITLE": "BilL Setup Custom WF Posting",
+      "COMPONENTTYPE": "form",
+      "DatatableColumnDetails": null,
+      "API_URL": null,
+      "API_BL_NAME": null,
+      "formItems": [
+        {
+          "title": "Sequence Selected",
+          "type": "dropdown",
+          "cssClass": null,
+          "additionalAttr": null,
+          "defaultVal": null,
+          "lookupQuery": "SELECT wfp_sequence flc_id, CONCAT_WS(' - ', wfp_sequence, wfp_process_name) flc_name FROM fims_usr.wf_process wp WHERE wfp_workflow_code = 'BILLREG_AP' ORDER BY wfp_sequence",
+          "isDisable": null
+        }
+      ]
+    }
+  ],
+  "blDetails": "<?php\r\n\r\ninclude('userinfo.php');\r\n\r\nif($_GET['dt_listing']){\r\n\r\n\t$param = [];\r\n\r\n\tif($_POST['search']['value']){\r\n\t\t$filter = \"\r\n\t\t\tAND CONCAT_WS('__',\r\n\t\t\t\tsbss_type,\r\n\t\t\t\tsbss_status\r\n\t\t\t) LIKE CONCAT('%', ?, '%')\r\n\t\t\";\r\n\t\t$param[] = $_POST['search']['value'];\r\n\t}\r\n\r\n\t$common = \"\r\n\t\tFROM\r\n\t\t\t\".DB2.\".setup_budget_structure_search\r\n\t\tWHERE\r\n\t\t\t1 = 1\r\n\t\t\t$filter\r\n    \";\r\n    \r\n\r\n    //============================================================ record count\r\n\t$sql = \"SELECT COUNT(*) C $common\";\r\n\t$recordsFiltered = executeQueryV2($sql, $param)[0];\r\n\r\n    //============================================================ main sql\r\n    $sql = \"\r\n        SELECT\r\n\t\t\tsbss_id,\r\n\t\t\tsbss_type,\r\n\t\t\tsbss_status\r\n        $common\r\n        ORDER BY {$_POST['orderBy'][0]} {$_POST['orderBy'][1]}\r\n        LIMIT {$_POST['start']}, {$_POST['length']}\r\n    \";\r\n    $data = executeQueryV2($sql, $param);\r\n\r\n    // for($i=0; $i<count($data); $i++){\r\n    //     $data[$i]['urlEdit'] = 'index.php?a='.flc_url_encode('page=page_wrapper&menuID=1855&pyb_pybatch_id='.$data[$i]['pyb_pybatch_id']);\r\n    // }\r\n\r\n    //============================================================ finally\r\n    return [\r\n        'draw' => $_POST['draw'],\r\n        'recordsFiltered' => $recordsFiltered['C'],\r\n        'data' => $data\r\n    ];\r\n}\r\n\r\nif($_GET['billSetup']){\r\n\r\n\t$param = [];\r\n\r\n\tif($_POST['search']['value']){\r\n\t\t$filter = \"\r\n\t\t\tAND CONCAT_WS('__',\r\n\t\t\t\tbis_type,\r\n\t\t\t\tbis_status\r\n\t\t\t) LIKE CONCAT('%', ?, '%')\r\n\t\t\";\r\n\t\t$param[] = $_POST['search']['value'];\r\n\t}\r\n\r\n\t$common = \"\r\n\t\tFROM\r\n\t\t\t\".DB2.\".bills_setup\r\n\t\tWHERE\r\n\t\t\t1 = 1\r\n\t\t\t$filter\r\n    \";\r\n    \r\n\r\n    //============================================================ record count\r\n\t$sql = \"SELECT COUNT(*) C $common\";\r\n\t$recordsFiltered = executeQueryV2($sql, $param)[0];\r\n\r\n    //============================================================ main sql\r\n    $sql = \"\r\n        SELECT\r\n\t\t\tbis_id,\r\n\t\t\tbis_type,\r\n\t\t\tbis_status\r\n        $common\r\n        ORDER BY {$_POST['orderBy'][0]} {$_POST['orderBy'][1]}\r\n        LIMIT {$_POST['start']}, {$_POST['length']}\r\n    \";\r\n    $data = executeQueryV2($sql, $param);\r\n\r\n    // for($i=0; $i<count($data); $i++){\r\n    //     $data[$i]['urlEdit'] = 'index.php?a='.flc_url_encode('page=page_wrapper&menuID=1855&pyb_pybatch_id='.$data[$i]['pyb_pybatch_id']);\r\n    // }\r\n\r\n    //============================================================ finally\r\n    return [\r\n        'draw' => $_POST['draw'],\r\n        'recordsFiltered' => $recordsFiltered['C'],\r\n        'data' => $data\r\n    ];\r\n}\r\n\r\nif($_GET['getDataModal']){\r\n\t$data = executeQueryV2([\r\n\t\t\"sql\" => \"\r\n\t\t\tSELECT \r\n\t\t\t\tsbss_id,\r\n\t\t\t\tsbss_type,\r\n\t\t\t\tsbss_status\r\n\t\t\tFROM\r\n\t\t\t\t\".DB2.\".setup_budget_structure_search\r\n\t\t\tWHERE\r\n\t\t\t\tsbss_id = ?\r\n\t\t\",\r\n\t\t\"params\" => [$_POST['sbss_id']]\r\n\t])[0];\r\n\r\n\treturn[\r\n\t\t\"dataModal\" => $data\r\n\t];\r\n}\r\n\r\nif($_GET['getDataBillSetup']){\r\n\t$data = executeQueryV2([\r\n\t\t\"sql\" => \"\r\n\t\t\tSELECT \r\n\t\t\t\tbis_id,\r\n\t\t\t\tbis_type,\r\n\t\t\t\tbis_status\r\n\t\t\tFROM\r\n\t\t\t\t\".DB2.\".bills_setup\r\n\t\t\tWHERE\r\n\t\t\t\tbis_id = ?\r\n\t\t\",\r\n\t\t\"params\" => [$_POST['bis_id']]\r\n\t])[0];\r\n\r\n\treturn[\r\n\t\t\"dataModal\" => $data\r\n\t];\r\n}\r\n\r\nif($_GET['saveModal']){\r\n\r\n\texecuteQueryV2([\r\n\t\t\"sql\" => \"UPDATE \".DB2.\".setup_budget_structure_search SET sbss_status = 'INACTIVE'\"\r\n\t]);\r\n\r\n\t$_POST['dataModal']['sbss_id'] = $_POST['sbss_id'];\r\n\r\n\texpressDML([\r\n\t\t\"table\" => \"setup_budget_structure_search\",\r\n\t\t\"data\" => $_POST['dataModal']\r\n\t]);\r\n\r\n\treturn[\r\n\t\t\"status\" => \"ok\"\r\n\t];\r\n}\r\n\r\nif($_GET['saveBillSetupModal']){\r\n\r\n\t$_POST['dataModal']['bis_id'] = $_POST['bis_id'];\r\n\r\n\texpressDML([\r\n\t\t\"table\" => \"bills_setup\",\r\n\t\t\"data\" => $_POST['dataModal']\r\n\t]);\r\n\r\n\treturn[\r\n\t\t\"status\" => \"ok\"\r\n\t];\r\n}\r\n\r\nif($_GET['getDataSemiStrict']){\r\n\t$data = executeQueryV2([\r\n\t\t\"sql\" => \"\r\n\t\t\tSELECT \r\n\t\t\t\tsbss_column_selection,\r\n\t\t\t\tsbss_level_selection\r\n\t\t\tFROM\r\n\t\t\t\t\".DB2.\".setup_budget_structure_search\r\n\t\t\tWHERE\r\n\t\t\t\tsbss_type = 'SEMISTRICT'\r\n\t\t\"\r\n\t])[0];\r\n\r\n\treturn[\r\n\t\t\"semiStrict\" => $data\r\n\t];\r\n}\r\n\r\nif($_GET['getAllDataForm']){\r\n\t$data = executeQueryV2([\r\n\t\t\"sql\" => \"\r\n\t\t\tSELECT \r\n\t\t\t\tsbss_column_selection,\r\n\t\t\t\tsbss_level_selection\r\n\t\t\tFROM\r\n\t\t\t\t\".DB2.\".setup_budget_structure_search\r\n\t\t\tWHERE\r\n\t\t\t\tsbss_type = 'SEMISTRICT'\r\n\t\t\"\r\n\t])[0];\r\n\r\n\t$data2 = executeQueryV2([\r\n\t\t\"sql\" => \"SELECT bis_sequence_level FROM \".DB2.\".bills_setup WHERE bis_type = 'CustomWF'\"\r\n\t])[0];\r\n\r\n\t$allData = $data + $data2;\r\n\r\n\treturn[\r\n\t\t\"allData\" => $allData\r\n\t];\r\n}\r\n\r\nif($_GET['saveSemiStrict']){\r\n\r\n\texecuteQueryV2([\r\n\t\t\"sql\" => \"UPDATE \".DB2.\".setup_budget_structure_search SET sbss_column_selection = ?, sbss_level_selection = ? WHERE sbss_type = 'SEMISTRICT'\",\r\n\t\t\"params\" => [$_POST['dataSemiStrict']['sbss_column_selection'], $_POST['dataSemiStrict']['sbss_level_selection']]\r\n\t]);\r\n\r\n\treturn[\r\n\t\t\"status\" => \"ok\"\r\n\t];\r\n}\r\n\r\nif($_GET['saveBillSetupCustomWF']){\r\n\r\n\texecuteQueryV2([\r\n\t\t\"sql\" => \"UPDATE \".DB2.\".bills_setup SET bis_sequence_level = ? WHERE bis_type = 'CustomWF'\",\r\n\t\t\"params\" => [$_POST['dataBillSetupCustomWF']['bis_sequence_level']]\r\n\t]);\r\n\r\n\treturn[\r\n\t\t\"status\" => \"ok\"\r\n\t];\r\n}"
+}

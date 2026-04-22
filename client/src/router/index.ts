@@ -58,6 +58,10 @@ import DiscountNoteView from "@/views/DiscountNoteView.vue";
 import DiscountNoteFormView from "@/views/DiscountNoteFormView.vue";
 import AuthorizedReceiptingView from "@/views/AuthorizedReceiptingView.vue";
 import AuthorizedReceiptingFormView from "@/views/AuthorizedReceiptingFormView.vue";
+import LetterPhraseView from "@/views/LetterPhraseView.vue";
+import VcTncView from "@/views/VcTncView.vue";
+import CheckErrorView from "@/views/CheckErrorView.vue";
+import BudgetStructureSearchView from "@/views/BudgetStructureSearchView.vue";
 import StorefrontHomeView from "@/views/StorefrontHomeView.vue";
 import StorefrontPageView from "@/views/StorefrontPageView.vue";
 import { useAuthStore } from "@/stores/auth";
@@ -178,6 +182,13 @@ const router = createRouter({
     { path: "/admin/kerisi/m/1784", name: "kerisi-ar-discount-note-form", component: DiscountNoteFormView, meta: { requiresAuth: true, title: "Discount Note Form" } },
     { path: "/admin/kerisi/m/1952", name: "kerisi-ar-authorized-receipting", component: AuthorizedReceiptingView, meta: { requiresAuth: true, title: "Authorized Receipting" } },
     { path: "/admin/kerisi/m/1953", name: "kerisi-ar-authorized-receipting-form", component: AuthorizedReceiptingFormView, meta: { requiresAuth: true, title: "Authorized Receipting Form" } },
+    // FIMS setup & maintenance pages migrated from legacy PAGE_SETUP_MAINTENANCE
+    // (level 2) — MENUID maps to legacy MENUID and keeps URL parity with the
+    // generic `/admin/kerisi/m/:menuId` pattern used by the sidebar.
+    { path: "/admin/kerisi/m/3506", name: "kerisi-letter-phrase", component: LetterPhraseView, meta: { requiresAuth: true, title: "Letter Phrase" } },
+    { path: "/admin/kerisi/m/2073", name: "kerisi-vc-tnc", component: VcTncView, meta: { requiresAuth: true, title: "HOD, VC & TNC" } },
+    { path: "/admin/kerisi/m/2740", name: "kerisi-check-error", component: CheckErrorView, meta: { requiresAuth: true, title: "Cek yang mungkin error" } },
+    { path: "/admin/kerisi/m/3224", name: "kerisi-budget-structure-search", component: BudgetStructureSearchView, meta: { requiresAuth: true, title: "Setup Carian Structure Budget" } },
     { path: "/admin/kerisi/m/:menuId", name: "kerisi-menu", component: ComingSoonView, meta: { requiresAuth: true, title: "KERISI" } },
     { path: "/admin/kitchen-sink", name: "kitchen-sink", component: KitchenSinkView, meta: { requiresAuth: true, title: "Kitchen Sink" } },
     { path: "/admin/kitchen-sink/forms", name: "kitchen-forms", component: KitchenFormsView, meta: { requiresAuth: true, title: "Forms" } },

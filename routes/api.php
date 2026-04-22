@@ -28,9 +28,11 @@ use App\Http\Controllers\Api\DebitNoteController;
 use App\Http\Controllers\Api\DebitNoteFormController;
 use App\Http\Controllers\Api\DebtorController;
 use App\Http\Controllers\Api\DevelopersGuideController;
+use App\Http\Controllers\Api\CheckErrorController;
 use App\Http\Controllers\Api\DiscountNoteController;
 use App\Http\Controllers\Api\DiscountNoteFormController;
 use App\Http\Controllers\Api\FundTypeController;
+use App\Http\Controllers\Api\LetterPhraseController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\PayeeRegistrationController;
@@ -39,8 +41,9 @@ use App\Http\Controllers\Api\PtjCodeController;
 use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SettingController;
+use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\UtilityRegistrationController;
+use App\Http\Controllers\Api\VcTncController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes (no auth)
@@ -267,6 +270,50 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/setup/cascade-structure/{id}', [CascadeStructureController::class, 'show']);
     Route::post('/setup/cascade-structure', [CascadeStructureController::class, 'store']);
     Route::put('/setup/cascade-structure/{id}', [CascadeStructureController::class, 'update']);
+
+    // Letter Phrase setup (PAGEID 2911 / MENUID 3506). Legacy BL
+    // SZ_SETUPANDMAINTENANCE_LETTERPHRASE_API only supports list + update;
+    // delete was rendered client-side without server support.
+    Route::get('/setup/letter-phrase', [LetterPhraseController::class, 'index']);
+    Route::get('/setup/letter-phrase/{lpmValue}', [LetterPhraseController::class, 'show']);
+    Route::put('/setup/letter-phrase/{lpmValue}', [LetterPhraseController::class, 'update']);
+
+    // HOD, VC & TNC setup (PAGEID 1715 / MENUID 2073). Legacy BL
+    // API_VC_TNC_SETUP — list organization units with their head/VC staff,
+    // fetch one record for edit, and persist superior changes.
+    Route::get('/setup/vc-tnc/options', [VcTncController::class, 'options']);
+    Route::get('/setup/vc-tnc', [VcTncController::class, 'index']);
+    Route::get('/setup/vc-tnc/{id}', [VcTncController::class, 'show']);
+    Route::put('/setup/vc-tnc/{id}', [VcTncController::class, 'update']);
+
+    // "Cek yang mungkin error" diagnostic screen (PAGEID 2253 / MENUID 2740).
+    // Seven read-only datatables derived from MM_API_MAINTANANCE_CEKERROR.
+    Route::prefix('setup/check-error')->group(function () {
+        Route::get('/bill-master', [CheckErrorController::class, 'billMaster']);
+        Route::get('/voucher-detail', [CheckErrorController::class, 'voucherDetail']);
+        Route::get('/voucher-master', [CheckErrorController::class, 'voucherMaster']);
+        Route::get('/payment-record-pelik', [CheckErrorController::class, 'paymentRecordPelik']);
+        Route::get('/payment-record-pelik2', [CheckErrorController::class, 'paymentRecord2Pelik']);
+        Route::get('/url-brf-hilang', [CheckErrorController::class, 'urlBrfHilang']);
+        Route::get('/resit-no-allocate', [CheckErrorController::class, 'resitNoAllocate']);
+    });
+
+    // Setup Carian Structure Budget (PAGEID 2664 / MENUID 3224). Legacy BL
+    // MM_API_GLOBAL_SETUPCARIANSBG — two datatables (setup_budget_structure_search
+    // and bills_setup) plus forms for Semi-Strict column/level config and the
+    // CustomWF bill setup sequence.
+    Route::prefix('setup/budget-structure-search')->group(function () {
+        Route::get('/options', [SetupBudgetStructureSearchController::class, 'options']);
+        Route::get('/forms', [SetupBudgetStructureSearchController::class, 'forms']);
+        Route::get('/jenis-carian', [SetupBudgetStructureSearchController::class, 'indexJenisCarian']);
+        Route::get('/jenis-carian/{id}', [SetupBudgetStructureSearchController::class, 'showJenisCarian']);
+        Route::put('/jenis-carian/{id}', [SetupBudgetStructureSearchController::class, 'updateJenisCarian']);
+        Route::get('/bills-setup', [SetupBudgetStructureSearchController::class, 'indexBillsSetup']);
+        Route::get('/bills-setup/{id}', [SetupBudgetStructureSearchController::class, 'showBillsSetup']);
+        Route::put('/bills-setup/{id}', [SetupBudgetStructureSearchController::class, 'updateBillsSetup']);
+        Route::put('/semi-strict', [SetupBudgetStructureSearchController::class, 'saveSemiStrict']);
+        Route::put('/custom-wf', [SetupBudgetStructureSearchController::class, 'saveBillsCustomWf']);
+    });
 
     Route::get('/media', [MediaController::class, 'index']);
     Route::post('/media/upload', [MediaController::class, 'upload']);
