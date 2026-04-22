@@ -48,6 +48,16 @@ import PayeeRegistrationView from "@/views/PayeeRegistrationView.vue";
 import UtilityRegistrationView from "@/views/UtilityRegistrationView.vue";
 import AccountBankByPayeeView from "@/views/AccountBankByPayeeView.vue";
 import AccountBankUpdatedView from "@/views/AccountBankUpdatedView.vue";
+import DebtorView from "@/views/DebtorView.vue";
+import CashbookPtjView from "@/views/CashbookPtjView.vue";
+import CreditNoteView from "@/views/CreditNoteView.vue";
+import CreditNoteFormView from "@/views/CreditNoteFormView.vue";
+import DebitNoteView from "@/views/DebitNoteView.vue";
+import DebitNoteFormView from "@/views/DebitNoteFormView.vue";
+import DiscountNoteView from "@/views/DiscountNoteView.vue";
+import DiscountNoteFormView from "@/views/DiscountNoteFormView.vue";
+import AuthorizedReceiptingView from "@/views/AuthorizedReceiptingView.vue";
+import AuthorizedReceiptingFormView from "@/views/AuthorizedReceiptingFormView.vue";
 import StorefrontHomeView from "@/views/StorefrontHomeView.vue";
 import StorefrontPageView from "@/views/StorefrontPageView.vue";
 import { useAuthStore } from "@/stores/auth";
@@ -158,6 +168,16 @@ const router = createRouter({
     { path: "/admin/kerisi/m/3466", name: "kerisi-ap-utility-registration", component: UtilityRegistrationView, meta: { requiresAuth: true, title: "Utility Registration" } },
     { path: "/admin/kerisi/m/2751", name: "kerisi-ap-account-bank-by-payee", component: AccountBankByPayeeView, meta: { requiresAuth: true, title: "Account Bank By Payee" } },
     { path: "/admin/kerisi/m/2078", name: "kerisi-ap-account-bank-updated", component: AccountBankUpdatedView, meta: { requiresAuth: true, title: "Account Bank Updated" } },
+    { path: "/admin/kerisi/m/1727", name: "kerisi-ar-debtor", component: DebtorView, meta: { requiresAuth: true, title: "Debtor" } },
+    { path: "/admin/kerisi/m/1049", name: "kerisi-ar-cashbook-ptj", component: CashbookPtjView, meta: { requiresAuth: true, title: "Cashbook PTJ" } },
+    { path: "/admin/kerisi/m/1041", name: "kerisi-ar-credit-note", component: CreditNoteView, meta: { requiresAuth: true, title: "Credit Note" } },
+    { path: "/admin/kerisi/m/1782", name: "kerisi-ar-credit-note-form", component: CreditNoteFormView, meta: { requiresAuth: true, title: "Credit Note Form" } },
+    { path: "/admin/kerisi/m/1042", name: "kerisi-ar-debit-note", component: DebitNoteView, meta: { requiresAuth: true, title: "Debit Note" } },
+    { path: "/admin/kerisi/m/1783", name: "kerisi-ar-debit-note-form", component: DebitNoteFormView, meta: { requiresAuth: true, title: "Debit Note Form" } },
+    { path: "/admin/kerisi/m/1043", name: "kerisi-ar-discount-note", component: DiscountNoteView, meta: { requiresAuth: true, title: "Discount Note" } },
+    { path: "/admin/kerisi/m/1784", name: "kerisi-ar-discount-note-form", component: DiscountNoteFormView, meta: { requiresAuth: true, title: "Discount Note Form" } },
+    { path: "/admin/kerisi/m/1952", name: "kerisi-ar-authorized-receipting", component: AuthorizedReceiptingView, meta: { requiresAuth: true, title: "Authorized Receipting" } },
+    { path: "/admin/kerisi/m/1953", name: "kerisi-ar-authorized-receipting-form", component: AuthorizedReceiptingFormView, meta: { requiresAuth: true, title: "Authorized Receipting Form" } },
     { path: "/admin/kerisi/m/:menuId", name: "kerisi-menu", component: ComingSoonView, meta: { requiresAuth: true, title: "KERISI" } },
     { path: "/admin/kitchen-sink", name: "kitchen-sink", component: KitchenSinkView, meta: { requiresAuth: true, title: "Kitchen Sink" } },
     { path: "/admin/kitchen-sink/forms", name: "kitchen-forms", component: KitchenFormsView, meta: { requiresAuth: true, title: "Forms" } },
