@@ -1378,11 +1378,6 @@ export const KERISI_MENU_TREE: KerisiMigratedMenuNode[] = [
         to: "/admin/kerisi/m/1784"
       },
       {
-        menuId: 1020,
-        label: "Debtor - En Masri",
-        to: "/admin/kerisi/m/1020"
-      },
-      {
         menuId: 1044,
         label: "Receipt",
         to: "/admin/kerisi/m/1044",
@@ -1479,11 +1474,6 @@ export const KERISI_MENU_TREE: KerisiMigratedMenuNode[] = [
         ]
       },
       {
-        menuId: 1046,
-        label: "Authorized Receipting",
-        to: "/admin/kerisi/m/1046"
-      },
-      {
         menuId: 1952,
         label: "Authorized Receipting",
         to: "/admin/kerisi/m/1952"
@@ -1521,19 +1511,9 @@ export const KERISI_MENU_TREE: KerisiMigratedMenuNode[] = [
         ]
       },
       {
-        menuId: 1048,
-        label: "Pre-printed Receipt",
-        to: "/admin/kerisi/m/1048"
-      },
-      {
         menuId: 1049,
         label: "Cashbook PTJ",
         to: "/admin/kerisi/m/1049"
-      },
-      {
-        menuId: 1731,
-        label: "Payee Registration Details Add",
-        to: "/admin/kerisi/m/1731"
       },
       {
         menuId: 1786,
@@ -1572,16 +1552,6 @@ export const KERISI_MENU_TREE: KerisiMigratedMenuNode[] = [
           }
         ]
       },
-      {
-        menuId: 1909,
-        label: "xxxxx",
-        to: "/admin/kerisi/m/1909"
-      },
-      {
-        menuId: 1908,
-        label: "xxxxx",
-        to: "/admin/kerisi/m/1908"
-      }
     ]
   },
   {

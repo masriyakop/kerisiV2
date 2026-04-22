@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\AccountBankUpdatedController;
 use App\Http\Controllers\Api\AccountCodeController;
 use App\Http\Controllers\Api\AccountCodePpiController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AuthorizedReceiptingController;
+use App\Http\Controllers\Api\AuthorizedReceiptingFormController;
 use App\Http\Controllers\Api\BankAccountController;
 use App\Http\Controllers\Api\BankMasterController;
 use App\Http\Controllers\Api\BankSetupController;
@@ -16,11 +18,26 @@ use App\Http\Controllers\Api\BudgetMonitoringController;
 use App\Http\Controllers\Api\BudgetMovementController;
 use App\Http\Controllers\Api\CascadeStructureController;
 use App\Http\Controllers\Api\CashbookListController;
+use App\Http\Controllers\Api\CashbookPtjController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CostCentreController;
+use App\Http\Controllers\Api\CreditNoteController;
+use App\Http\Controllers\Api\CreditNoteFormController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DebitNoteController;
+use App\Http\Controllers\Api\DebitNoteFormController;
+use App\Http\Controllers\Api\DebtorController;
+use App\Http\Controllers\Api\DebtorProfileUpdateController;
+use App\Http\Controllers\Api\DebtorReminderController;
+use App\Http\Controllers\Api\DebtorStatementController;
+use App\Http\Controllers\Api\DepositController;
+use App\Http\Controllers\Api\DepositFormController;
 use App\Http\Controllers\Api\DevelopersGuideController;
 use App\Http\Controllers\Api\CheckErrorController;
+use App\Http\Controllers\Api\DiscountNoteController;
+use App\Http\Controllers\Api\DiscountNoteFormController;
+use App\Http\Controllers\Api\InvoiceBalanceController;
+use App\Http\Controllers\Api\ListOfDepositController;
 use App\Http\Controllers\Api\FundTypeController;
 use App\Http\Controllers\Api\LetterPhraseController;
 use App\Http\Controllers\Api\MediaController;
@@ -32,8 +49,11 @@ use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
+use App\Http\Controllers\Api\TenderQuotationController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UtilityRegistrationController;
 use App\Http\Controllers\Api\VcTncController;
+use App\Http\Controllers\Api\VendorRegistrationFeeHistoryController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes (no auth)
@@ -175,6 +195,142 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/account-payable/account-bank-updated/vouchers', [AccountBankUpdatedController::class, 'listVouchers']);
     Route::post('/account-payable/account-bank-updated/bills/process', [AccountBankUpdatedController::class, 'processBills']);
     Route::post('/account-payable/account-bank-updated/vouchers/process', [AccountBankUpdatedController::class, 'processVouchers']);
+
+    // FIMS Account Receivable — Debtor (PAGEID 1415 / MENUID 1727): datatable with
+    // smart filter (Status) + cascade delete across vend_customer_supplier,
+    // vend_supplier_account and vendor_address. Cashbook PTJ (PAGEID 2048 /
+    // MENUID 1049): read-only UNION of offline and preprinted receipts grouped
+    // by staff + counter. See DebtorController / CashbookPtjController.
+    Route::get('/account-receivable/debtor/options', [DebtorController::class, 'options']);
+    Route::get('/account-receivable/debtor', [DebtorController::class, 'index']);
+    Route::delete('/account-receivable/debtor/{id}', [DebtorController::class, 'destroy'])->whereNumber('id');
+
+    Route::get('/account-receivable/cashbook-ptj', [CashbookPtjController::class, 'index']);
+
+    // FIMS Account Receivable — Note lists (PAGEID 1459/1461/1463, MENUID
+    // 1041/1042/1043) all follow the same BL shape: list + search over coded
+    // + JSON-extended desc columns, delete cascades through *_details first.
+    // Scoped by `{c,d,dc}nm_system_id` sentinels (AR_CN / AR_DN / AR_DC).
+    Route::get('/account-receivable/credit-note', [CreditNoteController::class, 'index']);
+    Route::delete('/account-receivable/credit-note/{id}', [CreditNoteController::class, 'destroy']);
+
+    Route::get('/account-receivable/debit-note', [DebitNoteController::class, 'index']);
+    Route::delete('/account-receivable/debit-note/{id}', [DebitNoteController::class, 'destroy']);
+
+    Route::get('/account-receivable/discount-note', [DiscountNoteController::class, 'index']);
+    Route::delete('/account-receivable/discount-note/{id}', [DiscountNoteController::class, 'destroy']);
+
+    // Credit Note Form (PAGEID 1474 / MENUID 1782) — BL DT_AR_CREDIT_NOTE_FORM.
+    // The legacy single-endpoint `?action=` switch is split into REST
+    // endpoints. `submit` / `cancel` / `process-flow` are workflow stubs
+    // (status transition + reason logging) because the FIMS workflow SPs
+    // and `wf_task` tables are not yet migrated — see controller docblock.
+    // Shared AR note-form lookups (Customer Type / Debtor Type dropdown, and
+    // autosuggest searches for Debtor Name and Invoice No).
+    Route::get('/account-receivable/lookup/customer-type', [CreditNoteFormController::class, 'customerTypes']);
+    Route::get('/account-receivable/credit-note-form/search-debtor', [CreditNoteFormController::class, 'searchDebtors']);
+    Route::get('/account-receivable/credit-note-form/search-invoice', [CreditNoteFormController::class, 'searchInvoices']);
+    Route::get('/account-receivable/credit-note-form/invoice-lines', [CreditNoteFormController::class, 'invoiceLines']);
+    Route::get('/account-receivable/credit-note-form/{id}', [CreditNoteFormController::class, 'show']);
+    Route::post('/account-receivable/credit-note-form', [CreditNoteFormController::class, 'saveDraft']);
+    Route::post('/account-receivable/credit-note-form/{id}/submit', [CreditNoteFormController::class, 'submit']);
+    Route::post('/account-receivable/credit-note-form/{id}/cancel', [CreditNoteFormController::class, 'cancel']);
+    Route::get('/account-receivable/credit-note-form/{id}/process-flow', [CreditNoteFormController::class, 'processFlow']);
+
+    // Debit Note Form (PAGEID 1476 / MENUID 1783) — BL DT_AR_DEBIT_NOTE_FORM.
+    // Same Wave-B stubbing rationale as the credit-note form above.
+    Route::get('/account-receivable/debit-note-form/invoice-lines', [DebitNoteFormController::class, 'invoiceLines']);
+    Route::get('/account-receivable/debit-note-form/{id}', [DebitNoteFormController::class, 'show']);
+    Route::post('/account-receivable/debit-note-form', [DebitNoteFormController::class, 'saveDraft']);
+    Route::post('/account-receivable/debit-note-form/{id}/submit', [DebitNoteFormController::class, 'submit']);
+    Route::post('/account-receivable/debit-note-form/{id}/cancel', [DebitNoteFormController::class, 'cancel']);
+    Route::get('/account-receivable/debit-note-form/{id}/process-flow', [DebitNoteFormController::class, 'processFlow']);
+
+    // Authorized Receipting list (PAGEID 1613 / MENUID 1952). Legacy BL scoped
+    // to logged-in staff OR UUM_UNIT_TERIMAAN group; we expose a global admin
+    // list with an optional ?staff_id= emulation (see controller docblock).
+    Route::get('/account-receivable/authorized-receipting/options', [AuthorizedReceiptingController::class, 'options']);
+    Route::get('/account-receivable/authorized-receipting', [AuthorizedReceiptingController::class, 'index']);
+    Route::delete('/account-receivable/authorized-receipting/{id}', [AuthorizedReceiptingController::class, 'destroy']);
+
+    // Discount Note Form (MENUID 1784) — BL DT_AR_DISCOUNT_NOTE_FORM.
+    // Same Wave-B stubbing rationale as credit-/debit-note forms above.
+    Route::get('/account-receivable/discount-note-form/discount-policies', [DiscountNoteFormController::class, 'discountPolicies']);
+    Route::get('/account-receivable/discount-note-form/invoice-lines', [DiscountNoteFormController::class, 'invoiceLines']);
+    Route::get('/account-receivable/discount-note-form/{id}', [DiscountNoteFormController::class, 'show']);
+    Route::post('/account-receivable/discount-note-form', [DiscountNoteFormController::class, 'saveDraft']);
+    Route::post('/account-receivable/discount-note-form/{id}/submit', [DiscountNoteFormController::class, 'submit']);
+    Route::post('/account-receivable/discount-note-form/{id}/cancel', [DiscountNoteFormController::class, 'cancel']);
+    Route::get('/account-receivable/discount-note-form/{id}/process-flow', [DiscountNoteFormController::class, 'processFlow']);
+
+    // Authorized Receipting Form (MENUID 1953) — BL V2_AUTHORIZED_RECEIPTING_FORM_API.
+    // Same Wave-B stubbing rationale; the legacy two-branch workflow (PTJ
+    // same vs different) is deferred — see controller docblock.
+    Route::get('/account-receivable/authorized-receipting-form/current-staff', [AuthorizedReceiptingFormController::class, 'currentStaff']);
+    Route::get('/account-receivable/authorized-receipting-form/search-event', [AuthorizedReceiptingFormController::class, 'searchEvents']);
+    Route::get('/account-receivable/authorized-receipting-form/search-staff', [AuthorizedReceiptingFormController::class, 'searchStaff']);
+    Route::get('/account-receivable/authorized-receipting-form/{id}', [AuthorizedReceiptingFormController::class, 'show']);
+    Route::post('/account-receivable/authorized-receipting-form', [AuthorizedReceiptingFormController::class, 'saveDraft']);
+    Route::post('/account-receivable/authorized-receipting-form/{id}/submit', [AuthorizedReceiptingFormController::class, 'submit']);
+    Route::post('/account-receivable/authorized-receipting-form/{id}/cancel', [AuthorizedReceiptingFormController::class, 'cancel']);
+    Route::get('/account-receivable/authorized-receipting-form/{id}/process-flow', [AuthorizedReceiptingFormController::class, 'processFlow']);
+
+    // ---------------------------------------------------------------- Credit Control
+
+    // Deposit listing (PAGEID 1445 / MENUID 1809). Legacy BL
+    // ZR_CREDITCONTROL_DEPOSIT_API — joined deposit_master + deposit_details
+    // with global / top / smart filters and signed-amount footer.
+    Route::get('/credit-control/deposit/options', [DepositController::class, 'options']);
+    Route::get('/credit-control/deposit/autosuggest', [DepositController::class, 'autosuggest']);
+    Route::get('/credit-control/deposit', [DepositController::class, 'index']);
+
+    // List of Deposit (PAGEID 2159 / MENUID 3066). Legacy BL
+    // SNA_API_CC_LISTOFDEPOSIT — restricted to account_main subsidiary+deposit
+    // rows, with customer-type / customer-id / PTJ filters.
+    Route::get('/credit-control/list-of-deposit/options', [ListOfDepositController::class, 'options']);
+    Route::get('/credit-control/list-of-deposit/search-customer', [ListOfDepositController::class, 'searchCustomer']);
+    Route::get('/credit-control/list-of-deposit', [ListOfDepositController::class, 'index']);
+
+    // Invoice Balance (PAGEID 2561 / MENUID 3388). Legacy BL
+    // MZS_API_CC_INVOICE_BALANCE — read-only aggregated outstanding invoices
+    // computed from rep_aging_debtor as-of tf_end_date.
+    Route::get('/credit-control/invoice-balance/options', [InvoiceBalanceController::class, 'options']);
+    Route::get('/credit-control/invoice-balance/search-customer', [InvoiceBalanceController::class, 'searchCustomer']);
+    Route::get('/credit-control/invoice-balance/search-invoice', [InvoiceBalanceController::class, 'searchInvoice']);
+    Route::get('/credit-control/invoice-balance', [InvoiceBalanceController::class, 'index']);
+
+    // Detail of Deposit (PAGEID 2688 / MENUID 3397). Legacy BL
+    // NAD_API_CC_DEPOSIT_DETAILS — master form + detail datatable + popup
+    // modal. Only updates are supported; no new-record flow exists in legacy.
+    Route::get('/credit-control/deposit-form/search-customer', [DepositFormController::class, 'searchCustomer']);
+    Route::get('/credit-control/deposit-form/{id}/details', [DepositFormController::class, 'details'])->whereNumber('id');
+    Route::get('/credit-control/deposit-form/{id}', [DepositFormController::class, 'show'])->whereNumber('id');
+    Route::put('/credit-control/deposit-form/{id}', [DepositFormController::class, 'update'])->whereNumber('id');
+    Route::put('/credit-control/deposit-form/{id}/detail/{detailId}', [DepositFormController::class, 'updateDetail'])->whereNumber('id')->whereNumber('detailId');
+
+    // Portal pages — read-only vendor/debtor self-service listings.
+    // Debtor Portal > List of Profile Update Application (PAGEID 2155 / MENUID 2608).
+    // Legacy BL: MZ_BL_DEBTOR_PORTAL_LIST (?dtListing=1).
+    Route::get('/portal/debtor/profile-update-applications', [DebtorProfileUpdateController::class, 'index']);
+
+    // Debtor Portal > Financial Information > Reminder (MENUID 2584).
+    // Legacy BL: NF_BL_DEBTOR_PORTAL_REMINDER.
+    Route::get('/portal/debtor/reminders', [DebtorReminderController::class, 'index']);
+
+    // Debtor Portal > Financial Information > Debtors Statement (MENUID 2267).
+    // Legacy BL: NF_BL_DP_DEBTORS_STATEMENT (running-balance AR ledger).
+    Route::get('/portal/debtor/statement', [DebtorStatementController::class, 'index']);
+
+    // Vendor Portal > Tender/Quotation List (PAGEID 2278 / MENUID 2767).
+    // Legacy BL: NF_BL_PURCHASING_VENDOR_PORTAL_TENDER (?ListOfTender=1, ?check=1).
+    Route::get('/portal/vendor/tenders', [TenderQuotationController::class, 'index']);
+    Route::get('/portal/vendor/tenders/check-status', [TenderQuotationController::class, 'checkVendorStatus']);
+
+    // Vendor Portal > Online Registration Fee History (PAGEID 1654 / MENUID 2003).
+    // Legacy BL: NF_BL_VENDOR_ONLINE_PAYMENT (source not available); read-only
+    // listing reconstructed from the frontend column spec + commented legacy
+    // joins embedded in BL NF_BL_PURCHASING_VENDOR_PORTAL_TENDER.
+    Route::get('/portal/vendor/registration-fees', [VendorRegistrationFeeHistoryController::class, 'index']);
 
     Route::get('/setup/cascade-structure/options', [CascadeStructureController::class, 'options']);
     Route::get('/setup/cascade-structure', [CascadeStructureController::class, 'index']);

@@ -40,6 +40,33 @@ import BudgetMovementView from "@/views/BudgetMovementView.vue";
 import BudgetMonitoringView from "@/views/BudgetMonitoringView.vue";
 import BudgetInitialView from "@/views/BudgetInitialView.vue";
 import BudgetClosingView from "@/views/BudgetClosingView.vue";
+import BankSetupView from "@/views/BankSetupView.vue";
+import BankMasterView from "@/views/BankMasterView.vue";
+import BankAccountView from "@/views/BankAccountView.vue";
+import CashbookListView from "@/views/CashbookListView.vue";
+import PayeeRegistrationView from "@/views/PayeeRegistrationView.vue";
+import UtilityRegistrationView from "@/views/UtilityRegistrationView.vue";
+import AccountBankByPayeeView from "@/views/AccountBankByPayeeView.vue";
+import AccountBankUpdatedView from "@/views/AccountBankUpdatedView.vue";
+import DebtorView from "@/views/DebtorView.vue";
+import CashbookPtjView from "@/views/CashbookPtjView.vue";
+import CreditNoteView from "@/views/CreditNoteView.vue";
+import CreditNoteFormView from "@/views/CreditNoteFormView.vue";
+import DebitNoteView from "@/views/DebitNoteView.vue";
+import DebitNoteFormView from "@/views/DebitNoteFormView.vue";
+import DiscountNoteView from "@/views/DiscountNoteView.vue";
+import DiscountNoteFormView from "@/views/DiscountNoteFormView.vue";
+import AuthorizedReceiptingView from "@/views/AuthorizedReceiptingView.vue";
+import AuthorizedReceiptingFormView from "@/views/AuthorizedReceiptingFormView.vue";
+import DepositView from "@/views/DepositView.vue";
+import ListOfDepositView from "@/views/ListOfDepositView.vue";
+import InvoiceBalanceView from "@/views/InvoiceBalanceView.vue";
+import DepositFormView from "@/views/DepositFormView.vue";
+import DebtorProfileUpdateView from "@/views/DebtorProfileUpdateView.vue";
+import TenderQuotationView from "@/views/TenderQuotationView.vue";
+import VendorRegistrationFeeHistoryView from "@/views/VendorRegistrationFeeHistoryView.vue";
+import DebtorReminderView from "@/views/DebtorReminderView.vue";
+import DebtorStatementView from "@/views/DebtorStatementView.vue";
 import LetterPhraseView from "@/views/LetterPhraseView.vue";
 import VcTncView from "@/views/VcTncView.vue";
 import CheckErrorView from "@/views/CheckErrorView.vue";
@@ -139,6 +166,52 @@ const router = createRouter({
     { path: "/admin/kerisi/m/1541", name: "kerisi-budget-initial", component: BudgetInitialView, meta: { requiresAuth: true, title: "Budget Initial" } },
     { path: "/admin/kerisi/m/2389", name: "kerisi-budget-closing", component: BudgetClosingView, meta: { requiresAuth: true, title: "Budget Closing" } },
     { path: "/admin/kerisi/m/3154", name: "kerisi-budget-closing-alias", component: BudgetClosingView, meta: { requiresAuth: true, title: "Budget Closing" } },
+    // FIMS Cashbook — Bank Setup (PAGEID 2680), Bank Master (PAGEID 1682),
+    // Bank Account (PAGEID 1736), List of Cashbook Daily (PAGEID 1397) and
+    // Monthly (PAGEID 2024). Daily/Monthly reuse CashbookListView via prop.
+    { path: "/admin/kerisi/m/3246", name: "kerisi-bank-setup", component: BankSetupView, meta: { requiresAuth: true, title: "Bank Setup" } },
+    { path: "/admin/kerisi/m/2036", name: "kerisi-bank-master", component: BankMasterView, meta: { requiresAuth: true, title: "Bank Master" } },
+    { path: "/admin/kerisi/m/2097", name: "kerisi-bank-account", component: BankAccountView, meta: { requiresAuth: true, title: "Bank Account" } },
+    { path: "/admin/kerisi/m/1702", name: "kerisi-cashbook-daily", component: CashbookListView, props: { type: "DAILY" }, meta: { requiresAuth: true, title: "List Of CashBook (Daily)" } },
+    { path: "/admin/kerisi/m/2471", name: "kerisi-cashbook-monthly", component: CashbookListView, props: { type: "MONTHLY" }, meta: { requiresAuth: true, title: "List Of Cashbook (Monthly)" } },
+    // FIMS Account Payable — Payee Registration (MENUID 1711), Utility
+    // Registration (MENUID 3466), Account Bank by Payee (MENUID 2751),
+    // Account Bank Updated (MENUID 2078).
+    { path: "/admin/kerisi/m/1711", name: "kerisi-ap-payee-registration", component: PayeeRegistrationView, meta: { requiresAuth: true, title: "Payee Registration" } },
+    { path: "/admin/kerisi/m/3466", name: "kerisi-ap-utility-registration", component: UtilityRegistrationView, meta: { requiresAuth: true, title: "Utility Registration" } },
+    { path: "/admin/kerisi/m/2751", name: "kerisi-ap-account-bank-by-payee", component: AccountBankByPayeeView, meta: { requiresAuth: true, title: "Account Bank By Payee" } },
+    { path: "/admin/kerisi/m/2078", name: "kerisi-ap-account-bank-updated", component: AccountBankUpdatedView, meta: { requiresAuth: true, title: "Account Bank Updated" } },
+    { path: "/admin/kerisi/m/1727", name: "kerisi-ar-debtor", component: DebtorView, meta: { requiresAuth: true, title: "Debtor" } },
+    { path: "/admin/kerisi/m/1049", name: "kerisi-ar-cashbook-ptj", component: CashbookPtjView, meta: { requiresAuth: true, title: "Cashbook PTJ" } },
+    { path: "/admin/kerisi/m/1041", name: "kerisi-ar-credit-note", component: CreditNoteView, meta: { requiresAuth: true, title: "Credit Note" } },
+    { path: "/admin/kerisi/m/1782", name: "kerisi-ar-credit-note-form", component: CreditNoteFormView, meta: { requiresAuth: true, title: "Credit Note Form" } },
+    { path: "/admin/kerisi/m/1042", name: "kerisi-ar-debit-note", component: DebitNoteView, meta: { requiresAuth: true, title: "Debit Note" } },
+    { path: "/admin/kerisi/m/1783", name: "kerisi-ar-debit-note-form", component: DebitNoteFormView, meta: { requiresAuth: true, title: "Debit Note Form" } },
+    { path: "/admin/kerisi/m/1043", name: "kerisi-ar-discount-note", component: DiscountNoteView, meta: { requiresAuth: true, title: "Discount Note" } },
+    // Student Finance list aliases — same backend tables/columns as the admin
+    // AR listings above; the legacy `DT_CREDIT_NOTE_LIST` / `DT_DEBIT_NOTE_LIST`
+    // / `DT_DISCOUNT_NOTE_LIST` BL files are not present in the available
+    // source JSON, so they are assumed to be alternate menu placements of the
+    // same `DT_AR_*_LIST` listings already wired for MENUID 1041/1042/1043.
+    { path: "/admin/kerisi/m/1529", name: "kerisi-sf-credit-note", component: CreditNoteView, meta: { requiresAuth: true, title: "Credit Note" } },
+    { path: "/admin/kerisi/m/1575", name: "kerisi-sf-debit-note", component: DebitNoteView, meta: { requiresAuth: true, title: "Debit Note" } },
+    { path: "/admin/kerisi/m/1570", name: "kerisi-sf-discount-note", component: DiscountNoteView, meta: { requiresAuth: true, title: "Discount Note" } },
+    { path: "/admin/kerisi/m/1784", name: "kerisi-ar-discount-note-form", component: DiscountNoteFormView, meta: { requiresAuth: true, title: "Discount Note Form" } },
+    { path: "/admin/kerisi/m/1952", name: "kerisi-ar-authorized-receipting", component: AuthorizedReceiptingView, meta: { requiresAuth: true, title: "Authorized Receipting" } },
+    { path: "/admin/kerisi/m/1953", name: "kerisi-ar-authorized-receipting-form", component: AuthorizedReceiptingFormView, meta: { requiresAuth: true, title: "Authorized Receipting Form" } },
+    // FIMS Credit Control — MENUID 1809 / 3066 / 3388 / 3397 (legacy PAGEIDs
+    // 1445, 2159, 2561, 2688). Backed by DepositController /
+    // ListOfDepositController / InvoiceBalanceController / DepositFormController.
+    { path: "/admin/kerisi/m/1809", name: "kerisi-cc-deposit", component: DepositView, meta: { requiresAuth: true, title: "Deposit" } },
+    { path: "/admin/kerisi/m/3066", name: "kerisi-cc-list-of-deposit", component: ListOfDepositView, meta: { requiresAuth: true, title: "List of Deposit" } },
+    { path: "/admin/kerisi/m/3388", name: "kerisi-cc-invoice-balance", component: InvoiceBalanceView, meta: { requiresAuth: true, title: "Invoice Balance" } },
+    { path: "/admin/kerisi/m/3397", name: "kerisi-cc-deposit-form", component: DepositFormView, meta: { requiresAuth: true, title: "Detail of Deposit" } },
+    // Portal (debtor/vendor) read-only listings
+    { path: "/admin/kerisi/m/2608", name: "kerisi-portal-debtor-profile-updates", component: DebtorProfileUpdateView, meta: { requiresAuth: true, title: "List of Profile Update Application" } },
+    { path: "/admin/kerisi/m/2767", name: "kerisi-portal-tender-list", component: TenderQuotationView, meta: { requiresAuth: true, title: "Tender/Quotation List" } },
+    { path: "/admin/kerisi/m/2003", name: "kerisi-portal-registration-fees", component: VendorRegistrationFeeHistoryView, meta: { requiresAuth: true, title: "Online Registration Fee History" } },
+    { path: "/admin/kerisi/m/2584", name: "kerisi-portal-debtor-reminder", component: DebtorReminderView, meta: { requiresAuth: true, title: "Reminder" } },
+    { path: "/admin/kerisi/m/2267", name: "kerisi-portal-debtor-statement", component: DebtorStatementView, meta: { requiresAuth: true, title: "Debtors Statement" } },
     // FIMS setup & maintenance pages migrated from legacy PAGE_SETUP_MAINTENANCE
     // (level 2) — MENUID maps to legacy MENUID and keeps URL parity with the
     // generic `/admin/kerisi/m/:menuId` pattern used by the sidebar.
