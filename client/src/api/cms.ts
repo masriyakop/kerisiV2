@@ -87,11 +87,22 @@ import type {
   CheckErrorUrlBrfHilangRow,
   CheckErrorVoucherDetailRow,
   CheckErrorVoucherMasterRow,
+  CcCustomerOption,
+  CcOption,
   CostCentreInput,
   CostCentreRow,
+  DepositDetailInput,
+  DepositDetailRow,
+  DepositFormMaster,
+  DepositFormMasterInput,
+  DepositOptions,
+  DepositRow,
   FundTypeInput,
   FundTypeRow,
+  InvoiceBalanceOptions,
+  InvoiceBalanceRow,
   JenisCarianDetail,
+  ListOfDepositOptions,
   JenisCarianInput,
   JenisCarianRow,
   LetterPhraseDetail,
@@ -762,6 +773,193 @@ export async function saveBillsCustomWf(input: BillsCustomWfInput) {
   );
 }
 
+// ─── FIMS Cashbook ─────────────────────────────────────────────────────────
+// Bank Setup (PAGEID 2680 / MENUID 3246)
+export async function listBankSetup(params = "") {
+  return apiRequest<{ data: BankSetupRow[]; meta: Record<string, unknown> }>(`/api/cashbook/bank-setup${params}`);
+}
+
+export async function getBankSetupOptions() {
+  return apiRequest<{ data: BankSetupOptions }>("/api/cashbook/bank-setup/options");
+}
+
+export async function getBankSetup(code: string) {
+  return apiRequest<{ data: { lbmBankCode: string; lbmBankName: string; isBankMain: "Y" | "N" | null; lbmStatus: number } }>(
+    `/api/cashbook/bank-setup/${encodeURIComponent(code)}`,
+  );
+}
+
+export async function createBankSetup(input: BankSetupInput) {
+  return apiRequest<{ data: { lbmBankCode: string } }>("/api/cashbook/bank-setup", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateBankSetup(code: string, input: BankSetupInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/cashbook/bank-setup/${encodeURIComponent(code)}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// Bank Master (PAGEID 1682 / MENUID 2036)
+export async function listBankMaster(params = "") {
+  return apiRequest<{ data: BankMasterRow[]; meta: Record<string, unknown> }>(`/api/cashbook/bank-master${params}`);
+}
+
+export async function getBankMasterOptions() {
+  return apiRequest<{ data: BankMasterOptions }>("/api/cashbook/bank-master/options");
+}
+
+export async function getBankMaster(id: number) {
+  return apiRequest<{ data: BankMasterRow & { bnmAddressCountry: string | null; bnmAddressPostcode: string | null } }>(
+    `/api/cashbook/bank-master/${id}`,
+  );
+}
+
+export async function createBankMaster(input: BankMasterInput) {
+  return apiRequest<{ data: { bnmBankId: number } }>("/api/cashbook/bank-master", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateBankMaster(id: number, input: BankMasterInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/cashbook/bank-master/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// Bank Account (PAGEID 1736 / MENUID 2097)
+export async function listBankAccount(params = "") {
+  return apiRequest<{ data: BankAccountRow[]; meta: Record<string, unknown> }>(`/api/cashbook/bank-account${params}`);
+}
+
+export async function getBankAccountOptions() {
+  return apiRequest<{ data: BankAccountOptions }>("/api/cashbook/bank-account/options");
+}
+
+export async function getBankAccount(id: number) {
+  return apiRequest<{ data: BankAccountDetail }>(`/api/cashbook/bank-account/${id}`);
+}
+
+export async function createBankAccount(input: BankAccountInput) {
+  return apiRequest<{ data: { bndBankDetlId: number } }>("/api/cashbook/bank-account", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateBankAccount(id: number, input: BankAccountUpdateInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/cashbook/bank-account/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// List Of Cashbook DAILY|MONTHLY (PAGEID 1397/2024 / MENUID 1702/2471)
+export async function listCashbookList(type: CashbookListType, params = "") {
+  return apiRequest<{ data: CashbookListRow[]; meta: Record<string, unknown> }>(
+    `/api/cashbook/list/${type.toLowerCase()}${params}`,
+  );
+}
+
+export async function getCashbookListOptions(type: CashbookListType) {
+  return apiRequest<{ data: CashbookListOptions }>(`/api/cashbook/list/${type.toLowerCase()}/options`);
+}
+
+// ─── FIMS Account Payable ───────────────────────────────────────────────────
+// Payee Registration (Others) — PAGEID 1403 / MENUID 1711 (read-only listing).
+export async function listPayeeRegistration(params = "") {
+  return apiRequest<{ data: PayeeRegistrationRow[]; meta: Record<string, unknown> }>(
+    `/api/account-payable/payee-registration${params}`,
+  );
+}
+
+export async function getPayeeRegistrationOptions() {
+  return apiRequest<{ data: PayeeRegistrationOptions }>("/api/account-payable/payee-registration/options");
+}
+
+// Utility Registration — PAGEID 2881 / MENUID 3466 (list + inline add/edit).
+export async function listUtilityRegistration(params = "") {
+  return apiRequest<{ data: UtilityRegistrationRow[]; meta: Record<string, unknown> }>(
+    `/api/account-payable/utility-registration${params}`,
+  );
+}
+
+export async function getUtilityRegistration(id: string | number) {
+  return apiRequest<{ data: UtilityRegistrationDetail }>(`/api/account-payable/utility-registration/${id}`);
+}
+
+export async function createUtilityRegistration(input: UtilityRegistrationInput) {
+  return apiRequest<{ data: { vcsId: string; vcsVendorCode: string } }>(
+    "/api/account-payable/utility-registration",
+    { method: "POST", body: JSON.stringify(input) },
+  );
+}
+
+export async function updateUtilityRegistration(id: string | number, input: UtilityRegistrationInput) {
+  return apiRequest<{ data: { success: boolean } }>(`/api/account-payable/utility-registration/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(input),
+  });
+}
+
+// Account Bank by Payee — PAGEID 2262 / MENUID 2751 (read-only, payee-type driven).
+export async function getAccountBankByPayeeOptions(payeeType?: AccountBankPayeeType) {
+  const suffix = payeeType ? `?payee_type=${payeeType}` : "";
+  return apiRequest<{ data: AccountBankByPayeeOptions }>(
+    `/api/account-payable/account-bank-by-payee/options${suffix}`,
+  );
+}
+
+export async function listAccountBankByPayee(params = "") {
+  return apiRequest<{
+    data:
+      | AccountBankByPayeeGenericRow[]
+      | AccountBankByPayeeSponsorRow[]
+      | AccountBankByPayeeInvestmentRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/account-payable/account-bank-by-payee${params}`);
+}
+
+// Account Bank Updated — PAGEID 1719 / MENUID 2078. Bills + vouchers whose
+// line-level bank account drifts from the payee master, with bulk resync.
+export async function getAccountBankUpdatedOptions(payeeType?: AccountBankUpdatedPayeeType) {
+  const suffix = payeeType ? `?payee_type=${payeeType}` : "";
+  return apiRequest<{ data: AccountBankUpdatedOptions }>(
+    `/api/account-payable/account-bank-updated/options${suffix}`,
+  );
+}
+
+export async function listAccountBankUpdatedBills(params = "") {
+  return apiRequest<{ data: AccountBankUpdatedBillRow[]; meta: Record<string, unknown> }>(
+    `/api/account-payable/account-bank-updated/bills${params}`,
+  );
+}
+
+export async function listAccountBankUpdatedVouchers(params = "") {
+  return apiRequest<{ data: AccountBankUpdatedVoucherRow[]; meta: Record<string, unknown> }>(
+    `/api/account-payable/account-bank-updated/vouchers${params}`,
+  );
+}
+
+export async function processAccountBankUpdatedBills(input: AccountBankUpdatedProcessInput) {
+  return apiRequest<{ data: AccountBankUpdatedProcessResult }>(
+    "/api/account-payable/account-bank-updated/bills/process",
+    { method: "POST", body: JSON.stringify(input) },
+  );
+}
+
+export async function processAccountBankUpdatedVouchers(input: AccountBankUpdatedProcessInput) {
+  return apiRequest<{ data: AccountBankUpdatedProcessResult }>(
+    "/api/account-payable/account-bank-updated/vouchers/process",
+    { method: "POST", body: JSON.stringify(input) },
+  );
+}
+
 // ─── FIMS Account Receivable ────────────────────────────────────────────────
 // Debtor — PAGEID 1415 / MENUID 1727 (datatable + smart filter + delete).
 export async function getDebtorOptions() {
@@ -1144,5 +1342,157 @@ export async function searchArAuthorizedStaff(
   const qs = params.toString();
   return apiRequest<{ data: ArStaffSearchOption[] }>(
     `/api/account-receivable/authorized-receipting-form/search-staff${qs ? `?${qs}` : ""}`,
+  );
+}
+
+// ─── FIMS Credit Control ────────────────────────────────────────────────────
+
+/**
+ * Deposit listing (MENUID 1809). Accepts query string already built by the
+ * caller so tables / smart filters / sort params are passed through 1:1 to
+ * `DepositController@index`.
+ */
+export async function listDeposits(query = "") {
+  return apiRequest<{ data: DepositRow[]; meta: Record<string, unknown> }>(
+    `/api/credit-control/deposit${query}`,
+  );
+}
+
+export async function fetchDepositOptions() {
+  return apiRequest<{ data: DepositOptions }>(
+    `/api/credit-control/deposit/options`,
+  );
+}
+
+/**
+ * Smart-filter combobox autosuggest for the Deposit listing. `field` matches
+ * the controller's switch (deposit_no | vendor_code | ref_no | acct_code |
+ * amount | fund_type).
+ */
+export async function autosuggestDeposit(
+  field: string,
+  query = "",
+  limit = 20,
+) {
+  const params = new URLSearchParams({ field, limit: String(limit) });
+  if (query) params.set("q", query);
+  return apiRequest<{ data: { id: string; label: string }[] }>(
+    `/api/credit-control/deposit/autosuggest?${params.toString()}`,
+  );
+}
+
+/**
+ * List of Deposit (MENUID 3066). Restricted to account_main rows flagged as
+ * subsidiary+deposit and exposes the customer-type / customer-id / PTJ
+ * top filters defined in the legacy BL.
+ */
+export async function listOfDeposit(query = "") {
+  return apiRequest<{ data: DepositRow[]; meta: Record<string, unknown> }>(
+    `/api/credit-control/list-of-deposit${query}`,
+  );
+}
+
+export async function fetchListOfDepositOptions() {
+  return apiRequest<{ data: ListOfDepositOptions }>(
+    `/api/credit-control/list-of-deposit/options`,
+  );
+}
+
+export async function searchListOfDepositCustomer(query = "", limit = 20) {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (query) params.set("q", query);
+  return apiRequest<{ data: CcCustomerOption[] }>(
+    `/api/credit-control/list-of-deposit/search-customer?${params.toString()}`,
+  );
+}
+
+/**
+ * Invoice Balance (MENUID 3388) — read-only aggregated view. `tf_end_date`
+ * is required by the BL; backend defaults to today when omitted.
+ */
+export async function listInvoiceBalance(query = "") {
+  return apiRequest<{ data: InvoiceBalanceRow[]; meta: Record<string, unknown> }>(
+    `/api/credit-control/invoice-balance${query}`,
+  );
+}
+
+export async function fetchInvoiceBalanceOptions() {
+  return apiRequest<{ data: InvoiceBalanceOptions }>(
+    `/api/credit-control/invoice-balance/options`,
+  );
+}
+
+export async function searchInvoiceBalanceCustomer(
+  query = "",
+  customerType = "",
+  limit = 20,
+) {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (query) params.set("q", query);
+  if (customerType) params.set("customer_type", customerType);
+  return apiRequest<{ data: CcCustomerOption[] }>(
+    `/api/credit-control/invoice-balance/search-customer?${params.toString()}`,
+  );
+}
+
+export async function searchInvoiceBalanceInvoice(
+  query = "",
+  customerType = "",
+  customerId = "",
+  limit = 20,
+) {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (query) params.set("q", query);
+  if (customerType) params.set("customer_type", customerType);
+  if (customerId) params.set("customer_id", customerId);
+  return apiRequest<{ data: CcOption[] }>(
+    `/api/credit-control/invoice-balance/search-invoice?${params.toString()}`,
+  );
+}
+
+/**
+ * Detail of Deposit (MENUID 3397) — master form + detail datatable + popup.
+ */
+export async function getDepositForm(id: number | string) {
+  return apiRequest<{ data: DepositFormMaster }>(
+    `/api/credit-control/deposit-form/${id}`,
+  );
+}
+
+export async function listDepositFormDetails(
+  id: number | string,
+  query = "",
+) {
+  return apiRequest<{ data: DepositDetailRow[]; meta: Record<string, unknown> }>(
+    `/api/credit-control/deposit-form/${id}/details${query}`,
+  );
+}
+
+export async function updateDepositFormMaster(
+  id: number | string,
+  input: DepositFormMasterInput,
+) {
+  return apiRequest<{ data: DepositFormMaster }>(
+    `/api/credit-control/deposit-form/${id}`,
+    { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+export async function updateDepositFormDetail(
+  id: number | string,
+  detailId: number | string,
+  input: DepositDetailInput,
+) {
+  return apiRequest<{ data: Record<string, unknown> }>(
+    `/api/credit-control/deposit-form/${id}/detail/${detailId}`,
+    { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+export async function searchDepositFormCustomer(query = "", limit = 20) {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (query) params.set("q", query);
+  return apiRequest<{ data: CcCustomerOption[] }>(
+    `/api/credit-control/deposit-form/search-customer?${params.toString()}`,
   );
 }

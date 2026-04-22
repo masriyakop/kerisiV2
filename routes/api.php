@@ -27,10 +27,14 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DebitNoteController;
 use App\Http\Controllers\Api\DebitNoteFormController;
 use App\Http\Controllers\Api\DebtorController;
+use App\Http\Controllers\Api\DepositController;
+use App\Http\Controllers\Api\DepositFormController;
 use App\Http\Controllers\Api\DevelopersGuideController;
 use App\Http\Controllers\Api\CheckErrorController;
 use App\Http\Controllers\Api\DiscountNoteController;
 use App\Http\Controllers\Api\DiscountNoteFormController;
+use App\Http\Controllers\Api\InvoiceBalanceController;
+use App\Http\Controllers\Api\ListOfDepositController;
 use App\Http\Controllers\Api\FundTypeController;
 use App\Http\Controllers\Api\LetterPhraseController;
 use App\Http\Controllers\Api\MediaController;
@@ -43,6 +47,7 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UtilityRegistrationController;
 use App\Http\Controllers\Api\VcTncController;
 use Illuminate\Support\Facades\Route;
 
@@ -264,6 +269,39 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/account-receivable/authorized-receipting-form/{id}/submit', [AuthorizedReceiptingFormController::class, 'submit']);
     Route::post('/account-receivable/authorized-receipting-form/{id}/cancel', [AuthorizedReceiptingFormController::class, 'cancel']);
     Route::get('/account-receivable/authorized-receipting-form/{id}/process-flow', [AuthorizedReceiptingFormController::class, 'processFlow']);
+
+    // ---------------------------------------------------------------- Credit Control
+
+    // Deposit listing (PAGEID 1445 / MENUID 1809). Legacy BL
+    // ZR_CREDITCONTROL_DEPOSIT_API — joined deposit_master + deposit_details
+    // with global / top / smart filters and signed-amount footer.
+    Route::get('/credit-control/deposit/options', [DepositController::class, 'options']);
+    Route::get('/credit-control/deposit/autosuggest', [DepositController::class, 'autosuggest']);
+    Route::get('/credit-control/deposit', [DepositController::class, 'index']);
+
+    // List of Deposit (PAGEID 2159 / MENUID 3066). Legacy BL
+    // SNA_API_CC_LISTOFDEPOSIT — restricted to account_main subsidiary+deposit
+    // rows, with customer-type / customer-id / PTJ filters.
+    Route::get('/credit-control/list-of-deposit/options', [ListOfDepositController::class, 'options']);
+    Route::get('/credit-control/list-of-deposit/search-customer', [ListOfDepositController::class, 'searchCustomer']);
+    Route::get('/credit-control/list-of-deposit', [ListOfDepositController::class, 'index']);
+
+    // Invoice Balance (PAGEID 2561 / MENUID 3388). Legacy BL
+    // MZS_API_CC_INVOICE_BALANCE — read-only aggregated outstanding invoices
+    // computed from rep_aging_debtor as-of tf_end_date.
+    Route::get('/credit-control/invoice-balance/options', [InvoiceBalanceController::class, 'options']);
+    Route::get('/credit-control/invoice-balance/search-customer', [InvoiceBalanceController::class, 'searchCustomer']);
+    Route::get('/credit-control/invoice-balance/search-invoice', [InvoiceBalanceController::class, 'searchInvoice']);
+    Route::get('/credit-control/invoice-balance', [InvoiceBalanceController::class, 'index']);
+
+    // Detail of Deposit (PAGEID 2688 / MENUID 3397). Legacy BL
+    // NAD_API_CC_DEPOSIT_DETAILS — master form + detail datatable + popup
+    // modal. Only updates are supported; no new-record flow exists in legacy.
+    Route::get('/credit-control/deposit-form/search-customer', [DepositFormController::class, 'searchCustomer']);
+    Route::get('/credit-control/deposit-form/{id}/details', [DepositFormController::class, 'details'])->whereNumber('id');
+    Route::get('/credit-control/deposit-form/{id}', [DepositFormController::class, 'show'])->whereNumber('id');
+    Route::put('/credit-control/deposit-form/{id}', [DepositFormController::class, 'update'])->whereNumber('id');
+    Route::put('/credit-control/deposit-form/{id}/detail/{detailId}', [DepositFormController::class, 'updateDetail'])->whereNumber('id')->whereNumber('detailId');
 
     Route::get('/setup/cascade-structure/options', [CascadeStructureController::class, 'options']);
     Route::get('/setup/cascade-structure', [CascadeStructureController::class, 'index']);

@@ -58,6 +58,10 @@ import DiscountNoteView from "@/views/DiscountNoteView.vue";
 import DiscountNoteFormView from "@/views/DiscountNoteFormView.vue";
 import AuthorizedReceiptingView from "@/views/AuthorizedReceiptingView.vue";
 import AuthorizedReceiptingFormView from "@/views/AuthorizedReceiptingFormView.vue";
+import DepositView from "@/views/DepositView.vue";
+import ListOfDepositView from "@/views/ListOfDepositView.vue";
+import InvoiceBalanceView from "@/views/InvoiceBalanceView.vue";
+import DepositFormView from "@/views/DepositFormView.vue";
 import LetterPhraseView from "@/views/LetterPhraseView.vue";
 import VcTncView from "@/views/VcTncView.vue";
 import CheckErrorView from "@/views/CheckErrorView.vue";
@@ -182,6 +186,13 @@ const router = createRouter({
     { path: "/admin/kerisi/m/1784", name: "kerisi-ar-discount-note-form", component: DiscountNoteFormView, meta: { requiresAuth: true, title: "Discount Note Form" } },
     { path: "/admin/kerisi/m/1952", name: "kerisi-ar-authorized-receipting", component: AuthorizedReceiptingView, meta: { requiresAuth: true, title: "Authorized Receipting" } },
     { path: "/admin/kerisi/m/1953", name: "kerisi-ar-authorized-receipting-form", component: AuthorizedReceiptingFormView, meta: { requiresAuth: true, title: "Authorized Receipting Form" } },
+    // FIMS Credit Control — MENUID 1809 / 3066 / 3388 / 3397 (legacy PAGEIDs
+    // 1445, 2159, 2561, 2688). Backed by DepositController /
+    // ListOfDepositController / InvoiceBalanceController / DepositFormController.
+    { path: "/admin/kerisi/m/1809", name: "kerisi-cc-deposit", component: DepositView, meta: { requiresAuth: true, title: "Deposit" } },
+    { path: "/admin/kerisi/m/3066", name: "kerisi-cc-list-of-deposit", component: ListOfDepositView, meta: { requiresAuth: true, title: "List of Deposit" } },
+    { path: "/admin/kerisi/m/3388", name: "kerisi-cc-invoice-balance", component: InvoiceBalanceView, meta: { requiresAuth: true, title: "Invoice Balance" } },
+    { path: "/admin/kerisi/m/3397", name: "kerisi-cc-deposit-form", component: DepositFormView, meta: { requiresAuth: true, title: "Detail of Deposit" } },
     // FIMS setup & maintenance pages migrated from legacy PAGE_SETUP_MAINTENANCE
     // (level 2) — MENUID maps to legacy MENUID and keeps URL parity with the
     // generic `/admin/kerisi/m/:menuId` pattern used by the sidebar.
