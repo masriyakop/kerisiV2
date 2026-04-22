@@ -1,0 +1,13 @@
+[
+  {
+    "TRIGGER_ID": 5493,
+    "TRIGGER_TYPE": "JS",
+    "TRIGGER_EVENT": "onload",
+    "TRIGGER_BL": "MM_JS_MAINTANANCE_CEKERROR",
+    "TRIGGER_ITEM_TYPE": "page",
+    "PAGEID": 2253,
+    "TRIGGER_ORDER": 1,
+    "TRIGGER_STATUS": 1,
+    "BLDETAIL": "//================================================api/MM_API_MAINTANANCE_CEKERROR\r\n// $('#billMaster').closest('.card').append(\r\n//     '<div class=\"text-right mt-2\">'+\r\n//         '<div class=\"btn btn-primary ml-1\" onclick=\"refresh()\"><i class=\"fas fa-sync-alt align-middle\"></i><span class=\"align-middle ml-1\">Refresh All Datatable</span></div>'+\r\n//     '</div>'\r\n// )\r\n\r\n// $('#voucherDetail').closest('.card').append(\r\n//     '<div class=\"text-right mt-2\">'+\r\n//         '<div class=\"btn btn-primary ml-1\" onclick=\"refresh()\"><i class=\"fas fa-sync-alt align-middle\"></i><span class=\"align-middle ml-1\">Refresh All Datatable</span></div>'+\r\n//     '</div>'\r\n// )\r\n\r\nlistDatatable = ['billMaster', 'voucherDetail', 'voucherMaster', 'paymentRecordPelik', 'paymentRecord2Pelik', 'URLBRFyghilang', 'resitNoAllocate'];\r\n\r\nlistDatatable.forEach(function(i){\r\n\t$('#'+i).closest('.card').append(\r\n\t\t'<div class=\"text-right mt-2\">'+\r\n\t\t\t'<div class=\"btn btn-primary ml-1\" onclick=\"refresh()\"><i class=\"fas fa-sync-alt align-middle\"></i><span class=\"align-middle ml-1\">Refresh All Datatable</span></div>'+\r\n\t\t'</div>'\r\n\t)\r\n})\r\n\r\nwindow['refresh'] = function(){\r\n\tvoucherDetail.draw()\r\n\tbillMaster.draw()\r\n\tvoucherMaster.draw()\r\n\tpaymentRecordPelik.draw()\r\n\tpaymentRecord2Pelik.draw()\r\n\tURLBRFyghilang.draw()\r\n\tresitNoAllocate.draw()\r\n}"
+  }
+]

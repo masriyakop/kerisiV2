@@ -1,0 +1,86 @@
+{
+  "page": {
+    "MENUID": 2073,
+    "PAGEID": 1715,
+    "PAGETITLE": "HOD, VC & TNC",
+    "PAGEBREADCRUMBS": "Setup and Maintenance / HOD, VC &amp; TNC",
+    "BL_preprocess_total": 1,
+    "BL_onload_total": 4
+  },
+  "components": [
+    {
+      "COMPONENTID": 5049,
+      "COMPONENTTITLE": "List Of Organization Unit (HOD, VC & TNC Setup)",
+      "COMPONENTTYPE": "datatable",
+      "DatatableColumnDetails": "{\"dt_bi\": [\"No\", \"Code\", \"Description\", \"Head of Department\", \"VC/TNC\", \"Action\"], \"dt_bm\": [\"No\", \"Code\", \"Description\", \"Head of Department\", \"VC/TNC\", \"Action\"], \"dt_js\": [\"return row.index\", \"\", \"\", \"\", \"\", \"return ''+\\r\\n`<a data-toggle=\\\"tooltip\\\" data-placement=\\\"bottom\\\" title=\\\"Edit\\\" onclick=\\\"vctnc.edit(`+row.id+`,'edit')\\\"><i class=\\\"fas fa-file-alt\\\"></i></a>`\"], \"dt_key\": [\"\", \"oun_code\", \"oun_desc\", \"st_staff_id_head\", \"st_staff_id_superior\", \"\"], \"dt_ajax\": \"api/API_VC_TNC_SETUP?vctnc=1\", \"dt_post\": null, \"dt_sort\": [\"unsortable\", \"asc\", \"default\", \"default\", \"default\", \"unsortable\"], \"dt_bInfo\": \"true\", \"dt_class\": [\"\", \"\", \"\", \"\", \"\", \"action-column\"], \"dt_print\": \"false\", \"dt_filter\": \"default\", \"dt_bPaginate\": \"true\", \"dt_pageLength\": \"10\", \"dt_bLengthChange\": \"false\"}",
+      "API_URL": "\"api/API_VC_TNC_SETUP?vctnc=1\"",
+      "API_BL_NAME": "API_VC_TNC_SETUP",
+      "formItems": []
+    },
+    {
+      "COMPONENTID": 5050,
+      "COMPONENTTITLE": "HOD, VC & TNC Information",
+      "COMPONENTTYPE": "form",
+      "DatatableColumnDetails": null,
+      "API_URL": null,
+      "API_BL_NAME": null,
+      "formItems": [
+        {
+          "title": "oun_id",
+          "type": "text",
+          "cssClass": "d-none",
+          "additionalAttr": null,
+          "defaultVal": null,
+          "lookupQuery": null,
+          "isDisable": null
+        },
+        {
+          "title": "Code",
+          "type": "text",
+          "cssClass": null,
+          "additionalAttr": "disabled",
+          "defaultVal": null,
+          "lookupQuery": null,
+          "isDisable": null
+        },
+        {
+          "title": "Description",
+          "type": "text",
+          "cssClass": null,
+          "additionalAttr": "disabled",
+          "defaultVal": null,
+          "lookupQuery": null,
+          "isDisable": null
+        },
+        {
+          "title": "Head of Department",
+          "type": "dropdown",
+          "cssClass": null,
+          "additionalAttr": "disabled",
+          "defaultVal": null,
+          "lookupQuery": null,
+          "isDisable": null
+        },
+        {
+          "title": "VC/TNC",
+          "type": "dropdown",
+          "cssClass": null,
+          "additionalAttr": "required",
+          "defaultVal": null,
+          "lookupQuery": "select stf_staff_id FLC_ID, \nCONCAT(upper(stf_extended_field->>'$.stf_title_desc'),stf_staff_name) FLC_NAME,\nstf_extended_field->>'$.stf_title_desc' _title\nfrom fims_usr.staff where stf_staff_id in ('VC0','TNC001','TNC002','TNC003');",
+          "isDisable": null
+        },
+        {
+          "title": "Footer",
+          "type": "custom",
+          "cssClass": "CSS Class = force-one-column full-no-label",
+          "additionalAttr": null,
+          "defaultVal": "<div class='modal-footer'>\n    <button type='button' class='btn btn-danger' data-dismiss='modal'>Cancel</button>\n    <button type='button' class='btn btn-primary' onclick='vctnc.save()'>Save</button>\n</div>",
+          "lookupQuery": null,
+          "isDisable": null
+        }
+      ]
+    }
+  ],
+  "blDetails": "<?php\r\ninclude('db.php');\r\ninclude('userinfo.php');\r\n\r\nif($_GET['vctnc']){\r\n\t\r\n    //============================================================ common filter\r\n    $common = \"FROM \".DB2.\".organization_unit \r\n\t\t\t   LEFT JOIN \".DB2.\".staff ON (st_staff_id_head = stf_staff_id) \r\n               WHERE\r\n                CONCAT_WS('__',\r\n\t\t\t\t\toun_code,\r\n\t\t\t\t\toun_desc,\r\n\t\t\t\t\tst_staff_id_superior\r\n                ) LIKE CONCAT('%', ?, '%')  \r\n    \";\r\n\t\r\n    //============================================================ record count\r\n    $sql = \"SELECT COUNT(*) C $common\";\r\n    $recordsFiltered = executeQueryV2($sql,[$_POST['search']['value']])[0]['C'];\r\n\r\n    //============================================================ main sql\r\n    $sql = \"SELECT \r\n                oun_id id,\r\n\t\t\t\toun_code,\r\n                oun_desc,\r\n\t\t\t\tCONCAT_WS(' - ',st_staff_id_head, stf_staff_name) st_staff_id_head,\r\n\t\t\t\tCONCAT_WS(' - ',st_staff_id_superior,oun_extended_field->>'$.st_staff_name_superior') st_staff_id_superior\r\n        $common \r\n        ORDER BY {$_POST['orderBy'][0]} {$_POST['orderBy'][1]}\r\n        LIMIT \".$_POST['start'].\", \".$_POST['length'].\"\r\n    \";\r\n    $data = executeQueryV2($sql,[$_POST['search']['value']]);\r\n\r\n    //============================================================ finally\r\n    $result = [\r\n        'draw' => $_POST['draw'],\r\n        'recordsFiltered' => $recordsFiltered,\r\n        'data' => $data,\r\n    ];\r\n\r\n}else if($_GET['displayData']){\r\n\t$sqlData = \"SELECT \r\n\t\t\t\t\toun_id id,\r\n\t\t\t\t\toun_code,\r\n\t\t\t\t\toun_desc,\r\n\t\t\t\t\tst_staff_id_head,\r\n\t\t\t\t\tst_staff_id_superior, #FLC_ID,\r\n\t\t\t\t\toun_extended_field->>'$.st_staff_name_superior' FLC_NAME\r\n\t\t\t\tFROM \".DB2.\".organization_unit \r\n\t\t\t\tLEFT JOIN \".DB2.\".staff ON (st_staff_id_head = stf_staff_id) \r\n\t\t\t\tWHERE oun_id = ?\r\n    \";\r\n    $rsData = executeQueryV2($sqlData,[$_POST['id']]);\r\n\r\n\tforeach($rsData as $y){\r\n\t\t$opt = $opt.'<option value=\"'.$y['FLC_ID'].'\">'.$y['FLC_NAME'].' - '.$y['FLC_NAME'].'</option>';\r\n\t}\r\n\t\r\n\t$result = [\r\n\t\t'status' => 'ok',\r\n\t\t'oun_id' => $rsData[0]['id'],\r\n\t\t'oun_code' => $rsData[0]['oun_code'],\r\n\t\t'oun_desc' => $rsData[0]['oun_desc'],\r\n\t\t'st_staff_id_head' => $rsData[0]['st_staff_id_head'],\r\n\t\t'stf_id_supervisor' => $rsData[0]['st_staff_id_superior'],\r\n\t\t'opt' => $opt\r\n\t];\r\n}else if($_GET['saveData']){\r\n\r\n        $updateLookup =\"UPDATE \".DB2.\".organization_unit \r\n\t\t\t\t\t\t\tSET\t\r\n\t\t\t\t\t\t\t\tst_staff_id_head = ?,\r\n\t\t\t\t\t\t\t\tst_staff_id_superior = ?,\r\n\t\t\t\t\t\t\t\toun_extended_field = JSON_SET(oun_extended_field,\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'$.st_staff_name_superior', ?,\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'$.st_staff_title_superior', ?),\r\n\t\t\t\t\t\t\t\tupdateddate\t\t\t= NOW(),\r\n\t\t\t\t\t\t\t\tupdatedby\t\t\t= '\".$_USER['USERNAME'].\"'\r\n\t\t\t\t\t\tWHERE oun_id = ?\r\n\t\t\t\t\t\";\r\n\t\t$rs = executeQueryV2($updateLookup, [$_POST['st_staff_id_head'], $_POST['st_staff_id_superior'],$_POST['st_staff_name_superior'],$_POST['st_staff_title_superior'],$_POST['oun_id']]);\r\n\r\n\tif($rs){\r\n\t\t$result = [\r\n\t\t\t'status' => 'ok',\r\n\t\t];\r\n\t}else{\r\n\t\t$result = [\r\n\t\t\t'status' => 'ko',\r\n\t\t\t'msg' =>'Data cannot be save.'\r\n\t\t];\r\n\t}\t\r\n}\r\nreturn $result;"
+}
