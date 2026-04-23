@@ -166,6 +166,13 @@ import type {
   PostingToTbLine,
   PostingToTbOptions,
   PostingToTbRow,
+  BankAccountUpdateOptions,
+  BankAccountUpdateRow,
+  LedgerOptions,
+  LedgerRow,
+  ManualInvoiceFooter,
+  ManualInvoiceOptions,
+  ManualInvoiceRow,
   PtptnDataDetail,
   PtptnDataHeader,
   PtptnDataRow,
@@ -1800,6 +1807,54 @@ export async function deletePtptnData(id: number) {
   return apiRequest<{ data: { success: boolean } }>(
     `/api/student-finance/ptptn-data/${id}`,
     { method: "DELETE" },
+  );
+}
+
+// Student Finance > Student Profile or Ledger (PAGEID 1232 / MENUID 1509).
+// Legacy BL `V2_SFSP_LEDGER_API`.
+export async function listLedger(params = "") {
+  return apiRequest<{ data: LedgerRow[]; meta: Record<string, unknown> }>(
+    `/api/student-finance/ledger${params}`,
+  );
+}
+
+export async function getLedgerOptions() {
+  return apiRequest<{ data: LedgerOptions }>("/api/student-finance/ledger/options");
+}
+
+// Student Finance > Manual Invoice Listing (PAGEID 2389 / MENUID 2897).
+// Legacy BL `DT_SF_MANUAL_INV_LISTING`.
+export async function listManualInvoices(params = "") {
+  return apiRequest<{
+    data: ManualInvoiceRow[];
+    meta: Record<string, unknown> & { footer?: ManualInvoiceFooter };
+  }>(`/api/student-finance/manual-invoice${params}`);
+}
+
+export async function getManualInvoiceOptions() {
+  return apiRequest<{ data: ManualInvoiceOptions }>(
+    "/api/student-finance/manual-invoice/options",
+  );
+}
+
+export async function deleteManualInvoice(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/student-finance/manual-invoice/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+// Student Finance > Bank Account Update (PAGEID 977 / MENUID 1081).
+// Legacy BL `DT_BANK_ACC_UPDATE`. Read-only listing.
+export async function listBankAccountUpdates(params = "") {
+  return apiRequest<{ data: BankAccountUpdateRow[]; meta: Record<string, unknown> }>(
+    `/api/student-finance/bank-account-update${params}`,
+  );
+}
+
+export async function getBankAccountUpdateOptions() {
+  return apiRequest<{ data: BankAccountUpdateOptions }>(
+    "/api/student-finance/bank-account-update/options",
   );
 }
 

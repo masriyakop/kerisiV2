@@ -61,6 +61,9 @@ use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\GlYearMonthController;
 use App\Http\Controllers\Api\JournalListingController;
+use App\Http\Controllers\Api\BankAccountUpdateController;
+use App\Http\Controllers\Api\LedgerController;
+use App\Http\Controllers\Api\ManualInvoiceListingController;
 use App\Http\Controllers\Api\PtptnDataController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
@@ -254,6 +257,32 @@ Route::middleware('auth:sanctum')->group(function () {
         ->whereNumber('id');
     Route::delete('/student-finance/ptptn-data/{id}', [PtptnDataController::class, 'destroy'])
         ->whereNumber('id');
+
+    // Student Finance > Student Profile or Ledger (PAGEID 1232 / MENUID 1509).
+    // Legacy BL V2_SFSP_LEDGER_API — list + smart filter. View Profile / View
+    // Ledger deep-links (menuID 1512 / V2_SFSP_LEDGER_VIEWPROFILE_API) are
+    // NOT migrated yet; the frontend renders those buttons disabled.
+    Route::get('/student-finance/ledger/options', [LedgerController::class, 'options']);
+    Route::get('/student-finance/ledger', [LedgerController::class, 'index']);
+
+    // Student Finance > Manual Invoice Listing (PAGEID 2389 / MENUID 2897).
+    // Legacy BL DT_SF_MANUAL_INV_LISTING — list + smart filter + grand-total
+    // footer. Delete cascades cust_invoice_details → cust_invoice_master and
+    // is gated to DRAFT invoices (matching the legacy dt_js guard). The
+    // Manual Invoice Form (MENUID 2898) is NOT migrated yet so View/Edit
+    // render disabled on the frontend.
+    Route::get('/student-finance/manual-invoice/options', [ManualInvoiceListingController::class, 'options']);
+    Route::get('/student-finance/manual-invoice', [ManualInvoiceListingController::class, 'index']);
+    Route::delete('/student-finance/manual-invoice/{id}', [ManualInvoiceListingController::class, 'destroy'])
+        ->whereNumber('id');
+
+    // Student Finance > Bank Account Update (PAGEID 977 / MENUID 1081).
+    // Legacy BL DT_BANK_ACC_UPDATE — list + smart filter across
+    // student + stud_account_application + bank_master + academic_calendar.
+    // Read-only: the "Update" flow (inserts into student + stud_account)
+    // is NOT migrated yet.
+    Route::get('/student-finance/bank-account-update/options', [BankAccountUpdateController::class, 'options']);
+    Route::get('/student-finance/bank-account-update', [BankAccountUpdateController::class, 'index']);
 
     // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841). Legacy BL
     // ZR_PURCHASING_STATUSPOPR_API — read-only datatable with a smart

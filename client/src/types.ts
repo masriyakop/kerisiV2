@@ -2651,3 +2651,102 @@ export type GlListingSmartFilter = {
 export type GlListingFooter = {
   transAmt: number;
 };
+
+// Student Finance > Student Profile or Ledger (PAGEID 1232 / MENUID 1509).
+// Source: FIMS BL `V2_SFSP_LEDGER_API`. Read-only datatable with smart
+// filter (Matric / Name / NRIC/Passport / Semester No. / Program Level /
+// Status). The View Profile + View Ledger deep-links are not yet migrated.
+export type LedgerRow = {
+  index: number;
+  studentId: string;
+  studentName: string | null;
+  icPassport: string | null;
+  semLevel: string | null;
+  programLevel: string | null;
+  programLevelLabel: string | null;
+  statusDesc: string;
+  outstandingAmt: number;
+};
+
+export type LedgerOptions = {
+  programLevel: ArOption[];
+  status: ArOption[];
+};
+
+export type LedgerSmartFilter = {
+  studentId: string;
+  studentName: string;
+  icPassport: string;
+  semLevel: string;
+  programLevel: string;
+  statusDesc: string[];
+};
+
+// Student Finance > Manual Invoice Listing (PAGEID 2389 / MENUID 2897).
+// Source: FIMS BL `DT_SF_MANUAL_INV_LISTING`. Scoped to
+// cim_system_id='STUD_INV' AND cim_invoice_type='12'. The list meta
+// includes a `footer.totalAmt` grand total (same as the legacy BL).
+export type ManualInvoiceRow = {
+  index: number;
+  id: number;
+  invoiceNo: string | null;
+  invoiceDate: string | null;
+  invoiceDateIso: string | null;
+  status: string | null;
+  debtorId: string | null;
+  debtorName: string | null;
+  debtorType: string | null;
+  debtorTypeLabel: string;
+  totalAmt: number;
+  crNoteAmt: number;
+  dnNoteAmt: number;
+  dcNoteAmt: number;
+  paidAmt: number;
+  balAmt: number;
+};
+
+export type ManualInvoiceOptions = {
+  debtorType: ArOption[];
+  status: ArOption[];
+};
+
+export type ManualInvoiceSmartFilter = {
+  invoiceDate: string;
+  debtorType: string;
+  status: string;
+};
+
+export type ManualInvoiceFooter = {
+  totalAmt: number;
+};
+
+// Student Finance > Bank Account Update (PAGEID 977 / MENUID 1081).
+// Source: FIMS BL `DT_BANK_ACC_UPDATE`. Read-only datatable joining
+// student + stud_account_application + bank_master + academic_calendar.
+export type BankAccountUpdateRow = {
+  index: number;
+  applicationId: number;
+  applicationNo: string | null;
+  matric: string | null;
+  name: string | null;
+  icPassport: string | null;
+  currentSemester: string | null;
+  accountNo: string | null;
+  bankName: string | null;
+  bankCode: string | null;
+  applicationDate: string | null;
+  approvedDate: string | null;
+  status: string | null;
+  statusRaw: string | null;
+};
+
+export type BankAccountUpdateOptions = {
+  bank: ArOption[];
+  status: ArOption[];
+};
+
+export type BankAccountUpdateSmartFilter = {
+  semester: string;
+  bank: string;
+  status: string;
+};

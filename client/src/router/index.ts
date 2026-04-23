@@ -68,7 +68,10 @@ import GeneralLedgerListingView from "@/views/GeneralLedgerListingView.vue";
 import JournalListingView from "@/views/JournalListingView.vue";
 import ManualJournalListingView from "@/views/ManualJournalListingView.vue";
 import PostingToTbView from "@/views/PostingToTbView.vue";
+import BankAccountUpdateView from "@/views/BankAccountUpdateView.vue";
+import ManualInvoiceListingView from "@/views/ManualInvoiceListingView.vue";
 import PtptnDataView from "@/views/PtptnDataView.vue";
+import StudentLedgerView from "@/views/StudentLedgerView.vue";
 import StatusPoPrView from "@/views/StatusPoPrView.vue";
 import TenderQuotationView from "@/views/TenderQuotationView.vue";
 import VendorRegistrationFeeHistoryView from "@/views/VendorRegistrationFeeHistoryView.vue";
@@ -228,6 +231,9 @@ const router = createRouter({
     { path: "/admin/kerisi/m/2767", name: "kerisi-portal-tender-list", component: TenderQuotationView, meta: { requiresAuth: true, title: "Tender/Quotation List" } },
     { path: "/admin/kerisi/m/1841", name: "kerisi-purchasing-status-po-pr", component: StatusPoPrView, meta: { requiresAuth: true, title: "Status PO & PR" } },
     { path: "/admin/kerisi/m/1031", name: "kerisi-student-finance-ptptn-data", component: PtptnDataView, meta: { requiresAuth: true, title: "PTPTN Data" } },
+    { path: "/admin/kerisi/m/1509", name: "kerisi-student-finance-ledger", component: StudentLedgerView, meta: { requiresAuth: true, title: "Student Profile or Ledger" } },
+    { path: "/admin/kerisi/m/2897", name: "kerisi-student-finance-manual-invoice", component: ManualInvoiceListingView, meta: { requiresAuth: true, title: "Manual Invoice Listing" } },
+    { path: "/admin/kerisi/m/1081", name: "kerisi-student-finance-bank-account-update", component: BankAccountUpdateView, meta: { requiresAuth: true, title: "Bank Account Update" } },
     { path: "/admin/kerisi/m/2056", name: "kerisi-gl-journal-listing", component: JournalListingView, meta: { requiresAuth: true, title: "Journal Listing" } },
     { path: "/admin/kerisi/m/3287", name: "kerisi-gl-year-month", component: GlYearMonthView, meta: { requiresAuth: true, title: "List of Year and Month" } },
     { path: "/admin/kerisi/m/1409", name: "kerisi-gl-posting-to-tb", component: PostingToTbView, meta: { requiresAuth: true, title: "Posting to GL (TB)" } },
