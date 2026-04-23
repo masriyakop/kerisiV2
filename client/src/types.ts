@@ -566,6 +566,338 @@ export type LetterPhraseInput = {
   lpmValueDesc?: string | null;
 };
 
+// Petty Cash Recoup list (PAGEID 1255 / MENUID 1532). Legacy BL
+// API_PETTYCASH_PETTYCASHRECOUP (?PettyCashRecoupList_dt=1).
+export type PettyCashRecoupRow = {
+  index: number;
+  pcbId: number;
+  pcbBatchId: string | null;
+  pcbTransNo: string | null;
+  pcbBatchAmt: number | null;
+  pcmBalance: number | null;
+  pcbBalanceBefore: number | null;
+  pcbReceiveamt: number | null;
+  pcbBalanceInhand: number | null;
+  pcbStatus: string | null;
+  vmaVoucherNo: string | null;
+  vmaVchStatus: string | null;
+  urlView: string;
+  urlEdit: string;
+};
+
+// Petty Cash Recoup form (PAGEID 1256 / MENUID 1534). Legacy BL
+// API_PETTYCASH_PETTYCASHRECOUPFORM — `PettyCashBatchMaster` +
+// `PettyCashRecoupDetailSelected_dt` branches.
+export type PettyCashRecoupDetailLine = {
+  index: number;
+  pcdId: number;
+  pmsApplicationNo: string;
+  pmsRequestDate: string | null;
+  pcdReceiptNo: string;
+  ftyFundType: string;
+  atActivityCode: string;
+  ounCode: string;
+  ccrCostcentre: string;
+  acmAcctCode: string;
+  soCode: string;
+  cpaProjectNo: string;
+  pcdTransAmt: number | null;
+  pcdBatchStatus: string;
+};
+
+export type PettyCashRecoupDetail = {
+  pcbId: number;
+  pcbBatchId: string;
+  pcbTransNo: number | null;
+  pcbBatchAmt: number | null;
+  pcbStatus: string;
+  pcbBalanceBefore: number | null;
+  pcbReceiveamt: number | null;
+  pcbBalanceInhand: number | null;
+  ounCode: string;
+  vmaVoucherNo: string | null;
+  vmaVchStatus: string | null;
+  lines: PettyCashRecoupDetailLine[];
+};
+
+// List of Petty Cash Application (PAGEID 1217 / MENUID 1490). Legacy BL
+// API_PETTYCASH_LISTAPPLICATIONPETTYCASH.
+export type PettyCashApplicationListRow = {
+  index: number;
+  pmsId: number;
+  pmsApplicationNo: string | null;
+  pmsRequestBy: string | null;
+  pmsRequestDate: string;
+  pmsTotalAmt: number | null;
+  rejectAmt: number;
+  cancelAmt: number;
+  paidAmount: number;
+  pmsStatus: string | null;
+  editable: string;
+  urlView: string;
+  urlEdit: string;
+};
+
+export type PettyCashApplicationListOptions = {
+  status: { id: string; label: string }[];
+};
+
+export type PettyCashApplicationDetailLine = {
+  pcdId: number;
+  pcdTransDesc: string | null;
+  pcdReceiptNo: string | null;
+  acmAcctCode: string | null;
+  pcdTransAmt: number | null;
+  pcdStatus: string | null;
+};
+
+export type PettyCashApplicationDetail = {
+  pmsId: number;
+  pmsApplicationNo: string | null;
+  pmsRequestBy: string | null;
+  pmsRequestByDesc: string | null;
+  pmsPayToId: string | null;
+  pmsPayToIdDesc: string | null;
+  pmsRequestDate: string;
+  pmsRequestTime: string;
+  pmsTotalAmt: number;
+  pmsStatus: string | null;
+  requestorName: string;
+  requestorJob: string;
+  payToName: string;
+  payToJob: string;
+  lines: PettyCashApplicationDetailLine[];
+};
+
+// List Petty Cash by PTJ (PAGEID 1963 / MENUID 2399). Legacy BL
+// NAD_API_PC_PETTYCASHBYPTJ.
+export type PettyCashByPtjRow = {
+  index: number;
+  pmsId: number;
+  pcmId: number;
+  pmsApplicationNo: string | null;
+  pmsRequestBy: string | null;
+  pmsRequestDate: string;
+  pmsTotalAmt: number | null;
+  pmsReturnAmt: number | null;
+  pmsStatus: string | null;
+  urlView: string;
+};
+
+// Bill Petty Cash (PAGEID 1964 / MENUID 2400). Legacy BL
+// NAD_API_PC_PETTYCASHBILL.
+export type PettyCashBillRow = {
+  index: number;
+  pcbId: number;
+  pcbBatchId: string | null;
+  pcbBatchAmt: number | null;
+  pcbStatus: string | null;
+  urlView: string;
+};
+
+// Confirmation Payment — Petty Cash (PAGEID 1982 / MENUID 2424). Legacy BL
+// NAD_API_PC_CONFIRMATIONPAYMENT. Awaiting and confirmed rows share most
+// columns; confirmed rows add namastaff (stfStaffName) and pcbReceivedate.
+export type PettyCashConfirmPaymentRow = {
+  index: number;
+  pcbId: number;
+  pcbBatchId: string | null;
+  pcbBatchAmt: number | null;
+  pcbStatus: string | null;
+  pcbApproveAmt: number | null;
+  vmaVoucherNo: string | null;
+  vdePaymentNo: string | null;
+  preTotalAmt: number | null;
+  stfStaffName?: string | null;
+  pcbReceivedate?: string;
+  urlView: string;
+};
+
+// Request Petty Cash list (PAGEID 2010 / MENUID 2456). Legacy BL
+// NAD_API_PC_REQUESTPETTYCASH.
+export type PettyCashRequestListRow = {
+  index: number;
+  pmsId: number;
+  pmsApplicationNo: string | null;
+  pmsRequestBy: string | null;
+  stfStaffName: string | null;
+  pmsRequestDate: string;
+  pmsTotalAmt: number | null;
+  pcbBatchId: string | null;
+  pcbStatus: string | null;
+  recoupCreatedDate: string;
+  bimBillsNo: string | null;
+  bimStatus: string | null;
+  billCreatedDate: string;
+  vmaVoucherNo: string | null;
+  vmaVchStatus: string | null;
+  voucherCreatedDate: string;
+  urlView: string;
+};
+
+// List of Release Paid — Petty Cash (PAGEID 2273 / MENUID 2761). Legacy BL
+// NAD_API_PC_LISTOFRELEASEPAID.
+export type PettyCashReleasePaidApplicationRow = {
+  index: number;
+  pmsId: number;
+  pcmId: number;
+  pmsApplicationNo: string | null;
+  pmsRequestBy: string | null;
+  pmsRequestDate: string;
+  pmsPayToId: string | null;
+  pcdPaidDate: string;
+  pmsTotalAmt: number | null;
+  pmsReturnAmt: number | null;
+  pmsStatus: string | null;
+  urlView: string;
+};
+
+export type PettyCashReleasePaidReceiptRow = {
+  index: number;
+  pmsId: number;
+  pcmId: number;
+  pmsApplicationNo: string | null;
+  pcdReceiptNo: string | null;
+  pcdPaidDate: string;
+  pmsRequestBy: string | null;
+  pmsRequestDate: string;
+  pmsPayToId: string | null;
+  pcdTransAmt: number | null;
+  pmsStatus: string | null;
+};
+
+// List of Voucher Petty Cash (PAGEID 2774 / MENUID 3344). Legacy BL
+// NAD_API_PC_LISTOFVOUCHERPETTYCASH.
+export type PettyCashVoucherListRow = {
+  index: number;
+  vmaVoucherId: number;
+  vmaVoucherNo: string | null;
+  vmaVoucherDate: string;
+  vmaVoucherAmt: number | null;
+  vmaVchStatus: string | null;
+  bimBillsNo: string | null;
+  pcbBatchId: string | null;
+  urlView: string;
+};
+
+export type PettyCashVoucherListOptions = {
+  status: { id: string; label: string }[];
+};
+
+// Petty Cash Claim Form (PAGEID 1544 / MENUID 1872). Legacy BL
+// MM_API_PETTYCASH_PETTYCASHCLAIMFORM. Header + detail lines drive the full
+// claim application (create / edit / view / cancel). Workflow submit/cancel
+// endpoints return `workflowStub=true` until the FIMS workflow SPs are ported.
+export type PettyCashClaimFormHead = {
+  pmsId: number;
+  pmsApplicationNo: string;
+  pmsRequestBy: string;
+  pmsRequestByDesc: string;
+  pmsRequestDate: string;
+  pmsTotalAmt: number;
+  pmsStatus: string;
+};
+
+export type PettyCashClaimFormLine = {
+  pcdId: number;
+  pcdReceiptNo: string;
+  pcdTransDesc: string;
+  pcdTransAmt: number;
+  pcdStatus: string;
+  pcmId: number;
+  pcmPaytoId: string;
+  pcmPaytoName: string;
+  pcmMaxPerReceipt: number | null;
+  ftyFundType: string;
+  ftyFundDesc: string;
+  atActivityCode: string;
+  atActivityDesc: string;
+  ounCode: string;
+  ounDesc: string;
+  ccrCostcentre: string;
+  ccrCostcentreDesc: string;
+  cpaProjectNo: string;
+  soCode: string;
+  acmAcctCode: string;
+  acmAcctDesc: string;
+};
+
+export type PettyCashClaimForm = {
+  head: PettyCashClaimFormHead;
+  lines: PettyCashClaimFormLine[];
+};
+
+export type PettyCashClaimRequestBySuggestion = {
+  id: string;
+  text: string;
+  Name: string;
+};
+
+export type PettyCashClaimPcmSuggestion = {
+  id: number;
+  text: string;
+  defaults: {
+    ftyFundType: string;
+    ftyFundDesc: string;
+    atActivityCode: string;
+    atActivityDesc: string;
+    ounCode: string;
+    ounDesc: string;
+    ccrCostcentre: string;
+    ccrCostcentreDesc: string;
+    soCode: string;
+  };
+  maxPerReceipt: number | null;
+};
+
+export type PettyCashClaimAccountCodeSuggestion = {
+  id: string;
+  text: string;
+};
+
+export type PettyCashClaimDimensionSuggestion = {
+  id: string;
+  desc: string;
+  text: string;
+};
+
+export type PettyCashClaimLinePayload = {
+  pcdId?: number | null;
+  pcdReceiptNo: string;
+  pcdTransDesc: string;
+  pcdTransAmt: number;
+  pcmId: number;
+  ftyFundType?: string | null;
+  atActivityCode?: string | null;
+  ounCode?: string | null;
+  ccrCostcentre?: string | null;
+  cpaProjectNo?: string | null;
+  soCode?: string | null;
+  acmAcctCode?: string | null;
+};
+
+export type PettyCashClaimSavePayload = {
+  head: {
+    pmsId?: number | null;
+    pmsApplicationNo?: string | null;
+    pmsRequestBy: string;
+    pmsRequestByDesc?: string | null;
+    pmsRequestDate: string;
+    pmsTotalAmt?: number | null;
+    pcmId: number;
+  };
+  lines: PettyCashClaimLinePayload[];
+};
+
+export type PettyCashClaimSaveResponse = {
+  status: "ok";
+  pmsId: number;
+  pmsApplicationNo: string;
+  pmsTotalAmt: number;
+  pmsStatus: string;
+  workflowStub: boolean;
+};
+
 // HOD, VC & TNC setup (PAGEID 1715 / MENUID 2073). Legacy BL API_VC_TNC_SETUP.
 // Fields mirror the controller response; `oun_extended_field` JSON is flattened
 // into `stStaffNameSuperior` / `stStaffTitleSuperior` on the detail endpoint.

@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class VoucherMaster extends Model
 {
-    use HasFactory, Auditable;
+    use Auditable, HasFactory;
 
     protected $connection = 'mysql_secondary';
 
@@ -29,6 +29,7 @@ class VoucherMaster extends Model
     protected $fillable = [
         'vma_voucher_id',
         'vma_voucher_no',
+        'vma_vch_status',
         'vma_vch_description',
         'createdby',
         'createddate',

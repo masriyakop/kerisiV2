@@ -68,6 +68,16 @@ import VendorRegistrationFeeHistoryView from "@/views/VendorRegistrationFeeHisto
 import DebtorReminderView from "@/views/DebtorReminderView.vue";
 import DebtorStatementView from "@/views/DebtorStatementView.vue";
 import LetterPhraseView from "@/views/LetterPhraseView.vue";
+import PettyCashApplicationListView from "@/views/PettyCashApplicationListView.vue";
+import PettyCashClaimFormView from "@/views/PettyCashClaimFormView.vue";
+import PettyCashBillView from "@/views/PettyCashBillView.vue";
+import PettyCashByPtjView from "@/views/PettyCashByPtjView.vue";
+import PettyCashConfirmPaymentView from "@/views/PettyCashConfirmPaymentView.vue";
+import PettyCashRecoupFormView from "@/views/PettyCashRecoupFormView.vue";
+import PettyCashRecoupView from "@/views/PettyCashRecoupView.vue";
+import PettyCashReleasePaidView from "@/views/PettyCashReleasePaidView.vue";
+import PettyCashRequestListView from "@/views/PettyCashRequestListView.vue";
+import PettyCashVoucherListView from "@/views/PettyCashVoucherListView.vue";
 import VcTncView from "@/views/VcTncView.vue";
 import CheckErrorView from "@/views/CheckErrorView.vue";
 import BudgetStructureSearchView from "@/views/BudgetStructureSearchView.vue";
@@ -216,6 +226,66 @@ const router = createRouter({
     // (level 2) — MENUID maps to legacy MENUID and keeps URL parity with the
     // generic `/admin/kerisi/m/:menuId` pattern used by the sidebar.
     { path: "/admin/kerisi/m/3506", name: "kerisi-letter-phrase", component: LetterPhraseView, meta: { requiresAuth: true, title: "Letter Phrase" } },
+    {
+      path: "/admin/kerisi/m/1532",
+      name: "kerisi-petty-cash-recoup-list",
+      component: PettyCashRecoupView,
+      meta: { requiresAuth: true, title: "Petty Cash Recoup List" },
+    },
+    {
+      path: "/admin/kerisi/m/1534",
+      name: "kerisi-petty-cash-recoup-form",
+      component: PettyCashRecoupFormView,
+      meta: { requiresAuth: true, title: "Petty Cash Recoup Form" },
+    },
+    {
+      path: "/admin/kerisi/m/1490",
+      name: "kerisi-petty-cash-application-list",
+      component: PettyCashApplicationListView,
+      meta: { requiresAuth: true, title: "List of Petty Cash Application" },
+    },
+    {
+      path: "/admin/kerisi/m/1872",
+      name: "kerisi-petty-cash-claim-form",
+      component: PettyCashClaimFormView,
+      meta: { requiresAuth: true, title: "Petty Cash Claim Form" },
+    },
+    {
+      path: "/admin/kerisi/m/2399",
+      name: "kerisi-petty-cash-by-ptj",
+      component: PettyCashByPtjView,
+      meta: { requiresAuth: true, title: "List Petty Cash by PTJ" },
+    },
+    {
+      path: "/admin/kerisi/m/2400",
+      name: "kerisi-petty-cash-bill",
+      component: PettyCashBillView,
+      meta: { requiresAuth: true, title: "Bill Petty Cash" },
+    },
+    {
+      path: "/admin/kerisi/m/2424",
+      name: "kerisi-petty-cash-confirm-payment",
+      component: PettyCashConfirmPaymentView,
+      meta: { requiresAuth: true, title: "Confirmation Payment" },
+    },
+    {
+      path: "/admin/kerisi/m/2456",
+      name: "kerisi-petty-cash-request-list",
+      component: PettyCashRequestListView,
+      meta: { requiresAuth: true, title: "Request Petty Cash" },
+    },
+    {
+      path: "/admin/kerisi/m/2761",
+      name: "kerisi-petty-cash-release-paid",
+      component: PettyCashReleasePaidView,
+      meta: { requiresAuth: true, title: "List of Release Paid" },
+    },
+    {
+      path: "/admin/kerisi/m/3344",
+      name: "kerisi-petty-cash-voucher-list",
+      component: PettyCashVoucherListView,
+      meta: { requiresAuth: true, title: "List of Voucher Petty Cash" },
+    },
     { path: "/admin/kerisi/m/2073", name: "kerisi-vc-tnc", component: VcTncView, meta: { requiresAuth: true, title: "HOD, VC & TNC" } },
     { path: "/admin/kerisi/m/2740", name: "kerisi-check-error", component: CheckErrorView, meta: { requiresAuth: true, title: "Cek yang mungkin error" } },
     { path: "/admin/kerisi/m/3224", name: "kerisi-budget-structure-search", component: BudgetStructureSearchView, meta: { requiresAuth: true, title: "Setup Carian Structure Budget" } },
