@@ -63,6 +63,11 @@ import ListOfDepositView from "@/views/ListOfDepositView.vue";
 import InvoiceBalanceView from "@/views/InvoiceBalanceView.vue";
 import DepositFormView from "@/views/DepositFormView.vue";
 import DebtorProfileUpdateView from "@/views/DebtorProfileUpdateView.vue";
+import GlYearMonthView from "@/views/GlYearMonthView.vue";
+import GeneralLedgerListingView from "@/views/GeneralLedgerListingView.vue";
+import JournalListingView from "@/views/JournalListingView.vue";
+import ManualJournalListingView from "@/views/ManualJournalListingView.vue";
+import PostingToTbView from "@/views/PostingToTbView.vue";
 import PtptnDataView from "@/views/PtptnDataView.vue";
 import StatusPoPrView from "@/views/StatusPoPrView.vue";
 import TenderQuotationView from "@/views/TenderQuotationView.vue";
@@ -223,6 +228,11 @@ const router = createRouter({
     { path: "/admin/kerisi/m/2767", name: "kerisi-portal-tender-list", component: TenderQuotationView, meta: { requiresAuth: true, title: "Tender/Quotation List" } },
     { path: "/admin/kerisi/m/1841", name: "kerisi-purchasing-status-po-pr", component: StatusPoPrView, meta: { requiresAuth: true, title: "Status PO & PR" } },
     { path: "/admin/kerisi/m/1031", name: "kerisi-student-finance-ptptn-data", component: PtptnDataView, meta: { requiresAuth: true, title: "PTPTN Data" } },
+    { path: "/admin/kerisi/m/2056", name: "kerisi-gl-journal-listing", component: JournalListingView, meta: { requiresAuth: true, title: "Journal Listing" } },
+    { path: "/admin/kerisi/m/3287", name: "kerisi-gl-year-month", component: GlYearMonthView, meta: { requiresAuth: true, title: "List of Year and Month" } },
+    { path: "/admin/kerisi/m/1409", name: "kerisi-gl-posting-to-tb", component: PostingToTbView, meta: { requiresAuth: true, title: "Posting to GL (TB)" } },
+    { path: "/admin/kerisi/m/2519", name: "kerisi-gl-listing", component: GeneralLedgerListingView, meta: { requiresAuth: true, title: "General Ledger Listing" } },
+    { path: "/admin/kerisi/m/2089", name: "kerisi-gl-manual-journal-listing", component: ManualJournalListingView, meta: { requiresAuth: true, title: "Manual Journal Listing" } },
     { path: "/admin/kerisi/m/2003", name: "kerisi-portal-registration-fees", component: VendorRegistrationFeeHistoryView, meta: { requiresAuth: true, title: "Online Registration Fee History" } },
     { path: "/admin/kerisi/m/2584", name: "kerisi-portal-debtor-reminder", component: DebtorReminderView, meta: { requiresAuth: true, title: "Reminder" } },
     { path: "/admin/kerisi/m/2267", name: "kerisi-portal-debtor-statement", component: DebtorStatementView, meta: { requiresAuth: true, title: "Debtors Statement" } },

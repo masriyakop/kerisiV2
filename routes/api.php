@@ -37,11 +37,14 @@ use App\Http\Controllers\Api\DevelopersGuideController;
 use App\Http\Controllers\Api\DiscountNoteController;
 use App\Http\Controllers\Api\DiscountNoteFormController;
 use App\Http\Controllers\Api\FundTypeController;
+use App\Http\Controllers\Api\GeneralLedgerListingController;
+use App\Http\Controllers\Api\ManualJournalListingController;
 use App\Http\Controllers\Api\InvoiceBalanceController;
 use App\Http\Controllers\Api\LetterPhraseController;
 use App\Http\Controllers\Api\ListOfDepositController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\PageController;
+use App\Http\Controllers\Api\PostingToTbController;
 use App\Http\Controllers\Api\PayeeRegistrationController;
 use App\Http\Controllers\Api\PettyCashApplicationListController;
 use App\Http\Controllers\Api\PettyCashBillController;
@@ -56,6 +59,8 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PtjCodeController;
 use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\GlYearMonthController;
+use App\Http\Controllers\Api\JournalListingController;
 use App\Http\Controllers\Api\PtptnDataController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
@@ -257,6 +262,57 @@ Route::middleware('auth:sanctum')->group(function () {
     // group 22/271 / PTJ 'S10400' bursar rules (see controller docblock).
     Route::get('/purchasing/status-po-pr/options', [StatusPoPrController::class, 'options']);
     Route::get('/purchasing/status-po-pr', [StatusPoPrController::class, 'index']);
+
+    // General Ledger > Journal Listing (PAGEID 1700 / MENUID 2056). Legacy
+    // BL SNA_API_GLREPORT_JOURNAL_LISTING — list + DR/CR details via
+    // manual_journal_details. Delete is gated server-side against posted /
+    // cancelled statuses.
+    Route::get('/general-ledger/journal-listing/options', [JournalListingController::class, 'options']);
+    Route::get('/general-ledger/journal-listing', [JournalListingController::class, 'index']);
+    Route::get('/general-ledger/journal-listing/{id}', [JournalListingController::class, 'show'])
+        ->whereNumber('id');
+    Route::delete('/general-ledger/journal-listing/{id}', [JournalListingController::class, 'destroy'])
+        ->whereNumber('id');
+
+    // General Ledger > List of Year and Month (PAGEID 2721 / MENUID 3287).
+    // Legacy BL MZ_BL_GL_LIST_YEAR_MONTH — list + add/edit via popup modal.
+    // No delete endpoint exists in legacy so none is exposed here.
+    Route::get('/general-ledger/year-month/options', [GlYearMonthController::class, 'options']);
+    Route::get('/general-ledger/year-month', [GlYearMonthController::class, 'index']);
+    Route::get('/general-ledger/year-month/{id}', [GlYearMonthController::class, 'show'])
+        ->whereNumber('id');
+    Route::post('/general-ledger/year-month', [GlYearMonthController::class, 'store']);
+    Route::put('/general-ledger/year-month/{id}', [GlYearMonthController::class, 'update'])
+        ->whereNumber('id');
+
+    // General Ledger > Posting to GL (TB) (PAGEID 1139 / MENUID 1409).
+    // Legacy BL POSTING_TO_TB — read-only listing + in-page DR/CR drilldown.
+    // `show` returns master header + debit lines + credit lines in one payload.
+    Route::get('/general-ledger/posting-to-tb/options', [PostingToTbController::class, 'options']);
+    Route::get('/general-ledger/posting-to-tb', [PostingToTbController::class, 'index']);
+    Route::get('/general-ledger/posting-to-tb/{id}', [PostingToTbController::class, 'show'])
+        ->whereNumber('id');
+
+    // General Ledger > General Ledger Listing (PAGEID 2068 / MENUID 2519).
+    // Legacy BL NAD_API_GL_LISTINGPOSTINGTOGL — line-level read-only listing
+    // with 17-field top filter + 16-field smart filter consolidated into a
+    // single smart filter modal on the client.
+    Route::get('/general-ledger/general-ledger-listing/options', [GeneralLedgerListingController::class, 'options']);
+    Route::get('/general-ledger/general-ledger-listing', [GeneralLedgerListingController::class, 'index']);
+
+    // General Ledger > Manual Journal Listing (PAGEID 1729 / MENUID 2089).
+    // Legacy BL V2_GL_JOURNAL_API — endpoints ?listing=1 and ?listing_delete=1.
+    // Read + draft-delete only. `mjm_typeofjournal` is required on index
+    // (General / InterOU / Intercompany); index returns an empty page when it
+    // is missing to mirror the legacy contract. Edit / View / Duplicate row
+    // actions are deferred until MENUID 2090 (Manual Journal Form) is migrated.
+    Route::get('/general-ledger/manual-journal/options', [ManualJournalListingController::class, 'options']);
+    Route::get('/general-ledger/manual-journal/listing-pdf', [ManualJournalListingController::class, 'listingForPdf']);
+    Route::get('/general-ledger/manual-journal', [ManualJournalListingController::class, 'index']);
+    Route::get('/general-ledger/manual-journal/{id}', [ManualJournalListingController::class, 'show'])
+        ->whereNumber('id');
+    Route::delete('/general-ledger/manual-journal/{id}', [ManualJournalListingController::class, 'destroy'])
+        ->whereNumber('id');
 
     Route::get('/account-payable/utility-registration', [UtilityRegistrationController::class, 'index']);
     Route::get('/account-payable/utility-registration/{id}', [UtilityRegistrationController::class, 'show'])->whereNumber('id');

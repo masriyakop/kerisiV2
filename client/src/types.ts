@@ -2247,3 +2247,407 @@ export type StatusPoPrSmartFilter = {
   dateStart: string;
   dateEnd: string;
 };
+
+// General Ledger > Journal Listing (PAGEID 1700 / MENUID 2056).
+// Source: FIMS BL `SNA_API_GLREPORT_JOURNAL_LISTING`. Read-only listing
+// with a View-details modal (DR + CR sub-tables) and a delete action
+// gated client- and server-side against posted / cancelled journals.
+export type JournalListingRow = {
+  index: number;
+  mjmJournalId: number;
+  journalNo: string | null;
+  description: string | null;
+  typeOfJournal: string | null;
+  amount: number | null;
+  status: string | null;
+  systemId: string | null;
+  dateJournal: string | null;
+  createdBy: string | null;
+};
+
+export type JournalListingOptions = {
+  types: string[];
+  statuses: string[];
+  systemIds: string[];
+};
+
+export type JournalListingSmartFilter = {
+  year: string;
+  typeOfJournal: string;
+  description: string;
+  dateJournal: string;
+  status: string;
+  systemId: string;
+};
+
+export type JournalListingHeader = {
+  mjmJournalId: number;
+  journalNo: string | null;
+  description: string | null;
+  typeOfJournal: string | null;
+  amount: number | null;
+  status: string | null;
+  systemId: string | null;
+  dateJournal: string | null;
+  createdBy: string | null;
+  sumDebit: number;
+  sumCredit: number;
+};
+
+export type JournalListingLine = {
+  id: number;
+  ounCode: string | null;
+  fundType: string | null;
+  activityCode: string | null;
+  costCentre: string | null;
+  acctCode: string | null;
+  documentNo: string | null;
+  amount: number | null;
+  codeSo: string | null;
+  projectNo: string | null;
+  taxcode: string | null;
+  status: string | null;
+  reference: string | null;
+  paytoId: string | null;
+  paytoType: string | null;
+  paytoName: string | null;
+  source: string | null;
+};
+
+// General Ledger > Manual Journal Listing (PAGEID 1729 / MENUID 2089).
+// Source: FIMS BL `V2_GL_JOURNAL_API` (endpoints ?listing=1 and
+// ?listing_delete=1). Read + DRAFT-only delete. The legacy page feeds the
+// Top Filter's Type-of-Journal dropdown as a required `mjm_typeofjournal`
+// query param; when empty the listing simply returns nothing (same as
+// legacy BL). Listing PDF mirrors `custom/report/Manual Journal/downloadListPDF.php`
+// (toolbar button) and the per-row Journal PDF mirrors
+// `custom/report/Manual Journal/downloadPDFmj.php` (row action). Edit /
+// View / Duplicate row actions are deferred until MENUID 2090 lands.
+export type ManualJournalRow = {
+  index: number;
+  mjmJournalId: number;
+  journalNo: string | null;
+  description: string | null;
+  typeOfJournal: string | null;
+  amount: number | null;
+  status: string | null;
+  systemId: string | null;
+  dateJournal: string | null;
+  createdBy: string | null;
+  createdDate: string | null;
+  wasNotes: string | null;
+};
+
+export type ManualJournalTypeOption = {
+  code: string;
+  label: string;
+};
+
+export type ManualJournalOptions = {
+  types: ManualJournalTypeOption[];
+  statuses: string[];
+};
+
+export type ManualJournalSmartFilter = {
+  enterDateFrom: string;
+  enterDateTo: string;
+  status: string;
+  totalAmtFrom: string;
+  totalAmtTo: string;
+};
+
+/** Row shape returned by `/api/general-ledger/manual-journal/listing-pdf`
+ * — the toolbar-level "Download PDF" button. Columns match the legacy
+ * `downloadListPDF.php` output exactly.
+ */
+export type ManualJournalListingPdfRow = {
+  index: number;
+  journalNo: string;
+  description: string;
+  amount: number;
+  status: string;
+  dateJournal: string;
+  createdBy: string;
+};
+
+export type ManualJournalListingPdfFilters = {
+  typeOfJournal: string;
+  globalSearch: string;
+  dateFrom: string;
+  dateTo: string;
+  status: string;
+  amountFrom: string;
+  amountTo: string;
+};
+
+export type ManualJournalListingPdfPayload = {
+  rows: ManualJournalListingPdfRow[];
+  filters: ManualJournalListingPdfFilters;
+  generatedAt: string;
+  typeLabel: string;
+  truncated?: boolean;
+  limit?: number;
+};
+
+/** Per-row Journal PDF payload backing `downloadPDFmj.php`. The backend
+ * resolves the workflow signers (Input / Verifier / Approver) from
+ * `wf_application_status` + `wf_process` + `staff_service`.
+ */
+export type ManualJournalDetailHeader = {
+  journalId: number;
+  journalNo: string;
+  journalDesc: string;
+  typeOfJournal: string;
+  status: string;
+  systemId: string;
+  enterDate: string;
+  enterMonth: string;
+  createdBy: string;
+  createdByName: string | null;
+  createdDate: string;
+  createdTime: string;
+  organization: string;
+  hasHumanApprover: boolean;
+};
+
+export type ManualJournalDetailLine = {
+  glStructure: string;
+  accountCode: string;
+  payToType: string;
+  payToId: string;
+  documentNo: string;
+  reference: string;
+  debit: number;
+  credit: number;
+};
+
+export type ManualJournalDetailProcessStep = {
+  processName: string;
+  createdByName: string;
+  ounDesc: string;
+  emailAddr: string;
+  telNoWork: string;
+  statusDesc: string;
+  remark: string;
+  createdDate: string;
+  createdTime: string;
+};
+
+export type ManualJournalDetail = {
+  header: ManualJournalDetailHeader;
+  lines: ManualJournalDetailLine[];
+  totals: { debit: number; credit: number };
+  processFlow: ManualJournalDetailProcessStep[];
+};
+
+// General Ledger > List of Year and Month (PAGEID 2721 / MENUID 3287).
+// Source: FIMS BL `MZ_BL_GL_LIST_YEAR_MONTH`. List + add/edit popup modal;
+// no delete endpoint exists in legacy.
+export type GlYearMonthRow = {
+  index: number;
+  gymId: number;
+  year: string;
+  month: string;
+  status: string;
+  remark: string | null;
+};
+
+export type GlYearMonthDetail = {
+  gymId: number;
+  year: string;
+  month: string;
+  status: string;
+  remark: string | null;
+};
+
+export type GlYearMonthInput = {
+  gym_year: string;
+  gym_month: string;
+  gym_status: "OPEN" | "CLOSE";
+  gym_remark?: string | null;
+};
+
+export type GlYearMonthLookupOption = {
+  value: string;
+  label: string;
+};
+
+export type GlYearMonthOptions = {
+  months: GlYearMonthLookupOption[];
+  statuses: GlYearMonthLookupOption[];
+};
+
+export type GlYearMonthSmartFilter = {
+  year: string;
+  month: string;
+  status: string;
+};
+
+// General Ledger > Posting to GL (TB) (PAGEID 1139 / MENUID 1409).
+// Source: FIMS BL `POSTING_TO_TB`. Read-only listing over
+// posting_master + posting_details grouped per posting + document +
+// references + date, with a View-details modal (DR + CR sub-tables) that
+// replaces the legacy deep-link to MENUID 1413 (out of migration scope).
+export type PostingToTbRow = {
+  index: number;
+  pmtPostingId: number;
+  postingNo: string | null;
+  documentNo: string | null;
+  systemId: string | null;
+  amountCr: number;
+  amountDt: number;
+  status: string | null;
+  reference: string | null;
+  reference1: string | null;
+  transDate: string | null;
+};
+
+export type PostingToTbOptions = {
+  systemIds: string[];
+  statuses: string[];
+};
+
+export type PostingToTbSmartFilter = {
+  systemId: string;
+  dateFrom: string;
+  dateTo: string;
+  totalAmt: string;
+};
+
+export type PostingToTbHeader = {
+  pmtPostingId: number;
+  postingNo: string | null;
+  systemId: string | null;
+  status: string | null;
+  totalAmount: number;
+  description: string | null;
+  currency: string | null;
+  postedDate: string | null;
+  postedBy: string | null;
+  sumDebit: number;
+  sumCredit: number;
+};
+
+export type PostingToTbLine = {
+  id: number;
+  fund: string | null;
+  activity: string | null;
+  ptj: string | null;
+  account: string | null;
+  documentNo: string | null;
+  reference: string | null;
+  reference1: string | null;
+  amount: number;
+  payTo: string | null;
+};
+
+export type PostingToTbFooter = {
+  amountDt: number;
+  amountCr: number;
+};
+
+// General Ledger > General Ledger Listing (PAGEID 2068 / MENUID 2519).
+// Source: FIMS BL `NAD_API_GL_LISTINGPOSTINGTOGL`. Read-only line-level
+// listing over posting_master + posting_details with the 5-level
+// account_main self-join hierarchy. Legacy page had separate Top Filter +
+// Smart Filter; here both are consolidated into one smart filter modal
+// (same pattern as PostingToTb).
+export type GlListingRow = {
+  index: number;
+  pdePostingDetlId: number;
+  pmtPostingId: number;
+  postingNo: string | null;
+  documentNo: string | null;
+  docDescription: string | null;
+  fundType: string | null;
+  fundDesc: string | null;
+  activityCode: string | null;
+  activityDesc: string | null;
+  ounCode: string | null;
+  ounDesc: string | null;
+  costCentre: string | null;
+  costCentreDesc: string | null;
+  soCode: string | null;
+  projectDesc: string | null;
+  acctCode: string | null;
+  acctDesc: string | null;
+  acctActivity: string | null;
+  acctBehavior: string | null;
+  accountClass: string | null;
+  accountSubclass: string | null;
+  accountSeries: string | null;
+  accountSubseries: string | null;
+  transAmt: number;
+  transType: string | null;
+  reference: string | null;
+  reference1: string | null;
+  postedDate: string | null;
+  postedPeriod: string | null;
+  transDate: string | null;
+  payToType: string | null;
+  payToId: string | null;
+  createdBy: string | null;
+  systemId: string | null;
+};
+
+export type GlListingCodeOption = {
+  code: string;
+  description: string;
+};
+
+export type GlListingPtjOption = GlListingCodeOption & {
+  parent: string | null;
+  level?: number | null;
+};
+
+export type GlListingCostCentreOption = GlListingCodeOption & {
+  parent: string | null;
+};
+
+export type GlListingAccountOption = GlListingCodeOption & {
+  parent: string | null;
+};
+
+export type GlListingOptions = {
+  systemIds: string[];
+  fundTypes: GlListingCodeOption[];
+  activityCodes: GlListingCodeOption[];
+  ptjL3: GlListingPtjOption[];
+  ptj: GlListingPtjOption[];
+  costCentres: GlListingCostCentreOption[];
+  accountsByLevel: Partial<Record<1 | 2 | 3 | 4 | 5, GlListingAccountOption[]>>;
+  accountTypes: string[];
+  statementItems: string[];
+  transTypes: string[];
+  payToTypes: GlListingCodeOption[];
+};
+
+export type GlListingSmartFilter = {
+  systemId: string;
+  dateStart: string;
+  dateEnd: string;
+  fundType: string;
+  activityCode: string;
+  ounCodeL3: string;
+  ounCode: string;
+  costCentre: string;
+  accountClass: string;
+  accountSubclass: string;
+  accountSeries: string;
+  accountSubseries: string;
+  acctCode: string;
+  accountType: string;
+  payToType: string;
+  postingNo: string;
+  documentNo: string;
+  soCode: string;
+  payToId: string;
+  reference: string;
+  reference1: string;
+  transType: string;
+  statementItem: string;
+};
+
+export type GlListingFooter = {
+  transAmt: number;
+};

@@ -148,6 +148,24 @@ import type {
   DebtorReminderRow,
   DebtorStatementFooter,
   DebtorStatementRow,
+  GlListingOptions,
+  GlListingRow,
+  GlYearMonthDetail,
+  GlYearMonthInput,
+  GlYearMonthOptions,
+  GlYearMonthRow,
+  JournalListingHeader,
+  JournalListingLine,
+  JournalListingOptions,
+  JournalListingRow,
+  ManualJournalDetail,
+  ManualJournalListingPdfPayload,
+  ManualJournalOptions,
+  ManualJournalRow,
+  PostingToTbHeader,
+  PostingToTbLine,
+  PostingToTbOptions,
+  PostingToTbRow,
   PtptnDataDetail,
   PtptnDataHeader,
   PtptnDataRow,
@@ -1795,5 +1813,145 @@ export async function listStatusPoPr(params = "") {
 export async function getStatusPoPrOptions() {
   return apiRequest<{ data: StatusPoPrOptions }>(
     "/api/purchasing/status-po-pr/options",
+  );
+}
+
+// General Ledger > Journal Listing (PAGEID 1700 / MENUID 2056).
+export async function listJournalListing(params = "") {
+  return apiRequest<{ data: JournalListingRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/journal-listing${params}`,
+  );
+}
+
+export async function getJournalListing(id: number) {
+  return apiRequest<{
+    data: {
+      header: JournalListingHeader;
+      debit: JournalListingLine[];
+      credit: JournalListingLine[];
+    };
+  }>(`/api/general-ledger/journal-listing/${id}`);
+}
+
+export async function deleteJournalListing(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/general-ledger/journal-listing/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+export async function getJournalListingOptions() {
+  return apiRequest<{ data: JournalListingOptions }>(
+    "/api/general-ledger/journal-listing/options",
+  );
+}
+
+// General Ledger > Manual Journal Listing (PAGEID 1729 / MENUID 2089).
+// Source: FIMS BL `V2_GL_JOURNAL_API` (?listing=1 + ?listing_delete=1).
+// Read list + DRAFT-only delete. Type-of-Journal is a fixed dropdown
+// hard-coded on the legacy page (General / InterOU / Intercompany) and is
+// REQUIRED by the backend — index returns an empty page when missing, as
+// the legacy BL does.
+export async function listManualJournal(params = "") {
+  return apiRequest<{ data: ManualJournalRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/manual-journal${params}`,
+  );
+}
+
+export async function deleteManualJournal(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/general-ledger/manual-journal/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+export async function getManualJournalOptions() {
+  return apiRequest<{ data: ManualJournalOptions }>(
+    "/api/general-ledger/manual-journal/options",
+  );
+}
+
+// Backs the toolbar "Download PDF" button — fetches ALL rows matching the
+// current filters (same contract as listManualJournal, no pagination).
+// Mirrors `custom/report/Manual Journal/downloadListPDF.php`.
+export async function getManualJournalListingPdf(params = "") {
+  return apiRequest<{ data: ManualJournalListingPdfPayload }>(
+    `/api/general-ledger/manual-journal/listing-pdf${params}`,
+  );
+}
+
+// Backs the per-row "PDF" row action — header + GL lines + workflow signers.
+// Mirrors `custom/report/Manual Journal/downloadPDFmj.php`.
+export async function getManualJournalDetail(id: number) {
+  return apiRequest<{ data: ManualJournalDetail }>(
+    `/api/general-ledger/manual-journal/${id}`,
+  );
+}
+
+// General Ledger > List of Year and Month (PAGEID 2721 / MENUID 3287).
+export async function listGlYearMonth(params = "") {
+  return apiRequest<{ data: GlYearMonthRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/year-month${params}`,
+  );
+}
+
+export async function getGlYearMonth(id: number) {
+  return apiRequest<{ data: GlYearMonthDetail }>(`/api/general-ledger/year-month/${id}`);
+}
+
+export async function getGlYearMonthOptions() {
+  return apiRequest<{ data: GlYearMonthOptions }>(
+    "/api/general-ledger/year-month/options",
+  );
+}
+
+export async function createGlYearMonth(input: GlYearMonthInput) {
+  return apiRequest<{ data: GlYearMonthDetail }>("/api/general-ledger/year-month", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateGlYearMonth(id: number, input: GlYearMonthInput) {
+  return apiRequest<{ data: GlYearMonthDetail }>(
+    `/api/general-ledger/year-month/${id}`,
+    { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+// General Ledger > Posting to GL (TB) (PAGEID 1139 / MENUID 1409).
+// Source: FIMS BL `POSTING_TO_TB`. List returns grouped master+document
+// rows with aggregated DR/CR sums; show returns the master header plus
+// debit + credit line sub-tables in one payload for the in-page modal.
+export async function listPostingToTb(params = "") {
+  return apiRequest<{ data: PostingToTbRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/posting-to-tb${params}`,
+  );
+}
+
+export async function getPostingToTb(id: number) {
+  return apiRequest<{
+    data: { header: PostingToTbHeader; debit: PostingToTbLine[]; credit: PostingToTbLine[] };
+  }>(`/api/general-ledger/posting-to-tb/${id}`);
+}
+
+export async function getPostingToTbOptions() {
+  return apiRequest<{ data: PostingToTbOptions }>(
+    "/api/general-ledger/posting-to-tb/options",
+  );
+}
+
+// General Ledger > General Ledger Listing (PAGEID 2068 / MENUID 2519).
+// Source: FIMS BL `NAD_API_GL_LISTINGPOSTINGTOGL`. Read-only line-level
+// datatable with a single consolidated smart filter modal.
+export async function listGlListing(params = "") {
+  return apiRequest<{ data: GlListingRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/general-ledger-listing${params}`,
+  );
+}
+
+export async function getGlListingOptions() {
+  return apiRequest<{ data: GlListingOptions }>(
+    "/api/general-ledger/general-ledger-listing/options",
   );
 }
