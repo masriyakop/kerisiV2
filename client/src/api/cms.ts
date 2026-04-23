@@ -115,6 +115,26 @@ import type {
   PageInput,
   PayeeRegistrationOptions,
   PayeeRegistrationRow,
+  PettyCashApplicationDetail,
+  PettyCashApplicationListOptions,
+  PettyCashApplicationListRow,
+  PettyCashBillRow,
+  PettyCashByPtjRow,
+  PettyCashClaimAccountCodeSuggestion,
+  PettyCashClaimDimensionSuggestion,
+  PettyCashClaimForm,
+  PettyCashClaimPcmSuggestion,
+  PettyCashClaimRequestBySuggestion,
+  PettyCashClaimSavePayload,
+  PettyCashClaimSaveResponse,
+  PettyCashConfirmPaymentRow,
+  PettyCashRecoupDetail,
+  PettyCashRecoupRow,
+  PettyCashReleasePaidApplicationRow,
+  PettyCashReleasePaidReceiptRow,
+  PettyCashRequestListRow,
+  PettyCashVoucherListOptions,
+  PettyCashVoucherListRow,
   PtjCodeInput,
   PtjCodeRow,
   Post,
@@ -128,6 +148,11 @@ import type {
   DebtorReminderRow,
   DebtorStatementFooter,
   DebtorStatementRow,
+  PtptnDataDetail,
+  PtptnDataHeader,
+  PtptnDataRow,
+  StatusPoPrOptions,
+  StatusPoPrRow,
   TenderQuotationRow,
   UtilityRegistrationDetail,
   UtilityRegistrationInput,
@@ -650,6 +675,196 @@ export async function updateLetterPhrase(lpmValue: string, input: LetterPhraseIn
   return apiRequest<{ data: { success: boolean } }>(
     `/api/setup/letter-phrase/${encodeURIComponent(lpmValue)}`,
     { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+// Petty Cash Recoup list (PAGEID 1255 / MENUID 1532).
+export async function listPettyCashRecoups(params = "") {
+  return apiRequest<{ data: PettyCashRecoupRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/recoup${params}`,
+  );
+}
+
+// Petty Cash Recoup form view (PAGEID 1256 / MENUID 1534).
+export async function getPettyCashRecoup(pcbId: number) {
+  return apiRequest<{ data: PettyCashRecoupDetail }>(`/api/petty-cash/recoup/${pcbId}`);
+}
+
+export async function getPettyCashApplicationListOptions() {
+  return apiRequest<{ data: PettyCashApplicationListOptions }>("/api/petty-cash/applications/options");
+}
+
+export async function listPettyCashApplications(params = "") {
+  return apiRequest<{ data: PettyCashApplicationListRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/applications${params}`,
+  );
+}
+
+export async function getPettyCashApplication(id: number) {
+  return apiRequest<{ data: PettyCashApplicationDetail }>(`/api/petty-cash/applications/${id}`);
+}
+
+// Petty Cash Claim Form (PAGEID 1544 / MENUID 1872). Legacy BL
+// MM_API_PETTYCASH_PETTYCASHCLAIMFORM.
+export async function getPettyCashClaim(id: number) {
+  return apiRequest<{ data: PettyCashClaimForm }>(`/api/petty-cash/claim-form/${id}`);
+}
+
+export async function suggestPettyCashClaimRequestBy(q: string, limit = 20) {
+  const params = new URLSearchParams({ q, limit: String(limit) });
+  return apiRequest<{ data: PettyCashClaimRequestBySuggestion[] }>(
+    `/api/petty-cash/claim-form/request-by/suggest?${params.toString()}`,
+  );
+}
+
+export async function suggestPettyCashClaimPcm(q: string, ptjCode = "", limit = 20) {
+  const params = new URLSearchParams({ q, limit: String(limit) });
+  if (ptjCode) params.set("ptj_code", ptjCode);
+  return apiRequest<{ data: PettyCashClaimPcmSuggestion[] }>(
+    `/api/petty-cash/claim-form/pcm/suggest?${params.toString()}`,
+  );
+}
+
+export async function suggestPettyCashClaimAccountCode(q: string, fundType = "", limit = 20) {
+  const params = new URLSearchParams({ q, limit: String(limit) });
+  if (fundType) params.set("fund_type", fundType);
+  return apiRequest<{ data: PettyCashClaimAccountCodeSuggestion[] }>(
+    `/api/petty-cash/claim-form/account-code/suggest?${params.toString()}`,
+  );
+}
+
+export async function suggestPettyCashClaimFundType(q = "", limit = 50) {
+  const params = new URLSearchParams({ q, limit: String(limit) });
+  return apiRequest<{ data: PettyCashClaimDimensionSuggestion[] }>(
+    `/api/petty-cash/claim-form/fund-type/suggest?${params.toString()}`,
+  );
+}
+
+export async function suggestPettyCashClaimActivityCode(
+  q = "",
+  fundType = "",
+  limit = 50,
+) {
+  const params = new URLSearchParams({ q, limit: String(limit) });
+  if (fundType) params.set("fund_type", fundType);
+  return apiRequest<{ data: PettyCashClaimDimensionSuggestion[] }>(
+    `/api/petty-cash/claim-form/activity-code/suggest?${params.toString()}`,
+  );
+}
+
+export async function suggestPettyCashClaimOun(
+  q = "",
+  opts: { fundType?: string; activityCode?: string } = {},
+  limit = 50,
+) {
+  const params = new URLSearchParams({ q, limit: String(limit) });
+  if (opts.fundType) params.set("fund_type", opts.fundType);
+  if (opts.activityCode) params.set("activity_code", opts.activityCode);
+  return apiRequest<{ data: PettyCashClaimDimensionSuggestion[] }>(
+    `/api/petty-cash/claim-form/oun/suggest?${params.toString()}`,
+  );
+}
+
+export async function suggestPettyCashClaimCostCentre(
+  q = "",
+  opts: { fundType?: string; activityCode?: string; ounCode?: string } = {},
+  limit = 50,
+) {
+  const params = new URLSearchParams({ q, limit: String(limit) });
+  if (opts.fundType) params.set("fund_type", opts.fundType);
+  if (opts.activityCode) params.set("activity_code", opts.activityCode);
+  if (opts.ounCode) params.set("oun_code", opts.ounCode);
+  return apiRequest<{ data: PettyCashClaimDimensionSuggestion[] }>(
+    `/api/petty-cash/claim-form/cost-centre/suggest?${params.toString()}`,
+  );
+}
+
+export async function getPettyCashClaimNextSeq() {
+  return apiRequest<{ data: { pcdId: number } }>(`/api/petty-cash/claim-form/next-seq`);
+}
+
+export async function savePettyCashClaim(payload: PettyCashClaimSavePayload) {
+  return apiRequest<{ data: PettyCashClaimSaveResponse }>("/api/petty-cash/claim-form", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function submitPettyCashClaim(id: number) {
+  return apiRequest<{ data: { status: string; pmsStatus: string; workflowStub: boolean; message: string } }>(
+    `/api/petty-cash/claim-form/${id}/submit`,
+    { method: "POST", body: JSON.stringify({}) },
+  );
+}
+
+export async function cancelPettyCashClaim(id: number, cancelReason: string) {
+  return apiRequest<{ data: { status: string; pmsStatus: string; message: string } }>(
+    `/api/petty-cash/claim-form/${id}/cancel`,
+    { method: "POST", body: JSON.stringify({ cancelReason }) },
+  );
+}
+
+export async function getPettyCashClaimProcessFlow(id: number) {
+  return apiRequest<{ data: unknown[]; meta?: Record<string, unknown> }>(
+    `/api/petty-cash/claim-form/${id}/process-flow`,
+  );
+}
+
+// List Petty Cash by PTJ (PAGEID 1963 / MENUID 2399).
+export async function listPettyCashByPtj(params = "") {
+  return apiRequest<{ data: PettyCashByPtjRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/by-ptj${params}`,
+  );
+}
+
+// Bill Petty Cash (PAGEID 1964 / MENUID 2400).
+export async function listPettyCashBills(params = "") {
+  return apiRequest<{ data: PettyCashBillRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/bills${params}`,
+  );
+}
+
+// Confirmation Payment — Petty Cash (PAGEID 1982 / MENUID 2424).
+export async function listPettyCashConfirmPaymentAwaiting(params = "") {
+  return apiRequest<{ data: PettyCashConfirmPaymentRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/confirm-payment/awaiting${params}`,
+  );
+}
+
+export async function listPettyCashConfirmPaymentConfirmed(params = "") {
+  return apiRequest<{ data: PettyCashConfirmPaymentRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/confirm-payment/confirmed${params}`,
+  );
+}
+
+// Request Petty Cash list (PAGEID 2010 / MENUID 2456).
+export async function listPettyCashRequests(params = "") {
+  return apiRequest<{ data: PettyCashRequestListRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/requests${params}`,
+  );
+}
+
+// List of Release Paid — Petty Cash (PAGEID 2273 / MENUID 2761).
+export async function listPettyCashReleasePaidApplications(params = "") {
+  return apiRequest<{ data: PettyCashReleasePaidApplicationRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/release-paid/applications${params}`,
+  );
+}
+
+export async function listPettyCashReleasePaidReceipts(params = "") {
+  return apiRequest<{ data: PettyCashReleasePaidReceiptRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/release-paid/receipts${params}`,
+  );
+}
+
+// List of Voucher Petty Cash (PAGEID 2774 / MENUID 3344).
+export async function getPettyCashVoucherListOptions() {
+  return apiRequest<{ data: PettyCashVoucherListOptions }>("/api/petty-cash/vouchers/options");
+}
+
+export async function listPettyCashVouchers(params = "") {
+  return apiRequest<{ data: PettyCashVoucherListRow[]; meta: Record<string, unknown> }>(
+    `/api/petty-cash/vouchers${params}`,
   );
 }
 
@@ -1548,4 +1763,37 @@ export async function listDebtorStatement(params = "") {
     data: DebtorStatementRow[];
     meta: Record<string, unknown> & { footer?: DebtorStatementFooter };
   }>(`/api/portal/debtor/statement${params}`);
+}
+
+// Student Finance > PTPTN Data (PAGEID 857 / MENUID 1031).
+export async function listPtptnData(params = "") {
+  return apiRequest<{ data: PtptnDataRow[]; meta: Record<string, unknown> }>(
+    `/api/student-finance/ptptn-data${params}`,
+  );
+}
+
+export async function getPtptnData(id: number) {
+  return apiRequest<{ data: { header: PtptnDataHeader; details: PtptnDataDetail[] } }>(
+    `/api/student-finance/ptptn-data/${id}`,
+  );
+}
+
+export async function deletePtptnData(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/student-finance/ptptn-data/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+// Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841).
+export async function listStatusPoPr(params = "") {
+  return apiRequest<{ data: StatusPoPrRow[]; meta: Record<string, unknown> }>(
+    `/api/purchasing/status-po-pr${params}`,
+  );
+}
+
+export async function getStatusPoPrOptions() {
+  return apiRequest<{ data: StatusPoPrOptions }>(
+    "/api/purchasing/status-po-pr/options",
+  );
 }

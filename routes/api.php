@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\AuditLogController;
-use App\Http\Controllers\Api\ActivityCodeController;
 use App\Http\Controllers\Api\AccountBankByPayeeController;
 use App\Http\Controllers\Api\AccountBankUpdatedController;
 use App\Http\Controllers\Api\AccountCodeController;
 use App\Http\Controllers\Api\AccountCodePpiController;
+use App\Http\Controllers\Api\ActivityCodeController;
+use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AuthorizedReceiptingController;
 use App\Http\Controllers\Api\AuthorizedReceiptingFormController;
@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\CascadeStructureController;
 use App\Http\Controllers\Api\CashbookListController;
 use App\Http\Controllers\Api\CashbookPtjController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CheckErrorController;
 use App\Http\Controllers\Api\CostCentreController;
 use App\Http\Controllers\Api\CreditNoteController;
 use App\Http\Controllers\Api\CreditNoteFormController;
@@ -33,22 +34,32 @@ use App\Http\Controllers\Api\DebtorStatementController;
 use App\Http\Controllers\Api\DepositController;
 use App\Http\Controllers\Api\DepositFormController;
 use App\Http\Controllers\Api\DevelopersGuideController;
-use App\Http\Controllers\Api\CheckErrorController;
 use App\Http\Controllers\Api\DiscountNoteController;
 use App\Http\Controllers\Api\DiscountNoteFormController;
-use App\Http\Controllers\Api\InvoiceBalanceController;
-use App\Http\Controllers\Api\ListOfDepositController;
 use App\Http\Controllers\Api\FundTypeController;
+use App\Http\Controllers\Api\InvoiceBalanceController;
 use App\Http\Controllers\Api\LetterPhraseController;
+use App\Http\Controllers\Api\ListOfDepositController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\PageController;
 use App\Http\Controllers\Api\PayeeRegistrationController;
+use App\Http\Controllers\Api\PettyCashApplicationListController;
+use App\Http\Controllers\Api\PettyCashBillController;
+use App\Http\Controllers\Api\PettyCashClaimFormController;
+use App\Http\Controllers\Api\PettyCashByPtjController;
+use App\Http\Controllers\Api\PettyCashConfirmPaymentController;
+use App\Http\Controllers\Api\PettyCashRecoupController;
+use App\Http\Controllers\Api\PettyCashReleasePaidController;
+use App\Http\Controllers\Api\PettyCashRequestListController;
+use App\Http\Controllers\Api\PettyCashVoucherListController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PtjCodeController;
 use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\PtptnDataController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
+use App\Http\Controllers\Api\StatusPoPrController;
 use App\Http\Controllers\Api\TenderQuotationController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UtilityRegistrationController;
@@ -181,6 +192,71 @@ Route::middleware('auth:sanctum')->group(function () {
     // respective controllers for full details.
     Route::get('/account-payable/payee-registration/options', [PayeeRegistrationController::class, 'options']);
     Route::get('/account-payable/payee-registration', [PayeeRegistrationController::class, 'index']);
+
+    // Petty Cash Recoup list (PAGEID 1255 / MENUID 1532). Legacy BL API_PETTYCASH_PETTYCASHRECOUP.
+    Route::get('/petty-cash/recoup', [PettyCashRecoupController::class, 'index']);
+
+    // Petty Cash Recoup form view (PAGEID 1256 / MENUID 1534). Legacy BL
+    // API_PETTYCASH_PETTYCASHRECOUPFORM — PettyCashBatchMaster + PettyCashRecoupDetailSelected_dt.
+    Route::get('/petty-cash/recoup/{pcb_id}', [PettyCashRecoupController::class, 'show'])->whereNumber('pcb_id');
+
+    // List of Petty Cash Application (PAGEID 1217 / MENUID 1490). Legacy BL API_PETTYCASH_LISTAPPLICATIONPETTYCASH.
+    Route::get('/petty-cash/applications/options', [PettyCashApplicationListController::class, 'options']);
+    Route::get('/petty-cash/applications', [PettyCashApplicationListController::class, 'index']);
+    Route::get('/petty-cash/applications/{id}', [PettyCashApplicationListController::class, 'show']);
+
+    // Petty Cash Claim Form (PAGEID 1544 / MENUID 1872). Legacy BL MM_API_PETTYCASH_PETTYCASHCLAIMFORM.
+    Route::get('/petty-cash/claim-form/request-by/suggest', [PettyCashClaimFormController::class, 'suggestRequestBy']);
+    Route::get('/petty-cash/claim-form/pcm/suggest', [PettyCashClaimFormController::class, 'suggestPcm']);
+    Route::get('/petty-cash/claim-form/account-code/suggest', [PettyCashClaimFormController::class, 'suggestAccountCode']);
+    Route::get('/petty-cash/claim-form/fund-type/suggest', [PettyCashClaimFormController::class, 'suggestFundType']);
+    Route::get('/petty-cash/claim-form/activity-code/suggest', [PettyCashClaimFormController::class, 'suggestActivityCode']);
+    Route::get('/petty-cash/claim-form/oun/suggest', [PettyCashClaimFormController::class, 'suggestOun']);
+    Route::get('/petty-cash/claim-form/cost-centre/suggest', [PettyCashClaimFormController::class, 'suggestCostCentre']);
+    Route::get('/petty-cash/claim-form/next-seq', [PettyCashClaimFormController::class, 'nextDetailSeq']);
+    Route::get('/petty-cash/claim-form/{id}', [PettyCashClaimFormController::class, 'show'])->whereNumber('id');
+    Route::post('/petty-cash/claim-form', [PettyCashClaimFormController::class, 'saveDraft']);
+    Route::post('/petty-cash/claim-form/{id}/submit', [PettyCashClaimFormController::class, 'submit'])->whereNumber('id');
+    Route::post('/petty-cash/claim-form/{id}/cancel', [PettyCashClaimFormController::class, 'cancel'])->whereNumber('id');
+    Route::get('/petty-cash/claim-form/{id}/process-flow', [PettyCashClaimFormController::class, 'processFlow'])->whereNumber('id');
+
+    // List Petty Cash by PTJ (PAGEID 1963 / MENUID 2399). Legacy BL NAD_API_PC_PETTYCASHBYPTJ.
+    Route::get('/petty-cash/by-ptj', [PettyCashByPtjController::class, 'index']);
+
+    // Bill Petty Cash (PAGEID 1964 / MENUID 2400). Legacy BL NAD_API_PC_PETTYCASHBILL.
+    Route::get('/petty-cash/bills', [PettyCashBillController::class, 'index']);
+
+    // Confirmation Payment — Petty Cash (PAGEID 1982 / MENUID 2424). Legacy BL NAD_API_PC_CONFIRMATIONPAYMENT.
+    Route::get('/petty-cash/confirm-payment/awaiting', [PettyCashConfirmPaymentController::class, 'awaiting']);
+    Route::get('/petty-cash/confirm-payment/confirmed', [PettyCashConfirmPaymentController::class, 'confirmed']);
+
+    // Request Petty Cash list (PAGEID 2010 / MENUID 2456). Legacy BL NAD_API_PC_REQUESTPETTYCASH.
+    Route::get('/petty-cash/requests', [PettyCashRequestListController::class, 'index']);
+
+    // List of Release Paid — Petty Cash (PAGEID 2273 / MENUID 2761). Legacy BL NAD_API_PC_LISTOFRELEASEPAID.
+    Route::get('/petty-cash/release-paid/applications', [PettyCashReleasePaidController::class, 'applications']);
+    Route::get('/petty-cash/release-paid/receipts', [PettyCashReleasePaidController::class, 'receipts']);
+
+    // List of Voucher Petty Cash (PAGEID 2774 / MENUID 3344). Legacy BL NAD_API_PC_LISTOFVOUCHERPETTYCASH.
+    Route::get('/petty-cash/vouchers/options', [PettyCashVoucherListController::class, 'options']);
+    Route::get('/petty-cash/vouchers', [PettyCashVoucherListController::class, 'index']);
+
+    // Student Finance > PTPTN Data (PAGEID 857 / MENUID 1031). Legacy BL
+    // API_PTPTN_DATA. Read-only datatable + View modal (ptptn_data_detl) +
+    // Delete gated on pdm_is_process_complete = 'N'.
+    Route::get('/student-finance/ptptn-data', [PtptnDataController::class, 'index']);
+    Route::get('/student-finance/ptptn-data/{id}', [PtptnDataController::class, 'show'])
+        ->whereNumber('id');
+    Route::delete('/student-finance/ptptn-data/{id}', [PtptnDataController::class, 'destroy'])
+        ->whereNumber('id');
+
+    // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841). Legacy BL
+    // ZR_PURCHASING_STATUSPOPR_API — read-only datatable with a smart
+    // filter (date range + PO/PR/Vendor/Status). PTJ scoping is exposed via
+    // an optional `ou_code` query param rather than hard-coding the legacy
+    // group 22/271 / PTJ 'S10400' bursar rules (see controller docblock).
+    Route::get('/purchasing/status-po-pr/options', [StatusPoPrController::class, 'options']);
+    Route::get('/purchasing/status-po-pr', [StatusPoPrController::class, 'index']);
 
     Route::get('/account-payable/utility-registration', [UtilityRegistrationController::class, 'index']);
     Route::get('/account-payable/utility-registration/{id}', [UtilityRegistrationController::class, 'show'])->whereNumber('id');
