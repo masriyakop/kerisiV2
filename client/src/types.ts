@@ -2750,3 +2750,370 @@ export type BankAccountUpdateSmartFilter = {
   bank: string;
   status: string;
 };
+
+// Investment > List Of Accrual (PAGEID 1548 / MENUID 1877).
+// Legacy BL `API_LIST_OF_ACCRUAL` (action=listing_all_dt). Read-only
+// listing joining investment_profile + investment_institution +
+// investment_accrual.
+export type ListOfAccrualRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionDesc: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  totalSum: number;
+  status: string | null;
+};
+
+export type ListOfAccrualOptions = {
+  institution: ArOption[];
+  status: ArOption[];
+};
+
+export type ListOfAccrualSmartFilter = {
+  batch: string;
+  institution: string;
+  period: string;
+  tenure: string;
+  amount: string;
+  status: string;
+};
+
+// Investment > Summary List of Investments (PAGEID 2316 / MENUID 2808).
+// Legacy BL `API_SUMMARY_LIST_OF_NEW_INVESTMENT` (action=listing_all_dt).
+export type SummaryListInvestmentRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionName: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  investmentTypeCode: string | null;
+  investmentTypeDesc: string | null;
+  fundTypeCode: string | null;
+  fundTypeDesc: string | null;
+  activityCode: string | null;
+  activityDesc: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+};
+
+export type SummaryListInvestmentOptions = {
+  yearOfBatch: ArOption[];
+  batchNo: ArOption[];
+  bank: ArOption[];
+  institution: ArOption[];
+  investmentType: ArOption[];
+  fundType: ArOption[];
+  activity: ArOption[];
+  tenure: ArOption[];
+  status: ArOption[];
+};
+
+export type SummaryListInvestmentSmartFilter = {
+  year: string;
+  batch: string;
+  bank: string;
+  institution: string;
+  investType: string;
+  fundType: string;
+  activity: string;
+  tenure: string;
+  amount: string;
+  status: string;
+};
+
+// Investment > List of Investments (PAGEID 1174 / MENUID 1448).
+// Legacy BL `API_LIST_OF_NEW_INVESTMENT` (action=listing_all_dt).
+export type ListOfInvestmentReceipt = {
+  receiptNo: string;
+  amount: string;
+  date: string;
+};
+
+export type ListOfInvestmentRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionName: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  journalNo: string | null;
+  journalStatus: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+  withdrawalType: string | null;
+  receipts: ListOfInvestmentReceipt[];
+};
+
+export type ListOfInvestmentOptions = {
+  prefix: ArOption[];
+  batchNo: ArOption[];
+  institution: ArOption[];
+  status: ArOption[];
+};
+
+export type ListOfInvestmentSmartFilter = {
+  prefix: string;
+  batch: string;
+  institution: string;
+  periodFrom: string;
+  periodTo: string;
+  maturedFrom: string;
+  maturedTo: string;
+  amount: string;
+  status: string;
+};
+
+// Investment > Investment to be Withdrawn (PAGEID 2895 / MENUID 3485).
+// Legacy BL `API_INV_WITHDRAWN`.
+export type InvestmentToBeWithdrawnReceipt = {
+  receiptNo: string;
+  amount: string;
+  date: string;
+};
+
+export type InvestmentToBeWithdrawnRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionName: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  journalNo: string | null;
+  journalStatus: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+  // 'WITHDRAWN' when ipf_status_withdraw='APPROVE', otherwise 'RENEW'
+  withdrawnLabel: string | null;
+  // false when the investment has already been marked as withdrawn
+  canWithdraw: boolean;
+  receipts: InvestmentToBeWithdrawnReceipt[];
+};
+
+export type InvestmentToBeWithdrawnOptions = {
+  batchNo: ArOption[];
+  institution: ArOption[];
+  status: ArOption[];
+};
+
+export type InvestmentToBeWithdrawnSmartFilter = {
+  batch: string;
+  institution: string;
+  periodFrom: string;
+  periodTo: string;
+  amount: string;
+  status: string;
+};
+
+export type InvestmentToBeWithdrawnModalData = {
+  investmentId: number;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  tenure: string | null;
+  alreadyWithdrawn: boolean;
+};
+
+// Investment > Accrual (PAGEID 1175 / MENUID 1446).
+// Legacy BL `API_INVESTMENT_ACCRUAL` (default listing action).
+// Read-only datatable joining investment_accrual +
+// investment_institution + investment_profile, scoped to
+// iac_start_date <= current_date() AND pmt_posting_no IS NULL.
+export type InvestmentAccrualRow = {
+  index: number;
+  accrualId: number | null;
+  // Legacy row.ID = `${ipf_investment_no}_${iac_id}` — exposed for the
+  // write flow payload once Post-to-TB lands. Unused in the read view.
+  rowId: string | null;
+  investmentNo: string | null;
+  institutionCode: string | null;
+  institutionName: string | null;
+  institutionBranch: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  createdDate: string | null;
+  amount: number | null;
+  noOfDays: number | null;
+  amtPerDay: number | null;
+  rate: number | null;
+  // Hidden column in legacy UI (dt_class="d-none"); kept for clients
+  // that need the reference but the migrated view does not render it.
+  postingNo: string | null;
+};
+
+export type InvestmentAccrualOptions = {
+  institution: ArOption[];
+};
+
+export type InvestmentAccrualSmartFilter = {
+  investNo: string;
+  instCode: string;
+  instName: string;
+  branch: string;
+  noOfDays: string;
+  rate: string;
+};
+
+// POST /api/investment/accrual/post-to-tb — fans out the legacy
+// INSERT_UPDATE_INVESTMENT_ACCRUAL default branch per selected iac_id.
+// Each row either lands in `processed` (with the generated
+// pmt_posting_no) or `failed` (with a reason — e.g. start date
+// still today, no matching investment_acct_setup row, or a stored
+// procedure error).
+export type InvestmentAccrualPostProcessed = {
+  accrualId: number;
+  investmentNo: string | null;
+  postingNo: string;
+  amount: number | null;
+};
+
+export type InvestmentAccrualPostFailure = {
+  accrualId: number;
+  investmentNo: string | null;
+  reason: string;
+};
+
+export type InvestmentAccrualPostResult = {
+  processed: InvestmentAccrualPostProcessed[];
+  failed: InvestmentAccrualPostFailure[];
+  successCount: number;
+  failureCount: number;
+};
+
+// Investment > Generate Schedule (PAGEID 1206 / MENUID 1475).
+// Legacy BL `API_INVESTMENT_GENERATE_ACCRUAL`. Read-only datatable
+// joining investment_profile + investment_type, scoped to
+// ipf_status IN ('APPROVE','MATURED') AND NOT EXISTS an
+// investment_accrual row for the investment.
+export type InvestmentGenerateScheduleRow = {
+  index: number;
+  investmentId: number | null;
+  investmentNo: string | null;
+  investmentType: string | null;
+  rate: number | null;
+  principalAmount: number | null;
+  startDate: string | null;
+  endDate: string | null;
+};
+
+// POST /api/investment/generate-schedule/generate — fans out
+// CALL investment_accrual(?) per selected investment_no on the
+// legacy DB. Returns per-row success/failure breakdown so the UI
+// can surface partial outcomes.
+export type InvestmentGenerateScheduleFailure = {
+  investmentNo: string;
+  reason: string;
+};
+
+export type InvestmentGenerateScheduleResult = {
+  processed: string[];
+  failed: InvestmentGenerateScheduleFailure[];
+  successCount: number;
+  failureCount: number;
+};
+
+// Investment > Monitoring (PAGEID 1183 / MENUID 1458).
+// Legacy BL `ATR_INVESTMENT_MONITORING`. Two-level drill-down:
+// Level 1 groups investment_profile by ipf_batch_no; Level 2 lists
+// investments within the selected batch, joining
+// manual_journal_master (system_id='JOURNAL_INVEST') plus a
+// correlated receipts subquery (receipt_details / receipt_master).
+export type InvestmentMonitoringBatchRow = {
+  index: number;
+  batchNo: string | null;
+  totalAmount: number | null;
+};
+
+export type InvestmentMonitoringReceipt = {
+  receiptNo: string;
+  amount: string;
+  date: string;
+};
+
+export type InvestmentMonitoringInvestmentRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionDesc: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  journalNo: string | null;
+  journalId: number | null;
+  journalStatus: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+  receipts: InvestmentMonitoringReceipt[];
+};
+
+/**
+ * Row shape returned by `/api/investment/monitoring/summary-pdf`.
+ * Mirrors the single-line-per-investment layout of the legacy
+ * TCPDF report `investmentSummary_pdf.php`. Institution / tenure
+ * are pre-assembled on the backend; the client composable
+ * concatenates them for the table cell so the PDF output matches
+ * the legacy `Institution` + `Tenure` HTML columns exactly.
+ */
+export type InvestmentMonitoringSummaryPdfRow = {
+  index: number;
+  institutionCode: string | null;
+  institutionDesc: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  journalNo: string | null;
+  journalStatus: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+};
+
+export type InvestmentMonitoringSummaryPdfPayload = {
+  batch: string;
+  totalByBatch: number;
+  grandTotal: number;
+  generatedAt: string;
+  rows: InvestmentMonitoringSummaryPdfRow[];
+  truncated: boolean;
+  limit: number;
+};

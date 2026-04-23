@@ -170,6 +170,23 @@ import type {
   BankAccountUpdateRow,
   LedgerOptions,
   LedgerRow,
+  InvestmentAccrualOptions,
+  InvestmentAccrualPostResult,
+  InvestmentAccrualRow,
+  InvestmentGenerateScheduleResult,
+  InvestmentGenerateScheduleRow,
+  InvestmentMonitoringBatchRow,
+  InvestmentMonitoringInvestmentRow,
+  InvestmentMonitoringSummaryPdfPayload,
+  ListOfAccrualOptions,
+  ListOfAccrualRow,
+  InvestmentToBeWithdrawnModalData,
+  InvestmentToBeWithdrawnOptions,
+  InvestmentToBeWithdrawnRow,
+  ListOfInvestmentOptions,
+  ListOfInvestmentRow,
+  SummaryListInvestmentOptions,
+  SummaryListInvestmentRow,
   ManualInvoiceFooter,
   ManualInvoiceOptions,
   ManualInvoiceRow,
@@ -1855,6 +1872,156 @@ export async function listBankAccountUpdates(params = "") {
 export async function getBankAccountUpdateOptions() {
   return apiRequest<{ data: BankAccountUpdateOptions }>(
     "/api/student-finance/bank-account-update/options",
+  );
+}
+
+// Investment > List Of Accrual (PAGEID 1548 / MENUID 1877).
+// Legacy BL `API_LIST_OF_ACCRUAL` (action=listing_all_dt).
+export async function listListOfAccrual(params = "") {
+  return apiRequest<{ data: ListOfAccrualRow[]; meta: Record<string, unknown> }>(
+    `/api/investment/list-of-accrual${params}`,
+  );
+}
+
+export async function getListOfAccrualOptions() {
+  return apiRequest<{ data: ListOfAccrualOptions }>(
+    "/api/investment/list-of-accrual/options",
+  );
+}
+
+// Investment > Summary List of Investments (PAGEID 2316 / MENUID 2808).
+// Legacy BL `API_SUMMARY_LIST_OF_NEW_INVESTMENT` (action=listing_all_dt).
+export async function listSummaryListInvestments(params = "") {
+  return apiRequest<{
+    data: SummaryListInvestmentRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/summary-list${params}`);
+}
+
+export async function getSummaryListInvestmentOptions() {
+  return apiRequest<{ data: SummaryListInvestmentOptions }>(
+    "/api/investment/summary-list/options",
+  );
+}
+
+// Investment > List of Investments (PAGEID 1174 / MENUID 1448).
+// Legacy BL `API_LIST_OF_NEW_INVESTMENT` (action=listing_all_dt).
+export async function listInvestments(params = "") {
+  return apiRequest<{
+    data: ListOfInvestmentRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/list${params}`);
+}
+
+export async function getListOfInvestmentOptions() {
+  return apiRequest<{ data: ListOfInvestmentOptions }>(
+    "/api/investment/list/options",
+  );
+}
+
+// Investment > Investment to be Withdrawn (PAGEID 2895 / MENUID 3485).
+// Legacy BL `API_INV_WITHDRAWN` (action=listing_all_dt / getDataModal /
+// edit_investment).
+export async function listInvestmentsToBeWithdrawn(params = "") {
+  return apiRequest<{
+    data: InvestmentToBeWithdrawnRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/withdrawn${params}`);
+}
+
+export async function getInvestmentToBeWithdrawnOptions() {
+  return apiRequest<{ data: InvestmentToBeWithdrawnOptions }>(
+    "/api/investment/withdrawn/options",
+  );
+}
+
+export async function getInvestmentWithdrawModalData(id: number) {
+  return apiRequest<{ data: InvestmentToBeWithdrawnModalData }>(
+    `/api/investment/withdrawn/${id}/modal`,
+  );
+}
+
+export async function withdrawInvestment(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/investment/withdrawn/${id}/withdraw`,
+    { method: "POST", body: JSON.stringify({}) },
+  );
+}
+
+// Investment > Accrual (PAGEID 1175 / MENUID 1446).
+// Legacy BL `API_INVESTMENT_ACCRUAL`.
+export async function listInvestmentAccrual(params = "") {
+  return apiRequest<{
+    data: InvestmentAccrualRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/accrual${params}`);
+}
+
+export async function getInvestmentAccrualOptions() {
+  return apiRequest<{ data: InvestmentAccrualOptions }>(
+    "/api/investment/accrual/options",
+  );
+}
+
+// Legacy INSERT_UPDATE_INVESTMENT_ACCRUAL default branch — inserts
+// posting_master / posting_details rows and calls the
+// getTableSequenceNum / getRefNoByCurrentYear stored procs for each
+// selected accrual. Response returns per-iac_id success/failure.
+export async function postInvestmentAccrualToTb(accrualIds: number[]) {
+  return apiRequest<{ data: InvestmentAccrualPostResult }>(
+    "/api/investment/accrual/post-to-tb",
+    {
+      method: "POST",
+      body: JSON.stringify({ accrualIds }),
+    },
+  );
+}
+
+// Investment > Generate Schedule (PAGEID 1206 / MENUID 1475).
+// Legacy BL `API_INVESTMENT_GENERATE_ACCRUAL`.
+export async function listInvestmentGenerateSchedule(params = "") {
+  return apiRequest<{
+    data: InvestmentGenerateScheduleRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/generate-schedule${params}`);
+}
+
+// Legacy INSERT_UPDATE_INVESTMENT_ACCRUAL mode=generateScheduleAccrual.
+// Fans `CALL investment_accrual(?)` per number; response includes
+// per-number success/failure breakdown.
+export async function generateInvestmentSchedules(investmentNumbers: string[]) {
+  return apiRequest<{ data: InvestmentGenerateScheduleResult }>(
+    "/api/investment/generate-schedule/generate",
+    {
+      method: "POST",
+      body: JSON.stringify({ investmentNumbers }),
+    },
+  );
+}
+
+// Investment > Monitoring (PAGEID 1183 / MENUID 1458).
+// Legacy BL `ATR_INVESTMENT_MONITORING`. Two-level drill-down.
+export async function listInvestmentMonitoringBatches(params = "") {
+  return apiRequest<{
+    data: InvestmentMonitoringBatchRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/monitoring/batches${params}`);
+}
+
+export async function listInvestmentMonitoringInvestments(params = "") {
+  return apiRequest<{
+    data: InvestmentMonitoringInvestmentRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/monitoring/investments${params}`);
+}
+
+// Backs the "Investment Summary" batch-level PDF report — migrated
+// from the legacy `investmentSummary_pdf.php`. Returns the full
+// batch payload (rows + totals + generated timestamp) for
+// `downloadInvestmentMonitoringSummaryPdf` to render client-side.
+export async function getInvestmentMonitoringSummaryPdf(params = "") {
+  return apiRequest<{ data: InvestmentMonitoringSummaryPdfPayload }>(
+    `/api/investment/monitoring/summary-pdf${params}`,
   );
 }
 

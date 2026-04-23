@@ -63,7 +63,14 @@ use App\Http\Controllers\Api\GlYearMonthController;
 use App\Http\Controllers\Api\JournalListingController;
 use App\Http\Controllers\Api\BankAccountUpdateController;
 use App\Http\Controllers\Api\LedgerController;
+use App\Http\Controllers\Api\InvestmentAccrualController;
+use App\Http\Controllers\Api\InvestmentGenerateScheduleController;
+use App\Http\Controllers\Api\InvestmentMonitoringController;
+use App\Http\Controllers\Api\InvestmentToBeWithdrawnController;
+use App\Http\Controllers\Api\ListOfAccrualController;
+use App\Http\Controllers\Api\ListOfInvestmentsController;
 use App\Http\Controllers\Api\ManualInvoiceListingController;
+use App\Http\Controllers\Api\SummaryListInvestmentsController;
 use App\Http\Controllers\Api\PtptnDataController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
@@ -283,6 +290,96 @@ Route::middleware('auth:sanctum')->group(function () {
     // is NOT migrated yet.
     Route::get('/student-finance/bank-account-update/options', [BankAccountUpdateController::class, 'options']);
     Route::get('/student-finance/bank-account-update', [BankAccountUpdateController::class, 'index']);
+
+    // Investment > List Of Accrual (PAGEID 1548 / MENUID 1877). Legacy BL
+    // API_LIST_OF_ACCRUAL (action=listing_all_dt) — read-only datatable
+    // joining investment_profile + investment_institution + investment_accrual.
+    // The detail page (legacy menuID 1878) is NOT migrated; Action column
+    // in the Vue view renders a disabled View button.
+    Route::get('/investment/list-of-accrual/options', [ListOfAccrualController::class, 'options']);
+    Route::get('/investment/list-of-accrual', [ListOfAccrualController::class, 'index']);
+
+    // Investment > Summary List of Investments (PAGEID 2316 / MENUID 2808).
+    // Legacy BL API_SUMMARY_LIST_OF_NEW_INVESTMENT (action=listing_all_dt) —
+    // read-only datatable scoped to ipf_status IN ('APPROVE','WITHDRAW','PENDING')
+    // with a 10-field smart filter. Detail page (legacy menuID 2820) is NOT
+    // migrated; Action renders a disabled View button.
+    Route::get('/investment/summary-list/options', [SummaryListInvestmentsController::class, 'options']);
+    Route::get('/investment/summary-list', [SummaryListInvestmentsController::class, 'index']);
+
+    // Investment > List of Investments (PAGEID 1174 / MENUID 1448).
+    // Legacy BL API_LIST_OF_NEW_INVESTMENT (action=listing_all_dt).
+    // Read-only list; Action column (Edit menuID 3226, View Journal
+    // menuID 3313, Download Journal, Cancel with investment_report_detail
+    // side-effects) is NOT migrated — buttons render disabled.
+    Route::get('/investment/list/options', [ListOfInvestmentsController::class, 'options']);
+    Route::get('/investment/list', [ListOfInvestmentsController::class, 'index']);
+
+    // Investment > Investment to be Withdrawn (PAGEID 2895 / MENUID 3485).
+    // Legacy BL API_INV_WITHDRAWN. Scope ipf_status='APPROVE'; single
+    // write action flips ipf_status_withdraw to 'APPROVE' and tags
+    // ipf_batch_no_wdraw='SYSTEM'. modal() returns the read-only summary
+    // the legacy `getDataModal` action served.
+    Route::get('/investment/withdrawn/options', [InvestmentToBeWithdrawnController::class, 'options']);
+    Route::get('/investment/withdrawn', [InvestmentToBeWithdrawnController::class, 'index']);
+    Route::get('/investment/withdrawn/{id}/modal', [InvestmentToBeWithdrawnController::class, 'modal'])
+        ->whereNumber('id');
+    Route::post('/investment/withdrawn/{id}/withdraw', [InvestmentToBeWithdrawnController::class, 'withdraw'])
+        ->whereNumber('id');
+
+    // Investment > Accrual (PAGEID 1175 / MENUID 1446). Legacy BL
+    // API_INVESTMENT_ACCRUAL — datatable joining investment_accrual +
+    // investment_institution + investment_profile. Scope:
+    // iac_start_date <= current_date() AND pmt_posting_no IS NULL.
+    // Post-to-TB action mirrors INSERT_UPDATE_INVESTMENT_ACCRUAL
+    // default branch — inserts posting_master / posting_details rows
+    // and calls the legacy stored procs `getTableSequenceNum` +
+    // `getRefNoByCurrentYear` on mysql_secondary. Response returns
+    // processed + failed arrays so the UI can surface partial
+    // outcomes (same contract as the Generate Schedule endpoint).
+    Route::get('/investment/accrual/options', [InvestmentAccrualController::class, 'options']);
+    Route::get('/investment/accrual', [InvestmentAccrualController::class, 'index']);
+    Route::post('/investment/accrual/post-to-tb', [InvestmentAccrualController::class, 'postToTb']);
+
+    // Investment > Generate Schedule (PAGEID 1206 / MENUID 1475). Legacy
+    // BL API_INVESTMENT_GENERATE_ACCRUAL — read-only datatable joining
+    // investment_profile + investment_type, scoped to
+    // ipf_status IN ('APPROVE','MATURED') AND NOT EXISTS an
+    // investment_accrual row. "Generate Schedule" write action calls
+    // the stored procedure investment_accrual(?) via legacy
+    // INSERT_UPDATE_INVESTMENT_ACCRUAL (mode=generateScheduleAccrual);
+    // that flow is NOT migrated and the Vue view renders the action
+    // disabled.
+    Route::get('/investment/generate-schedule', [InvestmentGenerateScheduleController::class, 'index']);
+    // POST body: { investmentNumbers: string[] }. Fans out to the
+    // legacy stored procedure investment_accrual(?) via mysql_secondary
+    // for each number (mirrors INSERT_UPDATE_INVESTMENT_ACCRUAL mode=
+    // generateScheduleAccrual). Response returns processed + failed
+    // arrays so the UI can show partial-success outcomes.
+    Route::post('/investment/generate-schedule/generate', [InvestmentGenerateScheduleController::class, 'generate']);
+
+    // Investment > Monitoring (PAGEID 1183 / MENUID 1458). Legacy BL
+    // ATR_INVESTMENT_MONITORING — two-level drill-down datatable:
+    //   - /batches: group investment_profile by ipf_batch_no
+    //   - /investments?batch=X: list investments inside the selected
+    //     batch (joins manual_journal_master, correlated receipts
+    //     subquery on receipt_details / receipt_master).
+    // Scope: ipf_status IN ('APPROVE','MATURED'), ipf_ref_investment_no
+    // IS NULL, (bim_bills_no != 'RENEW' OR bim_bills_no IS NULL).
+    // Legacy PDF report URLs:
+    //   - summary     -> /summary-pdf (MIGRATED, jsPDF in the SPA)
+    //   - billBatch   -> legacy billRegistrationInvestBatch_pdf.php
+    //                    (DEFERRED; requires bills_master, wf_task,
+    //                    staff, bank_master, lookup_details joins)
+    //   - reportUrl   -> legacy billRegistrationInvest_pdf.php
+    //                    (DEFERRED; per-bill entry point not exposed
+    //                    by the monitoring grid)
+    // Row-action "Download Journal" is MIGRATED (reuses the manual
+    // journal PDF pipeline); the legacy menuID-3226 "View" deep-link
+    // remains disabled until that page is migrated.
+    Route::get('/investment/monitoring/batches', [InvestmentMonitoringController::class, 'batches']);
+    Route::get('/investment/monitoring/investments', [InvestmentMonitoringController::class, 'investments']);
+    Route::get('/investment/monitoring/summary-pdf', [InvestmentMonitoringController::class, 'summaryForPdf']);
 
     // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841). Legacy BL
     // ZR_PURCHASING_STATUSPOPR_API — read-only datatable with a smart
