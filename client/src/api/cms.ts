@@ -148,6 +148,8 @@ import type {
   DebtorReminderRow,
   DebtorStatementFooter,
   DebtorStatementRow,
+  StatusPoPrOptions,
+  StatusPoPrRow,
   TenderQuotationRow,
   UtilityRegistrationDetail,
   UtilityRegistrationInput,
@@ -1758,4 +1760,17 @@ export async function listDebtorStatement(params = "") {
     data: DebtorStatementRow[];
     meta: Record<string, unknown> & { footer?: DebtorStatementFooter };
   }>(`/api/portal/debtor/statement${params}`);
+}
+
+// Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841).
+export async function listStatusPoPr(params = "") {
+  return apiRequest<{ data: StatusPoPrRow[]; meta: Record<string, unknown> }>(
+    `/api/purchasing/status-po-pr${params}`,
+  );
+}
+
+export async function getStatusPoPrOptions() {
+  return apiRequest<{ data: StatusPoPrOptions }>(
+    "/api/purchasing/status-po-pr/options",
+  );
 }

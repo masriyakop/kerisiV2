@@ -58,6 +58,7 @@ use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
+use App\Http\Controllers\Api\StatusPoPrController;
 use App\Http\Controllers\Api\TenderQuotationController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UtilityRegistrationController;
@@ -238,6 +239,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // List of Voucher Petty Cash (PAGEID 2774 / MENUID 3344). Legacy BL NAD_API_PC_LISTOFVOUCHERPETTYCASH.
     Route::get('/petty-cash/vouchers/options', [PettyCashVoucherListController::class, 'options']);
     Route::get('/petty-cash/vouchers', [PettyCashVoucherListController::class, 'index']);
+
+    // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841). Legacy BL
+    // ZR_PURCHASING_STATUSPOPR_API — read-only datatable with a smart
+    // filter (date range + PO/PR/Vendor/Status). PTJ scoping is exposed via
+    // an optional `ou_code` query param rather than hard-coding the legacy
+    // group 22/271 / PTJ 'S10400' bursar rules (see controller docblock).
+    Route::get('/purchasing/status-po-pr/options', [StatusPoPrController::class, 'options']);
+    Route::get('/purchasing/status-po-pr', [StatusPoPrController::class, 'index']);
 
     Route::get('/account-payable/utility-registration', [UtilityRegistrationController::class, 'index']);
     Route::get('/account-payable/utility-registration/{id}', [UtilityRegistrationController::class, 'show'])->whereNumber('id');

@@ -2161,3 +2161,37 @@ export type DebtorStatementFooter = {
   advance: number;
   balance: number;
 };
+
+// Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841).
+// Source: FIMS BL ZR_PURCHASING_STATUSPOPR_API. Read-only listing joining
+// purchase_order_master + details + vendor + bills + requisition tables.
+export type StatusPoPrRow = {
+  index: number;
+  pomOrderId: number | null;
+  rqmRequisitionId: number | null;
+  poNo: string | null;
+  prNo: string | null;
+  description: string | null;
+  itemCode: string | null;
+  itemDesc: string | null;
+  poStatus: string | null;
+  vendorCode: string | null;
+  vendorName: string | null;
+  billNo: string | null;
+  requestDate: string;
+  urlViewPo: string | null;
+  urlViewPr: string | null;
+};
+
+export type StatusPoPrOptions = {
+  poStatus: string[];
+};
+
+export type StatusPoPrSmartFilter = {
+  poNo: string;
+  prNo: string;
+  vendorCode: string;
+  poStatus: string;
+  dateStart: string;
+  dateEnd: string;
+};
