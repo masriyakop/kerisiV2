@@ -56,6 +56,7 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PtjCodeController;
 use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\PtptnDataController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
 use App\Http\Controllers\Api\StatusPoPrController;
@@ -239,6 +240,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // List of Voucher Petty Cash (PAGEID 2774 / MENUID 3344). Legacy BL NAD_API_PC_LISTOFVOUCHERPETTYCASH.
     Route::get('/petty-cash/vouchers/options', [PettyCashVoucherListController::class, 'options']);
     Route::get('/petty-cash/vouchers', [PettyCashVoucherListController::class, 'index']);
+
+    // Student Finance > PTPTN Data (PAGEID 857 / MENUID 1031). Legacy BL
+    // API_PTPTN_DATA. Read-only datatable + View modal (ptptn_data_detl) +
+    // Delete gated on pdm_is_process_complete = 'N'.
+    Route::get('/student-finance/ptptn-data', [PtptnDataController::class, 'index']);
+    Route::get('/student-finance/ptptn-data/{id}', [PtptnDataController::class, 'show'])
+        ->whereNumber('id');
+    Route::delete('/student-finance/ptptn-data/{id}', [PtptnDataController::class, 'destroy'])
+        ->whereNumber('id');
 
     // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841). Legacy BL
     // ZR_PURCHASING_STATUSPOPR_API — read-only datatable with a smart

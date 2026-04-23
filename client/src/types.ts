@@ -2162,6 +2162,58 @@ export type DebtorStatementFooter = {
   balance: number;
 };
 
+// Student Finance > PTPTN Data (PAGEID 857 / MENUID 1031).
+// Source: FIMS BL `API_PTPTN_DATA`. `isProcessed` ('Y' | 'N') gates the
+// Delete action client- and server-side.
+export type PtptnDataRow = {
+  index: number;
+  mID: number;
+  referenceNo: string | null;
+  date: string;
+  fileName: string | null;
+  source: string | null;
+  totalStudent: number | null;
+  totalWarrant: number | null;
+  deductAmt: number | null;
+  balanceAmt: number | null;
+  isProcessed: string;
+  isInvGenComplete: string;
+  isExportComplete: string;
+};
+
+export type PtptnDataHeader = {
+  mID: number;
+  referenceNo: string | null;
+  date: string | null;
+  fileName: string | null;
+  source: string | null;
+  totalStudent: number | null;
+  totalWarrant: number | null;
+  deductAmt: number | null;
+  balanceAmt: number | null;
+  isProcessed: string;
+  isInvGenComplete: string;
+  isExportComplete: string;
+};
+
+export type PtptnDataDetail = {
+  id: number;
+  studentId: string | null;
+  studentName: string | null;
+  studentIc: string | null;
+  uniCode: string | null;
+  studentGrp: string | null;
+  warrantNo: string | null;
+  warrantAmt: number | null;
+  deductionAmt: number | null;
+  balanceAmt: number | null;
+  statusPtptn: string | null;
+  payDate: string | null;
+  invoiceNo: string | null;
+  invoiceAmt: number | null;
+  creditStatus: string | null;
+};
+
 // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841).
 // Source: FIMS BL ZR_PURCHASING_STATUSPOPR_API. Read-only listing joining
 // purchase_order_master + details + vendor + bills + requisition tables.

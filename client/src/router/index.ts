@@ -63,6 +63,7 @@ import ListOfDepositView from "@/views/ListOfDepositView.vue";
 import InvoiceBalanceView from "@/views/InvoiceBalanceView.vue";
 import DepositFormView from "@/views/DepositFormView.vue";
 import DebtorProfileUpdateView from "@/views/DebtorProfileUpdateView.vue";
+import PtptnDataView from "@/views/PtptnDataView.vue";
 import StatusPoPrView from "@/views/StatusPoPrView.vue";
 import TenderQuotationView from "@/views/TenderQuotationView.vue";
 import VendorRegistrationFeeHistoryView from "@/views/VendorRegistrationFeeHistoryView.vue";
@@ -221,6 +222,7 @@ const router = createRouter({
     { path: "/admin/kerisi/m/2608", name: "kerisi-portal-debtor-profile-updates", component: DebtorProfileUpdateView, meta: { requiresAuth: true, title: "List of Profile Update Application" } },
     { path: "/admin/kerisi/m/2767", name: "kerisi-portal-tender-list", component: TenderQuotationView, meta: { requiresAuth: true, title: "Tender/Quotation List" } },
     { path: "/admin/kerisi/m/1841", name: "kerisi-purchasing-status-po-pr", component: StatusPoPrView, meta: { requiresAuth: true, title: "Status PO & PR" } },
+    { path: "/admin/kerisi/m/1031", name: "kerisi-student-finance-ptptn-data", component: PtptnDataView, meta: { requiresAuth: true, title: "PTPTN Data" } },
     { path: "/admin/kerisi/m/2003", name: "kerisi-portal-registration-fees", component: VendorRegistrationFeeHistoryView, meta: { requiresAuth: true, title: "Online Registration Fee History" } },
     { path: "/admin/kerisi/m/2584", name: "kerisi-portal-debtor-reminder", component: DebtorReminderView, meta: { requiresAuth: true, title: "Reminder" } },
     { path: "/admin/kerisi/m/2267", name: "kerisi-portal-debtor-statement", component: DebtorStatementView, meta: { requiresAuth: true, title: "Debtors Statement" } },

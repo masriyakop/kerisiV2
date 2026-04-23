@@ -148,6 +148,9 @@ import type {
   DebtorReminderRow,
   DebtorStatementFooter,
   DebtorStatementRow,
+  PtptnDataDetail,
+  PtptnDataHeader,
+  PtptnDataRow,
   StatusPoPrOptions,
   StatusPoPrRow,
   TenderQuotationRow,
@@ -1760,6 +1763,26 @@ export async function listDebtorStatement(params = "") {
     data: DebtorStatementRow[];
     meta: Record<string, unknown> & { footer?: DebtorStatementFooter };
   }>(`/api/portal/debtor/statement${params}`);
+}
+
+// Student Finance > PTPTN Data (PAGEID 857 / MENUID 1031).
+export async function listPtptnData(params = "") {
+  return apiRequest<{ data: PtptnDataRow[]; meta: Record<string, unknown> }>(
+    `/api/student-finance/ptptn-data${params}`,
+  );
+}
+
+export async function getPtptnData(id: number) {
+  return apiRequest<{ data: { header: PtptnDataHeader; details: PtptnDataDetail[] } }>(
+    `/api/student-finance/ptptn-data/${id}`,
+  );
+}
+
+export async function deletePtptnData(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/student-finance/ptptn-data/${id}`,
+    { method: "DELETE" },
+  );
 }
 
 // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841).
