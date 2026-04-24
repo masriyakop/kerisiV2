@@ -609,19 +609,19 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-[1600px] space-y-4">
-      <p class="text-sm font-medium text-slate-500">
+    <div class="space-y-4">
+      <div class="flex items-center gap-2">
         <button
           type="button"
-          class="mr-2 inline-flex items-center rounded border border-slate-300 bg-white p-1 text-slate-500 hover:bg-slate-50"
+          class="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-50"
           @click="goBack"
           aria-label="Back"
         >
           <ChevronLeft class="h-3.5 w-3.5" />
+          Back
         </button>
-        Account Receivable /
-        <span class="text-slate-700">Discount Note Form</span>
-      </p>
+        <h1 class="page-title">Account Receivable / Discount Note Form</h1>
+      </div>
 
       <!-- Discount Note Head -->
       <article class="rounded-lg border border-slate-200 bg-white shadow-sm">

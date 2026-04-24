@@ -542,8 +542,8 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-[96rem] space-y-4">
-      <p class="text-base font-semibold text-slate-500">Setup and Maintenance / General Ledger Structure / Activity Code</p>
+    <div class="space-y-4">
+      <h1 class="page-title">Setup and Maintenance / General Ledger Structure / Activity Code</h1>
       <div class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <h1 class="text-lg font-semibold text-slate-900">Activity Code</h1>

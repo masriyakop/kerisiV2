@@ -195,7 +195,7 @@ async function copyCurl(endpoint: Endpoint) {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <div class="flex items-center justify-between">
         <h1 class="page-title">API Management</h1>
       </div>

@@ -656,13 +656,13 @@ onMounted(async () => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
-      <p class="text-base font-semibold text-slate-500">
+    <div class="space-y-4">
+      <h1 class="page-title">
         Account Receivable / Authorized Receipting Form
         <span v-if="mode !== 'create'" class="text-slate-700"
           >/ {{ head.are_application_no ?? areId }}</span
         >
-      </p>
+      </h1>
 
       <article class="rounded-lg border border-slate-200 bg-white shadow-sm">
         <!-- Header bar -->

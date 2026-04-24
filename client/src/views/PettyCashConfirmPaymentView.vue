@@ -200,9 +200,9 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <input ref="templateFileInputRef" type="file" accept=".json,application/json" class="hidden" @change="onTemplateFileChange" />
-      <nav class="text-base font-semibold text-slate-500" aria-label="Breadcrumb">{{ PAGE_BREADCRUMB }}</nav>
+      <h1 class="page-title">{{ PAGE_BREADCRUMB }}</h1>
 
       <div class="inline-flex rounded-lg border border-slate-200 bg-white p-1 shadow-sm">
         <button type="button" class="rounded-md px-3 py-1.5 text-xs font-medium" :class="tab === 'awaiting' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'" @click="switchTab('awaiting')">Awaiting Confirmation</button>

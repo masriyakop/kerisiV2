@@ -343,7 +343,7 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-[1400px] space-y-4">
+    <div class="space-y-4">
       <input
         ref="templateFileInputRef"
         type="file"
@@ -352,9 +352,9 @@ onUnmounted(() => {
         @change="onTemplateFileChange"
       />
 
-      <p class="text-base font-semibold text-slate-500">
+      <h1 class="page-title">
         Credit Control / Deposit
-      </p>
+      </h1>
 
       <!-- Top filter card -->
       <article class="rounded-lg border border-slate-200 bg-white shadow-sm">

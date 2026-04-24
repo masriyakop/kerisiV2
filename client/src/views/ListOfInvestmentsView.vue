@@ -392,7 +392,7 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <input
         ref="templateFileInputRef"
         type="file"
@@ -401,13 +401,7 @@ onUnmounted(() => {
         @change="onTemplateFileChange"
       />
 
-      <nav class="text-sm text-slate-500">
-        <ol class="flex flex-wrap items-center gap-1">
-          <li>Investment</li>
-          <li class="text-slate-300">/</li>
-          <li class="font-semibold text-slate-700">List of Investments</li>
-        </ol>
-      </nav>
+      <h1 class="page-title">Investment / List of Investments</h1>
 
       <article class="rounded-lg border border-slate-200 bg-white shadow-sm">
         <div

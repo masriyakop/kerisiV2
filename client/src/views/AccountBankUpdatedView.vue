@@ -453,7 +453,7 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <input
         ref="billsTplRef"
         type="file"
@@ -468,7 +468,7 @@ onUnmounted(() => {
         class="hidden"
         @change="onVouchersTplChange"
       />
-      <p class="text-base font-semibold text-slate-500">Account Payable / Account Bank Updated</p>
+      <h1 class="page-title">Account Payable / Account Bank Updated</h1>
 
       <article class="rounded-lg border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 px-4 py-3">

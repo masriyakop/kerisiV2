@@ -525,7 +525,7 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <input
         ref="batchTemplateFileInputRef"
         type="file"
@@ -541,17 +541,7 @@ onUnmounted(() => {
         @change="onInvestTemplateFileChange"
       />
 
-      <nav class="text-sm text-slate-500">
-        <ol class="flex flex-wrap items-center gap-1">
-          <li>Investment</li>
-          <li class="text-slate-300">/</li>
-          <li class="font-semibold text-slate-700">Monitoring</li>
-          <template v-if="selectedBatch">
-            <li class="text-slate-300">/</li>
-            <li class="text-slate-600">{{ selectedBatch }}</li>
-          </template>
-        </ol>
-      </nav>
+      <h1 class="page-title">Investment / Monitoring<template v-if="selectedBatch"> / {{ selectedBatch }}</template></h1>
 
       <!-- ===================== Level 1 : Batches ===================== -->
       <article

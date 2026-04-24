@@ -463,7 +463,7 @@ function handleTableAdd() {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <!-- ───── Slim Title Bar ───── -->
       <div class="flex items-center justify-between">
         <h1 class="page-title">UI Standard Reference</h1>

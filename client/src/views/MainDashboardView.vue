@@ -22,7 +22,7 @@ onMounted(async () => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-5">
+    <div class="space-y-5">
       <div class="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-50 to-white p-6 shadow-sm">
         <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Main Dashboard</p>
         <h1 class="mt-2 text-2xl font-semibold text-slate-900">Control Center</h1>
