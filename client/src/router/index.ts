@@ -79,12 +79,31 @@ import ManualInvoiceListingView from "@/views/ManualInvoiceListingView.vue";
 import SummaryListInvestmentsView from "@/views/SummaryListInvestmentsView.vue";
 import PtptnDataView from "@/views/PtptnDataView.vue";
 import StudentLedgerView from "@/views/StudentLedgerView.vue";
+import OfferedStudentView from "@/views/OfferedStudentView.vue";
+import InvoiceListView from "@/views/InvoiceListView.vue";
+import StudentInvoiceGenerationView from "@/views/StudentInvoiceGenerationView.vue";
 import StatusPoPrView from "@/views/StatusPoPrView.vue";
 import TenderQuotationView from "@/views/TenderQuotationView.vue";
+import AuditSystemTransactionView from "@/views/AuditSystemTransactionView.vue";
+import VendorPoStatusView from "@/views/VendorPoStatusView.vue";
+import VendorFinancialStatusView from "@/views/VendorFinancialStatusView.vue";
+import SponsorLetterView from "@/views/SponsorLetterView.vue";
+import StaffProfileView from "@/views/StaffProfileView.vue";
+import VendorPortalView from "@/views/VendorPortalView.vue";
+import AssetInventoryListView from "@/views/AssetInventoryListView.vue";
+import ProjectListView from "@/views/ProjectListView.vue";
+import ProjectUpdatedBalanceView from "@/views/ProjectUpdatedBalanceView.vue";
 import VendorRegistrationFeeHistoryView from "@/views/VendorRegistrationFeeHistoryView.vue";
 import DebtorReminderView from "@/views/DebtorReminderView.vue";
 import DebtorStatementView from "@/views/DebtorStatementView.vue";
 import LetterPhraseView from "@/views/LetterPhraseView.vue";
+import IntegrationPtjView from "@/views/IntegrationPtjView.vue";
+import IntegrationCostCentreView from "@/views/IntegrationCostCentreView.vue";
+import IntegrationProfileView from "@/views/IntegrationProfileView.vue";
+import IntegrationActivityView from "@/views/IntegrationActivityView.vue";
+import BudgetNotExistsView from "@/views/BudgetNotExistsView.vue";
+import ListOfCurrencyView from "@/views/ListOfCurrencyView.vue";
+import AgRateView from "@/views/AgRateView.vue";
 import PettyCashApplicationListView from "@/views/PettyCashApplicationListView.vue";
 import PettyCashClaimFormView from "@/views/PettyCashClaimFormView.vue";
 import PettyCashBillView from "@/views/PettyCashBillView.vue";
@@ -236,11 +255,31 @@ const router = createRouter({
     // Portal (debtor/vendor) read-only listings
     { path: "/admin/kerisi/m/2608", name: "kerisi-portal-debtor-profile-updates", component: DebtorProfileUpdateView, meta: { requiresAuth: true, title: "List of Profile Update Application" } },
     { path: "/admin/kerisi/m/2767", name: "kerisi-portal-tender-list", component: TenderQuotationView, meta: { requiresAuth: true, title: "Tender/Quotation List" } },
+    // FIMS Audit Trail — MENUID 5 (PAGEID 3). Backed by AuditSystemTransactionController.
+    { path: "/admin/kerisi/m/5", name: "kerisi-audit-system-transaction", component: AuditSystemTransactionView, meta: { requiresAuth: true, title: "Audit Trail / System Transaction" } },
+    // FIMS Vendor Portal — MENUID 2015 (PAGEID 1664). Backed by VendorPoStatusController.
+    { path: "/admin/kerisi/m/2015", name: "kerisi-vendor-po-status", component: VendorPoStatusView, meta: { requiresAuth: true, title: "Vendor Portal / Purchase Order Status" } },
+    // FIMS Vendor Portal — MENUID 2072 (PAGEID 1714). Backed by VendorFinancialStatusController.
+    { path: "/admin/kerisi/m/2072", name: "kerisi-vendor-financial-status", component: VendorFinancialStatusView, meta: { requiresAuth: true, title: "Vendor Portal / Financial Status" } },
+    // FIMS Portal — MENUID 2823 (PAGEID 2330). Backed by SponsorLetterController.
+    { path: "/admin/kerisi/m/2823", name: "kerisi-portal-letter-list", component: SponsorLetterView, meta: { requiresAuth: true, title: "Portal / List of Letter" } },
+    // FIMS Portal — MENUID 1914 (PAGEID 1581). Backed by StaffProfileController.
+    { path: "/admin/kerisi/m/1914", name: "kerisi-portal-staff-profile", component: StaffProfileView, meta: { requiresAuth: true, title: "Portal / Staff Profile" } },
+    // FIMS Vendor Portal — MENUID 1961 (PAGEID 1622). Backed by VendorPortalController.
+    // Read-only profile + 7 sub-tables; renewal/edit workflow deferred.
+    { path: "/admin/kerisi/m/1961", name: "kerisi-portal-vendor-portal", component: VendorPortalView, meta: { requiresAuth: true, title: "Vendor Portal / Vendor Portal" } },
+    // FIMS Asset — MENUID 1548 (PAGEID 1271). Backed by AssetInventoryListController.
+    { path: "/admin/kerisi/m/1548", name: "kerisi-asset-list-of-asset", component: AssetInventoryListView, meta: { requiresAuth: true, title: "Asset / List of Asset" } },
+    { path: "/admin/kerisi/m/1544", name: "kerisi-project-monitoring-list", component: ProjectListView, meta: { requiresAuth: true, title: "Project Monitoring / List of Project" } },
+    { path: "/admin/kerisi/m/2065", name: "kerisi-project-monitoring-balance", component: ProjectUpdatedBalanceView, meta: { requiresAuth: true, title: "Project Monitoring / Updated Balance" } },
     { path: "/admin/kerisi/m/1841", name: "kerisi-purchasing-status-po-pr", component: StatusPoPrView, meta: { requiresAuth: true, title: "Status PO & PR" } },
     { path: "/admin/kerisi/m/1031", name: "kerisi-student-finance-ptptn-data", component: PtptnDataView, meta: { requiresAuth: true, title: "PTPTN Data" } },
     { path: "/admin/kerisi/m/1509", name: "kerisi-student-finance-ledger", component: StudentLedgerView, meta: { requiresAuth: true, title: "Student Profile or Ledger" } },
     { path: "/admin/kerisi/m/2897", name: "kerisi-student-finance-manual-invoice", component: ManualInvoiceListingView, meta: { requiresAuth: true, title: "Manual Invoice Listing" } },
     { path: "/admin/kerisi/m/1081", name: "kerisi-student-finance-bank-account-update", component: BankAccountUpdateView, meta: { requiresAuth: true, title: "Bank Account Update" } },
+    { path: "/admin/kerisi/m/2636", name: "kerisi-student-finance-list-of-offered", component: OfferedStudentView, meta: { requiresAuth: true, title: "List of Offered" } },
+    { path: "/admin/kerisi/m/1023", name: "kerisi-student-finance-invoice", component: InvoiceListView, meta: { requiresAuth: true, title: "Invoice" } },
+    { path: "/admin/kerisi/m/1231", name: "kerisi-student-finance-invoice-generation", component: StudentInvoiceGenerationView, meta: { requiresAuth: true, title: "Generate Student Invoice" } },
     { path: "/admin/kerisi/m/1877", name: "kerisi-investment-list-of-accrual", component: ListOfAccrualView, meta: { requiresAuth: true, title: "List of Accrual" } },
     { path: "/admin/kerisi/m/2808", name: "kerisi-investment-summary-list", component: SummaryListInvestmentsView, meta: { requiresAuth: true, title: "Summary List of Investments" } },
     { path: "/admin/kerisi/m/1448", name: "kerisi-investment-list", component: ListOfInvestmentsView, meta: { requiresAuth: true, title: "List of Investments" } },
@@ -260,6 +299,16 @@ const router = createRouter({
     // (level 2) — MENUID maps to legacy MENUID and keeps URL parity with the
     // generic `/admin/kerisi/m/:menuId` pattern used by the sidebar.
     { path: "/admin/kerisi/m/3506", name: "kerisi-letter-phrase", component: LetterPhraseView, meta: { requiresAuth: true, title: "Letter Phrase" } },
+    // Setup and Maintenance > Integration / Report / Currency — migrated from
+    // PAGE_MENUID1003_LEVEL3.json (PAGEIDs 1860, 1861, 2000, 2003, 2200, 2636,
+    // 2647). Each MENUID matches an existing leaf in the kerisi sidebar.
+    { path: "/admin/kerisi/m/2277", name: "kerisi-integration-ptj", component: IntegrationPtjView, meta: { requiresAuth: true, title: "Integration - PTJ" } },
+    { path: "/admin/kerisi/m/2278", name: "kerisi-integration-cost-centre", component: IntegrationCostCentreView, meta: { requiresAuth: true, title: "Integration - Cost Centre" } },
+    { path: "/admin/kerisi/m/2443", name: "kerisi-integration-profile", component: IntegrationProfileView, meta: { requiresAuth: true, title: "Integration - Profile" } },
+    { path: "/admin/kerisi/m/2444", name: "kerisi-integration-activity", component: IntegrationActivityView, meta: { requiresAuth: true, title: "Integration - Activity" } },
+    { path: "/admin/kerisi/m/2657", name: "kerisi-budget-not-exists", component: BudgetNotExistsView, meta: { requiresAuth: true, title: "Budget Not Exists" } },
+    { path: "/admin/kerisi/m/3198", name: "kerisi-list-of-currency", component: ListOfCurrencyView, meta: { requiresAuth: true, title: "List of Currency" } },
+    { path: "/admin/kerisi/m/3199", name: "kerisi-ag-rate", component: AgRateView, meta: { requiresAuth: true, title: "AG Rate" } },
     {
       path: "/admin/kerisi/m/1532",
       name: "kerisi-petty-cash-recoup-list",

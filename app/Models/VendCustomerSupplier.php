@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class VendCustomerSupplier extends Model
 {
-    use HasFactory, Auditable;
+    use Auditable, HasFactory;
 
     protected $connection = 'mysql_secondary';
 
@@ -38,13 +38,32 @@ class VendCustomerSupplier extends Model
         'vcs_bank_accno',
         'vcs_biller_code',
         'vcs_tel_no',
+        'vcs_fax_no',
         'vcs_email_address',
         'vcs_contact_person',
         'vcs_ic_no',
         'vcs_registration_no',
+        'vcs_reg_date',
+        'vcs_reg_exp_date',
+        'vcs_kk_regno',
+        'vcs_kk_expired_date',
+        'vcs_tax_regno',
         'vcs_vendor_status',
         'vcs_iscreditor',
         'vcs_isdebtor',
+        'vcs_bumi_status',
+        'vcs_company_category',
+        'vcs_authorize_capital',
+        'vcs_paid_up_capital',
+        'vcs_unv_reg_date',
+        'vcs_unv_req_exp_date',
+        'vcs_epf_no',
+        'vcs_socso_no',
+        'vcs_reg_no_kpm',
+        'vcs_reg_date_kpm',
+        'vcs_reg_expdate_kpm',
+        'vcs_ros_no',
+        'vcs_temp_code',
         'vcs_extended_field',
         'createdby',
         'createddate',

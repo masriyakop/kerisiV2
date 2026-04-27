@@ -71,4 +71,54 @@ class StudentFinanceTest extends TestCase
     {
         $this->assertUnauthorized('GET', '/api/student-finance/bank-account-update/options');
     }
+
+    public function test_offered_list_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/offered');
+    }
+
+    public function test_offered_options_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/offered/options');
+    }
+
+    public function test_invoice_list_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/invoice');
+    }
+
+    public function test_invoice_options_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/invoice/options');
+    }
+
+    public function test_invoice_details_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/invoice/1/details');
+    }
+
+    public function test_invoice_generation_options_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/invoice-generation/options');
+    }
+
+    public function test_invoice_generation_search_requires_authentication(): void
+    {
+        $this->assertUnauthorized('POST', '/api/student-finance/invoice-generation/search');
+    }
+
+    public function test_invoice_generation_generate_requires_authentication(): void
+    {
+        $this->assertUnauthorized('POST', '/api/student-finance/invoice-generation/generate');
+    }
+
+    public function test_invoice_generation_export_csv_requires_authentication(): void
+    {
+        $this->assertUnauthorized('POST', '/api/student-finance/invoice-generation/export/csv');
+    }
+
+    public function test_invoice_generation_export_match_csv_requires_authentication(): void
+    {
+        $this->assertUnauthorized('POST', '/api/student-finance/invoice-generation/export/match-csv');
+    }
 }

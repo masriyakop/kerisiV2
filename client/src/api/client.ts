@@ -45,7 +45,15 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
 
   const payload = await response.json();
   if (!response.ok) {
-    throw new Error(payload?.error?.message || "Request failed");
+    const err = new Error(payload?.error?.message || "Request failed") as Error & {
+      status?: number;
+      code?: string;
+      details?: unknown;
+    };
+    err.status = response.status;
+    err.code = payload?.error?.code;
+    err.details = payload?.error?.details;
+    throw err;
   }
 
   return payload;

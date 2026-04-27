@@ -2682,6 +2682,193 @@ export type LedgerSmartFilter = {
   statusDesc: string[];
 };
 
+// Student Finance > List of Offered (PAGEID 2181 / MENUID 2636).
+// Source: FIMS BL `MZ_BL_SF_OFFEREDLIST`. Read-only datatable surfacing
+// whichever payment channel (auto-receipt / batch knockoff / manual
+// unidentified journal) settled an offered_student row.
+export type OfferedStudentRow = {
+  index: number;
+  matric: string;
+  name: string | null;
+  icPassport: string | null;
+  programLevel: string | null;
+  programLevelLabel: string | null;
+  offeredSemester: string | null;
+  paymentAmt: number | null;
+  paymentDate: string | null;
+  receiptNo: string | null;
+  receiptMasterId: number | null;
+};
+
+export type OfferedStudentOptions = {
+  programLevel: ArOption[];
+  offeredSemester: ArOption[];
+};
+
+export type OfferedStudentSmartFilter = {
+  programLevel: string;
+  offeredSemester: string;
+};
+
+// Student Finance > Invoice (PAGEID 828 / MENUID 1023).
+// Source: FIMS BLs `DT_SF_INVOICE` (main listing) + `DT_DEBIT_LIST`
+// (per-invoice debit detail drilldown). Read-only migration — the
+// legacy Invoice Form (menuID 1062) and bulk download / cancel SP
+// are NOT migrated yet, so the View / Edit / Delete buttons render
+// disabled in InvoiceListView.vue.
+export type InvoiceRow = {
+  index: number;
+  id: number;
+  invoiceNo: string | null;
+  invoiceDate: string | null;
+  invoiceDateIso: string | null;
+  status: string | null;
+  statusLabel: string | null;
+  customerId: string | null;
+  customerName: string | null;
+  customerType: string | null;
+  customerTypeLabel: string;
+  semester: string | null;
+  batchNo: string | null;
+  feeCode: string | null;
+  studentStatus: string | null;
+  amount: number;
+  balance: number;
+};
+
+export type InvoiceFooter = {
+  totalAmt: number;
+};
+
+export type InvoiceOptions = {
+  status: ArOption[];
+  feeCategory: ArOption[];
+  programLevel: ArOption[];
+  studentStatus: ArOption[];
+  studyCategory: ArOption[];
+  citizenship: ArOption[];
+  nationality: ArOption[];
+  customerType: ArOption[];
+};
+
+export type InvoiceSmartFilter = {
+  status: string;
+  invoiceNo: string;
+  feeCategory: string;
+  semester: string;
+  ptj: string;
+  programLevel: string;
+  studentStatus: string;
+  studyCategory: string;
+  citizenship: string;
+  nationality: string;
+  customerType: string;
+  customerId: string;
+};
+
+export type InvoiceDebitRow = {
+  index: number;
+  id: number;
+  item: string | null;
+  subItem: string | null;
+  fundType: string | null;
+  activityCode: string | null;
+  ptjCode: string | null;
+  costcentre: string | null;
+  codeSO: string | null;
+  acctCode: string | null;
+  taxCode: string | null;
+  taxAmt: number | null;
+  amt: number;
+  cnAmt: number;
+  dbAmt: number;
+  dcAmt: number;
+  totalAmt: number;
+  balAmt: number;
+};
+
+export type InvoiceDebitFooter = {
+  amt: number;
+  cnAmt: number;
+  dbAmt: number;
+  dcAmt: number;
+  totalAmt: number;
+  balAmt: number;
+};
+
+export type InvoiceDetails = {
+  rows: InvoiceDebitRow[];
+  footer: InvoiceDebitFooter;
+};
+
+// Student Finance > Invoice Generation (PAGEID 970 / MENUID 1231).
+// Source: FIMS BL `CALL_PROC_STUDENT_INVOICE` with 4 actions
+// (find / csv / match / generate). The "Search Parameter" form runs
+// `invoiceCheckingByBatch` server-side and returns the legacy 8-column
+// roster keyed by `uniqueKey`; `uniqueKey` is then passed back to the
+// CSV / generate endpoints so they keep operating on the exact roster
+// the user just inspected.
+export type StudentInvoiceGenerationRow = {
+  index: number;
+  matric: string;
+  name: string | null;
+  status: string | null;
+  program: string | null;
+  intakeCase: string | null;
+  citizenship: string | null;
+  semesterNo: string | null;
+  feeCode: string | null;
+};
+
+export type StudentInvoiceGenerationOptions = {
+  semester: ArOption[];
+  programLevel: ArOption[];
+  studentType: ArOption[];
+  feeType: ArOption[];
+  intakeCase: ArOption[];
+};
+
+// Mirrors the legacy form payload (snake_case after CamelCaseMiddleware).
+export type StudentInvoiceGenerationSearchInput = {
+  semester: string;
+  programLevel: string;
+  feeType: string;
+  studentType?: string;
+  intakeCase?: string;
+  matricNo?: string;
+  page?: number;
+  limit?: number;
+  q?: string;
+  sortBy?: string;
+  sortDir?: "asc" | "desc";
+};
+
+export type StudentInvoiceGenerationSearchMeta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+  uniqueKey: string;
+  message: string | null;
+};
+
+export type StudentInvoiceGenerationGenerateInput = {
+  uniqueKey: string;
+  semester: string;
+  programLevel: string;
+  feeType: string;
+  studentType?: string;
+  intakeCase?: string;
+  matricNo?: string;
+};
+
+export type StudentInvoiceGenerationGenerateResult = {
+  success: boolean;
+  message: string | null;
+  workflow: Record<string, unknown> | null;
+  taskIds: string[];
+};
+
 // Student Finance > Manual Invoice Listing (PAGEID 2389 / MENUID 2897).
 // Source: FIMS BL `DT_SF_MANUAL_INV_LISTING`. Scoped to
 // cim_system_id='STUD_INV' AND cim_invoice_type='12'. The list meta
@@ -3116,4 +3303,716 @@ export type InvestmentMonitoringSummaryPdfPayload = {
   rows: InvestmentMonitoringSummaryPdfRow[];
   truncated: boolean;
   limit: number;
+};
+
+// Audit Trail > System Transaction (PAGEID 3 / MENUID 5).
+// Source: FIMS BL V2_AUDIT_SYSTEM_TRANSACTION_API. Read-only audit ledger
+// surfacing every recorded user action across the legacy system.
+export type AuditSystemTransactionRow = {
+  index: number;
+  auditId: number;
+  auditTimestamp: string | null;
+  auditAction: string | null;
+  auditMenuPath: string | null;
+  auditMenuId: number | null;
+  auditBrowser: string | null;
+  auditClientIp: string | null;
+  auditUserId: number | null;
+  auditUserType: string | null;
+  auditUser: string | null;
+  hasSql: boolean;
+};
+
+export type AuditSystemTransactionOption = { id: string; label: string };
+
+export type AuditSystemTransactionOptions = {
+  browsers: AuditSystemTransactionOption[];
+  userTypes: AuditSystemTransactionOption[];
+  transTypes: AuditSystemTransactionOption[];
+};
+
+export type AuditSystemTransactionSql = {
+  auditId: number;
+  sql: string;
+};
+
+// Vendor Portal > Purchase Order Status (PAGEID 1664 / MENUID 2015).
+// Source: FIMS BL `NF_BL_VENDOR_PO_STATUS`. Vendor-scoped read-only PO
+// listing with per-row GRN aggregation.
+export type VendorPoGrn = {
+  receiveNo: string;
+  totalAmount: number | null;
+};
+
+export type VendorPoStatusRow = {
+  index: number;
+  orderId: number;
+  createdDate: string | null;
+  orderNo: string | null;
+  description: string | null;
+  orderAmount: number | null;
+  orderStatus: string | null;
+  availableDate: string | null;
+  grnTotalAmount: number | null;
+  grns: VendorPoGrn[];
+};
+
+export type VendorPoStatusFooter = {
+  pomOrderAmt: number;
+  grmTotalAmt: number;
+};
+
+// Vendor Portal > Financial Status (PAGEID 1714 / MENUID 2072).
+// Source: FIMS BL `NF_BL_PURCHASING_FINANCIAL_STATUS`. Three vendor-scoped
+// read-only datatables: billings, vouchers, payments.
+export type VendorBillingRow = {
+  index: number;
+  voucherNo: string | null;
+  refNo: string | null;
+  description: string | null;
+  receivedDate: string | null;
+  amount: number;
+  status: string | null;
+  payToId: string | null;
+};
+
+export type VendorVoucherRow = {
+  index: number;
+  voucherNo: string | null;
+  description: string | null;
+  date: string | null;
+  status: string | null;
+  amount: number;
+  refNo: string | null;
+  paymentNo: string | null;
+  payToId: string | null;
+  payToType: string | null;
+};
+
+export type VendorPaymentRow = {
+  index: number;
+  voucherNo: string | null;
+  description: string | null;
+  epChequeNo: string | null;
+  modeType: string | null;
+  amount: number | null;
+  transDate: string | null;
+  collectionMode: string | null;
+  statusEft: string | null;
+  refNo: string | null;
+  payToId: string | null;
+  payToType: string | null;
+};
+
+// Portal > List of Letter (PAGEID 2330 / MENUID 2823).
+// Source: FIMS BL `IKA_LETTER_LIST_API`. Read-only catalog + history.
+// PDF generation deferred (see SponsorLetterController doc).
+export type SponsorLetterCatalogRow = {
+  index: number;
+  ldeId: number;
+  letterId: string;
+  letter: string;
+};
+
+export type SponsorLetterHistoryRow = {
+  index: number;
+  lvsId: number;
+  letterId: string;
+  letterName: string;
+  referenceNo: string | null;
+  downloadDate: string | null;
+};
+
+// Asset > List of Asset (PAGEID 1271 / MENUID 1548).
+// Source: FIMS BL `API_ASSET_INVENTORY_LISTOFASSET`. Read-only listing
+// of asset_inventory_main with a smart filter.
+export type AssetInventoryRow = {
+  index: number;
+  assetId: number;
+  assetCode: string | null;
+  assetType: string | null;
+  assetNo: string | null;
+  gAssetNo: string | null;
+  category: string | null;
+  item: string | null;
+  assetDescription: string | null;
+  detail1: string | null;
+  serialNo: string | null;
+  brand: string | null;
+  currentPtj: string | null;
+  fund: string | null;
+  activity: string | null;
+  accountCode: string | null;
+  currentCostCentre: string | null;
+  initialCost: number | null;
+  installCost: number | null;
+  grnNo: string | null;
+  porNo: string | null;
+  journalNo: string | null;
+  billNo: string | null;
+  voucherNo: string | null;
+  status: string | null;
+  statusDate: string | null;
+  acqDate: string | null;
+};
+
+export type AssetInventoryFooter = {
+  totalRecord: number;
+  totalInitialCost: number;
+  totalInstallCost: number;
+};
+
+// Project Monitoring > List of Project (MENUID 1544). Datatable backed by
+// `capital_project`. See ProjectMonitoringController::projects().
+export type ProjectListRow = {
+  index: number;
+  cpaProjectId: number;
+  cpaProjectNo: string | null;
+  cpaProjectDesc: string | null;
+  cpaProjectType: string | null;
+  ftyFundType: string | null;
+  latActivityCode: string | null;
+  ounCode: string | null;
+  ccrCostcentre: string | null;
+  soCode: string | null;
+  cpaStartDate: string | null;
+  cpaEndDate: string | null;
+  cpaSource: string | null;
+  cpaProjectStatus: string | null;
+};
+
+// Project Monitoring > Updated Balance (MENUID 2065). The legacy page is a
+// FORM (Project ID autosuggest + Information card + Cash Balance card +
+// Save). Backend payload mirrors the legacy autosuggest result of
+// `SNA_API_UPDATEDBALANCE_PM&autoSuggestprojectID=1` (joined select over
+// capital_project / fund_type / costcentre / activity_type /
+// structure_budget / organization_unit / budget). The `*Label` fields
+// are the `code - description` composites that the legacy `concat_ws`
+// produced for the read-only display inputs.
+export type ProjectMonitoringBalance = {
+  cpaProjectId: number;
+  cpaProjectNo: string | null;
+  cpaProjectDesc: string | null;
+  ftyFundType: string | null;
+  ftyFundLabel: string | null;
+  latActivityCode: string | null;
+  latActivityLabel: string | null;
+  ounCode: string | null;
+  ounLabel: string | null;
+  ccrCostcentre: string | null;
+  ccrCostcentreLabel: string | null;
+  soCode: string | null;
+  balAmt: number | null;
+  budgetId: string | null;
+  budgetAmt: number | null;
+  seqStrtBudget: string | null;
+  seqBudget: string | null;
+};
+
+// Mirrors the legacy POST body to
+// `SNA_API_UPDATEDBALANCE_PM?updateAmount=1`:
+//   info.projectID_UB  → info.cpaProjectNo
+//   bal.currBalCash_bal → bal.currBalCashBal (saved into both
+//                                              cpa_ytd_balance_amt and
+//                                              bdg_topup_amt)
+//   bal.seqBudget_bal  → bal.seqBudgetBal   (bdg_budget_id key for the
+//                                              second UPDATE)
+//   bal.currBudget_bal → bal.currBudgetBal  (kept for fidelity; the
+//                                              legacy BL accepts but
+//                                              never persists this)
+export type ProjectMonitoringBalanceInput = {
+  info: {
+    cpaProjectNo: string;
+  };
+  bal: {
+    currBalCashBal: string;
+    currBudgetBal?: string;
+    seqBudgetBal: string;
+  };
+};
+
+// Portal > Staff Profile (PAGEID 1581 / MENUID 1914).
+// Source: legacy BL `API_PORTAL_SALARYPROFILEINFORMATION` (?master,
+// ?detailAddress, ?saveAddress, ?updateMaritalStatus, ?all_children,
+// ?family_spouse, ?family_children). Self-service portal scoped to the
+// authenticated staff. Spouse / children detail forms (MENUIDs 3301 /
+// 3305) are NOT migrated here — see StaffProfileController doc.
+
+export type StaffProfileMaster = {
+  staffDetails: StaffProfileDetails | null;
+  zakatAmount: string | null;
+  zakatPeriod: string | null;
+};
+
+export type StaffProfileDetails = {
+  stfStaffId: string | null;
+  stfStaffName: string | null;
+  stfIcNo: string | null;
+  stfUnit: string | null;
+  stfTelnoWork: string | null;
+  stfEmailAddr: string | null;
+  stfMaritalStatus: string | null;
+  stfHandphoneNo: string | null;
+  salTaxGroup: string | null;
+  status: string | null;
+  stfCitizen: string | null;
+  stfSalIncrDate: string | null;
+  stsSalaryGrade: string | null;
+  staAcctNoProfile: string | null;
+  staAcctNameProfile: string | null;
+  sscServiceDescProfile: string | null;
+  stsJoinDate: string | null;
+  stfCurrentAddress: string | null;
+  stfPermanentAddress: string | null;
+  salBasicSalary: string | null;
+  titleDesc: string | null;
+  genderDesc: string | null;
+  maritalstatusDesc: string | null;
+  salTaxCategory: string | null;
+  salZakatDesc: string | null;
+  pensionstatusDesc: string | null;
+  jobStatus: string | null;
+  ounDesc: string | null;
+  ccrCostcentreDesc: string | null;
+  salSocsoStatus: string | null;
+  salEpfStatus: string | null;
+  isAcknowledgeMarital: number | null;
+};
+
+export type StaffProfileLookupOption = { value: string; label: string };
+
+export type StaffProfileOptions = {
+  maritalStatus: StaffProfileLookupOption[];
+  state: StaffProfileLookupOption[];
+  country: StaffProfileLookupOption[];
+  addressType: StaffProfileLookupOption[];
+};
+
+export type StaffProfileAddress = {
+  stfStaffId: string | null;
+  saAddressType: number | null;
+  saAddress1: string | null;
+  saAddress2: string | null;
+  saPcode: string | null;
+  saCity: string | null;
+  saState: string | null;
+  saCountry: string | null;
+  isAcknowledgement: number;
+  stfHandphoneNo: string | null;
+  hasAddress: boolean;
+};
+
+export type StaffProfileAddressInput = {
+  saAddressType?: number | null;
+  saAddress1: string;
+  saAddress2?: string | null;
+  saPcode?: string | null;
+  saCity?: string | null;
+  saState?: string | null;
+  saCountry?: string | null;
+  stfHandphoneNo?: string | null;
+};
+
+export type StaffProfileMaritalStatusInput = {
+  maritalStatus: string;
+};
+
+export type StaffProfileSpouseRow = {
+  index: number;
+  spoSpouseSeq: string;
+  spoName: string | null;
+  spoIcNo: string | null;
+  spoTaxNo: string | null;
+  spoMarriageDate: string | null;
+  spoDivorceDate: string | null;
+  spoDeathDate: string | null;
+};
+
+export type StaffProfileChildRow = {
+  index: number;
+  stcChildSeq: string;
+  stcName: string | null;
+  stcSpouseSeq: string | null;
+  stcIcRefNo: string | null;
+  stcBod: string | null;
+  stcRelation: string | null;
+  stcPcbStatus: string | null;
+  age: number | null;
+  stcStudyStartDate: string | null;
+  stcStudyEndDate: string | null;
+  stcLevelStudy: string | null;
+  stcDisabilityStatus: string | null;
+  stcDeathDate: string | null;
+};
+
+// =============================================================================
+// Vendor Portal > Vendor Portal (PAGEID 1622 / MENUID 1961)
+// Backed by VendorPortalController. Phase 2a ships the editable master
+// profile (`PUT /profile`) + lookups; sub-table CRUD (Phase 2b) and
+// the temp_vend_* renewal staging / dropzone / submit flow (Phase 2c)
+// remain deferred. Sub-table list rows below are still read-only.
+// =============================================================================
+
+export type VendorPortalProfile = {
+  vendorId: string | null;
+  vendorCode: string | null;
+  vendorName: string | null;
+  address: string | null;
+  address1: string | null;
+  address2: string | null;
+  address3: string | null;
+  postcode: string | null;
+  state: string | null;
+  countryCode: string | null;
+  registrationNo: string | null;
+  registrationDate: string | null;
+  registrationExpiryDate: string | null;
+  kkRegNo: string | null;
+  kkExpiredDate: string | null;
+  taxRegNo: string | null;
+  telNo: string | null;
+  faxNo: string | null;
+  contactPerson: string | null;
+  vendorStatus: string | null;
+  isCreditor: string | null;
+  isDebtor: string | null;
+  bumiStatus: string | null;
+  companyCategory: string | null;
+  authorizeCapital: number | null;
+  paidUpCapital: number | null;
+  emailAddress: string | null;
+  icNo: string | null;
+  unvRegDate: string | null;
+  unvReqExpDate: string | null;
+  epfNo: string | null;
+  socsoNo: string | null;
+  regNoKpm: string | null;
+  regDateKpm: string | null;
+  regExpDateKpm: string | null;
+  rosNo: string | null;
+  vendorBank: string | null;
+  bankAccountNo: string | null;
+  billerCode: string | null;
+  tempCode: string | null;
+  nameApplication: string | null;
+  telNoApplication: string | null;
+  vendorCodeOri: string | null;
+};
+
+/**
+ * Update payload sent to `PUT /api/portal/vendor/profile`. Mirrors the
+ * three legacy sections that drive the master form on PAGEID 1622:
+ *   - Application Information (component 5257)
+ *   - Vendor Portal           (component 4737)
+ *   - Vendor Registration Detail (component 4738)
+ *
+ * Date fields use the legacy `d/m/Y` wire format ("27/04/2026") because
+ * both the read and write endpoints (and `UpdateVendorPortalProfileRequest`)
+ * standardise on that representation. Empty strings are normalised to
+ * null on the backend.
+ *
+ * `vendorCode`, `vendorId`, `vendorStatus`, `unvRegDate`, `unvReqExpDate`
+ * and `tempCode` are NOT part of this payload — those are owned by the
+ * renewal/approval workflow (Phase 2c) and the resolver, and live on the
+ * read-only `VendorPortalProfile` shape only.
+ */
+export type VendorPortalProfileInput = {
+  vendorName: string;
+  email: string;
+  telNo: string;
+  faxNo?: string | null;
+  bumiStatus: string;
+  contactPerson: string;
+  isCreditor?: "Y" | "N" | null;
+  isDebtor?: "Y" | "N" | null;
+  taxRegNo?: string | null;
+  epfNo?: string | null;
+  socsoNo?: string | null;
+  billerCode?: string | null;
+  icNo?: string | null;
+  companyCategory?: string | null;
+  authorizeCapital?: number | null;
+  paidUpCapital?: number | null;
+  registrationNo?: string | null;
+  regDate?: string | null;
+  regExpDate?: string | null;
+  kkRegNo: string;
+  kkExpiredDate?: string | null;
+  regNoKpm?: string | null;
+  regDateKpm?: string | null;
+  regExpdateKpm?: string | null;
+  rosNo: string;
+  nameApplication?: string | null;
+  telNoApplication?: string | null;
+};
+
+/**
+ * Dropdown option set returned by `GET /api/portal/vendor/lookups`.
+ * `taraf` is dynamic from `lookup_details`; the rest are static lists
+ * (matches the legacy hard-coded `UNION` queries on PAGEID 1622).
+ */
+export type VendorPortalLookupOption = { value: string; label: string };
+
+export type VendorPortalLookups = {
+  taraf: VendorPortalLookupOption[];
+  companyCategory: VendorPortalLookupOption[];
+  vendorStatus: VendorPortalLookupOption[];
+  creditorDebtor: VendorPortalLookupOption[];
+};
+
+export type VendorPortalCategoryRow = {
+  index: number;
+  id: string | null;
+  vendorCode: string | null;
+  categoryCode: string | null;
+  categoryLabel: string | null;
+  createdDate: string | null;
+};
+
+export type VendorPortalAccountRow = {
+  index: number;
+  id: string | null;
+  vendorCode: string | null;
+  bankCode: string | null;
+  bankName: string | null;
+  bankAccountNo: string | null;
+  status: string;
+  createdDate: string | null;
+};
+
+export type VendorPortalAddressRow = {
+  index: number;
+  id: string | null;
+  vendorCode: string | null;
+  addressType: string | null;
+  addressTypeLabel: string | null;
+  address1: string | null;
+  address2: string | null;
+  address3: string | null;
+  postcode: string | null;
+  city: string | null;
+  state: string | null;
+  country: string | null;
+  createdDate: string | null;
+};
+
+export type VendorPortalJobscopeRow = {
+  index: number;
+  id: string | null;
+  vendorCode: string | null;
+  jobscopeCode: string | null;
+  jobscopeLabel: string | null;
+  category: string | null;
+  createdDate: string | null;
+};
+
+export type VendorPortalLicenceRow = {
+  index: number;
+  id: string | null;
+  vendorCode: string | null;
+  licenceCode: string | null;
+  licenceLabel: string | null;
+  licenceDesc: string | null;
+  createdDate: string | null;
+};
+
+export type VendorPortalOtherLicenceRow = {
+  index: number;
+  id: string | null;
+  vendorCode: string | null;
+  licenceCode: string | null;
+  licenceDesc: string | null;
+  createdDate: string | null;
+};
+
+// Setup and Maintenance > Integration > Integration - PTJ (PAGEID 1860 / MENUID 2277).
+// Legacy BL: AS_BL_SM_INTEGRATIONPTJ.
+export type IntegrationPtjRow = {
+  index: number;
+  iouId: number;
+  iouCode: string | null;
+  iouCodePersis: string | null;
+  iouDesc: string | null;
+  iouBursarFlag: string | null;
+  orgCode: string | null;
+  orgDesc: string | null;
+  iouAddress: string | null;
+  iouTelNo: string | null;
+  iouFaxNo: string | null;
+};
+
+export type IntegrationPtjPromoteInput = {
+  iouCode: string;
+  iouDesc: string;
+  iouCodePersis?: string | null;
+  iouBursarFlag?: string | null;
+  orgCode?: string | null;
+  orgDesc?: string | null;
+  iouAddress?: string | null;
+  iouTelNo?: string | null;
+  iouFaxNo?: string | null;
+  ounLevel?: string | null;
+  ounCodeParent?: string | null;
+};
+
+// Setup and Maintenance > Integration > Integration - Cost center (PAGEID 1861 / MENUID 2278).
+// Legacy BL: AS_BL_SM_INTEGRATIONCOSTCENTRE.
+export type IntegrationCostCentreRow = {
+  index: number;
+  icsCostcentreId: number;
+  icsCostcentre: string | null;
+  icsCostcentreDesc: string | null;
+  icsHostelCode: string | null;
+  icsStatus: string | null;
+};
+
+export type IntegrationCostCentrePromoteInput = {
+  icsCostcentre: string;
+  icsCostcentreDesc: string;
+  icsHostelCode?: string | null;
+  icsStatus?: string | null;
+};
+
+// Setup and Maintenance > Integration > Integration - Profile (PAGEID 2000 / MENUID 2443).
+// Legacy BL: SNA_API_SM_INTEGRATION_PROFILE.
+export type IntegrationProfileRow = {
+  index: number;
+  icpProjectId: number;
+  icpProjectNo: string | null;
+  icpSubsystemId: string | null;
+  subsystemcode: string | null;
+  ftyFundType: string | null;
+  latActivityCode: string | null;
+  ccrCostcentre: string | null;
+  ounCode: string | null;
+  icpSoCode: string | null;
+  icpStartDate: string | null;
+  icpEndDate: string | null;
+  icpYearnum: number | null;
+  icpProjectType: string | null;
+  icpProjectDesc: string | null;
+  icpPeriod: number | null;
+  icpProjectStatus: string | null;
+};
+
+// Setup and Maintenance > Integration > Integration - Activity (PAGEID 2003 / MENUID 2444).
+// Legacy BL: SNA_API_SM_INTEGRATION_ACTIVITY.
+export type IntegrationActivityRow = {
+  index: number;
+  iatId: number;
+  iatActivityCode: string | null;
+  iatActivityDescriptionBm: string | null;
+  iatActivityCodeParent: string | null;
+  iatActivityGroupCode: string | null;
+  iatActivitySubgroupCode: string | null;
+  iatActivitySubsiriCode: string | null;
+  iatStatus: string | null;
+  iatSource: string | null;
+  iatExtendedField?: string | null;
+};
+
+// General Ledger > Budget Not Exists (PAGEID 2200 / MENUID 2657).
+// Legacy BL: NAD_API_SM_REPORT_BUDGET_NOT_EXIST.
+export type BudgetNotExistsRow = {
+  index: number;
+  pmtPostingId: number;
+  ftyFundType: string | null;
+  atActivityCode: string | null;
+  ounCode: string | null;
+  ccrCostcentre: string | null;
+  acmAcctCode: string | null;
+  cpaProjectNo: string | null;
+  pdeDocumentNo: string | null;
+  pdeReference: string | null;
+  pdeReference1: string | null;
+  pdeTransType: string | null;
+  pdeTransAmt: number | null;
+  pdeTransDate: string | null;
+  pdePaytoType: string | null;
+  pdePaytoId: string | null;
+  pdePaytoName: string | null;
+  pdeStatus: string | null;
+  pdeDocDescription: string | null;
+  pmtSystemId: string | null;
+  pmtPostingDesc: string | null;
+  pmtStatus: string | null;
+};
+
+// Setup and Maintenance > Global > List of Currency (PAGEID 2636 / MENUID 3198).
+// Legacy BL: QLA_API_GLOBAL_LISTOFCURRENCY.
+export type ListOfCurrencyRow = {
+  index: number;
+  cymCurrencyId: number;
+  cymCurrencyCode: string | null;
+  cymCurrencyDesc: string | null;
+  cydUnit: number | null;
+  cnyCountryCode: string | null;
+  cnyCountryDesc: string | null;
+  cymEnabled: string;
+};
+
+export type ListOfCurrencyInput = {
+  cymCurrencyCode: string;
+  cymCurrencyDesc: string;
+  cnyCountryCode: string;
+  cydUnit: number;
+  cymEnabled?: "Active" | "Inactive";
+};
+
+export type ListOfCurrencyUpdate = {
+  cydUnit: number;
+  cymEnabled: "Active" | "Inactive";
+};
+
+export type CountryOption = {
+  id: string;
+  label: string;
+  code: string;
+  desc: string | null;
+};
+
+// Setup and Maintenance > Global > AG Rate (PAGEID 2647 / MENUID 3199).
+// Legacy BL: QLA_API_GLOBAL_UPLOADCURRENCY.
+export type AgRateRow = {
+  index: number;
+  cydYear: number;
+  cydMonth: string;
+  cydFileName: string | null;
+};
+
+export type AgRateLine = {
+  cydId: number;
+  cymCurrencyCode: string | null;
+  cydStartDate: string | null;
+  cydEndDate: string | null;
+  cydExchangeTypeCode: string | null;
+  cydConversationRate: number | null;
+  cydUnit: number | null;
+  cydFileName: string | null;
+  cydStatus: string | null;
+};
+
+export type AgRateCurrencyOption = {
+  id: string;
+  label: string;
+  code: string;
+  desc: string | null;
+  unit: number | null;
+};
+
+export type AgRateOptionEntry = { id: string; label: string };
+
+export type AgRateOptions = {
+  years: AgRateOptionEntry[];
+  months: AgRateOptionEntry[];
+};
+
+export type AgRateEntryInput = {
+  cydYear: number;
+  cydMonth: number;
+  rates: Array<{
+    cymCurrencyCode: string;
+    cydUnit?: number;
+    cydConversationRate: number;
+  }>;
 };
