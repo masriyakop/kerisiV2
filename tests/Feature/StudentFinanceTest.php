@@ -36,4 +36,39 @@ class StudentFinanceTest extends TestCase
     {
         $this->assertUnauthorized('DELETE', '/api/student-finance/ptptn-data/1');
     }
+
+    public function test_ledger_list_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/ledger');
+    }
+
+    public function test_ledger_options_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/ledger/options');
+    }
+
+    public function test_manual_invoice_list_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/manual-invoice');
+    }
+
+    public function test_manual_invoice_options_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/manual-invoice/options');
+    }
+
+    public function test_manual_invoice_destroy_requires_authentication(): void
+    {
+        $this->assertUnauthorized('DELETE', '/api/student-finance/manual-invoice/1');
+    }
+
+    public function test_bank_account_update_list_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/bank-account-update');
+    }
+
+    public function test_bank_account_update_options_requires_authentication(): void
+    {
+        $this->assertUnauthorized('GET', '/api/student-finance/bank-account-update/options');
+    }
 }

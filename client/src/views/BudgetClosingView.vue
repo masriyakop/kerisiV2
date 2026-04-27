@@ -144,8 +144,8 @@ onMounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-4xl space-y-4">
-      <p class="text-base font-semibold text-slate-500">{{ PAGE_BREADCRUMB }}</p>
+    <div class="space-y-4">
+      <h1 class="page-title">{{ PAGE_BREADCRUMB }}</h1>
 
       <div class="flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
         <AlertTriangle class="mt-0.5 h-4 w-4 shrink-0" />

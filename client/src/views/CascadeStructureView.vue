@@ -143,8 +143,8 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
-      <p class="text-base font-semibold text-slate-500">Setup and Maintenance / General Ledger Structure / Cascade Structure</p>
+    <div class="space-y-4">
+      <h1 class="page-title">Setup and Maintenance / General Ledger Structure / Cascade Structure</h1>
       <article class="rounded-lg border border-slate-200 bg-white shadow-sm">
         <div class="border-b border-slate-100 px-4 py-3"><h1 class="text-base font-semibold text-slate-900">Cascade Structure</h1></div>
         <div class="space-y-4 p-4">

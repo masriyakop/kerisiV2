@@ -119,7 +119,7 @@ async function save() {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <div class="flex items-center justify-between">
         <h1 class="page-title">Menus</h1>
         <div class="flex items-center gap-2">

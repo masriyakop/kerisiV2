@@ -287,7 +287,7 @@ watch(
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-[1600px] space-y-4">
+    <div class="space-y-4">
       <input
         ref="templateFileInputRef"
         type="file"
@@ -295,7 +295,7 @@ watch(
         class="hidden"
         @change="onTemplateFileChange"
       />
-      <p class="text-base font-semibold text-slate-500">{{ PAGE_BREADCRUMB }}</p>
+      <h1 class="page-title">{{ PAGE_BREADCRUMB }}</h1>
 
       <!-- Top filter (legacy "Monitoring Filter" form) -->
       <article class="rounded-lg border border-slate-200 bg-white shadow-sm">

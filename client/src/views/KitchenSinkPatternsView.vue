@@ -599,7 +599,7 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-6">
+    <div class="space-y-6">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h1 class="page-title">Kitchen Sink — UI patterns</h1>

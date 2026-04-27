@@ -220,9 +220,9 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <input ref="templateFileInputRef" type="file" accept=".json,application/json" class="hidden" @change="onTemplateFileChange" />
-      <p class="text-base font-semibold text-slate-500">Vendor Portal / Tender/Quotation List</p>
+      <h1 class="page-title">Vendor Portal / Tender/Quotation List</h1>
 
       <div
         v-if="!vendorCheck.canBuyDocument && vendorCheck.restrictedStatus"

@@ -418,6 +418,60 @@ export type {Resource} = {Resource}Input & {
 - Meta: `requiresAuth: true` for protected pages, `guestOnly: true` for login
 - `meta.title` sets document title via `afterEach` hook
 
+### Page header & layout standard (ALL admin views)
+
+Every admin view (anything wrapped in `<AdminLayout>`) MUST follow the **kitchen sink** page-header standard. Reference: `KitchenSinkView.vue` and the `.page-title` component in `client/src/style.css`.
+
+**Required structure:**
+
+```vue
+<template>
+  <AdminLayout>
+    <div class="space-y-4">
+      <h1 class="page-title">{Parent Module} / {Page Name}</h1>
+      <!-- page content (articles, tables, modals…) -->
+    </div>
+  </AdminLayout>
+</template>
+```
+
+**Hard rules (ALL pages, including Kerisi/FIMS-migrated pages):**
+
+1. The root wrapper MUST be `<div class="space-y-4">` (or `space-y-3` where deliberately tighter). **Never** add `mx-auto`, `max-w-7xl`, `max-w-[96rem]`, `max-w-[1400px]`, `max-w-[1600px]`, or any other `max-w-*` class on the **top-level page wrapper** — `AdminLayout` already owns padding and the content must fill the available width (including zoomed-out viewports). Width caps are only allowed on inner modals (`max-w-md`, `max-w-lg`, `max-w-2xl`, etc.) and on individual form fields.
+2. The page title MUST be a single `<h1 class="page-title">…</h1>` element. Do NOT use:
+   - `<p class="text-base font-semibold text-slate-500">…</p>` (old Kerisi muted breadcrumb)
+   - `<p class="text-sm font-medium text-slate-500">…</p>` (old Kerisi form breadcrumb)
+   - `<nav class="text-sm text-slate-500"><ol>…<li>…</li></ol></nav>` (old Kerisi list breadcrumb)
+   - `<h1 class="text-base font-semibold text-slate-800|900">…</h1>` at the page level (this size is reserved for card-level headers inside `<article>` / `<section>`).
+3. Breadcrumb-style titles MUST render the trail as plain text inside the single `page-title` h1, separated by spaces and ` / ` (e.g. `Cashbook / Bank Account`, `Investment / List of Investments`, `Petty Cash (PTJ) / Petty Cash Claim Form`). Do not nest `<span>`, `<li>`, or coloured classes inside — they will override the gradient.
+4. **Form pages** (edit/detail screens launched from a list) follow the same rule, but place a small **Back** button to the left of the h1 inside a flex row:
+
+   ```vue
+   <div class="flex items-center gap-2">
+     <button
+       type="button"
+       class="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs text-slate-600 hover:bg-slate-50"
+       @click="goBack"
+       aria-label="Back"
+     >
+       <ChevronLeft class="h-3.5 w-3.5" />
+       Back
+     </button>
+     <h1 class="page-title">{Parent Module} / {Form Name}</h1>
+   </div>
+   ```
+
+   Reference: `DepositFormView.vue`, `CreditNoteFormView.vue`, `PettyCashClaimFormView.vue`.
+5. Card-level headers **inside** an `<article>`/`<section>` (e.g. "Deposit Master", "Details", table headers) keep their existing `<h1 class="text-base font-semibold text-slate-900">…</h1>` or `<h2 …>` style. Only the **top-of-page** title uses `.page-title`.
+6. Exceptions (do NOT retrofit):
+   - `LoginView.vue` (auth, `<AuthLayout>`).
+   - `StorefrontHomeView.vue`, `StorefrontPageView.vue` (public storefront, `<StorefrontLayout>`).
+   - `MainDashboardView.vue` — the admin root hero card with the "Main Dashboard" eyebrow + "Control Center" heading is a deliberate dashboard pattern and is exempt from the `.page-title` rule.
+
+**When migrating an existing Kerisi/FIMS page** (or generating a new one), the first edit is always: drop every `max-w-*`/`mx-auto` on the root wrapper and replace the legacy breadcrumb element with a single `<h1 class="page-title">…</h1>`.
+
+**Concrete references:** `KitchenSinkView.vue`, `BankAccountView.vue`, `CashbookListView.vue`, `AccountCodeView.vue`, `CostCentreView.vue`, `InvestmentAccrualView.vue`, `ManualInvoiceListingView.vue`, `DepositFormView.vue`, `CreditNoteFormView.vue`, `PettyCashClaimFormView.vue`.
+
 ---
 
 ## API Design Rules

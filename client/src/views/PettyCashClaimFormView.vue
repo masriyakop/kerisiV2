@@ -887,7 +887,7 @@ onUnmounted(() => {
         >
           <ChevronLeft class="h-5 w-5" />
         </button>
-        <h1 class="text-base font-semibold text-slate-800">
+        <h1 class="page-title">
           Petty Cash (PTJ) / Petty Cash Claim Form
         </h1>
       </div>

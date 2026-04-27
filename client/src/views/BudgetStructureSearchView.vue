@@ -181,8 +181,8 @@ onMounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
-      <p class="text-base font-semibold text-slate-500">{{ PAGE_BREADCRUMB }}</p>
+    <div class="space-y-4">
+      <h1 class="page-title">{{ PAGE_BREADCRUMB }}</h1>
       <h1 class="sr-only">{{ PAGE_TITLE }}</h1>
 
       <!-- Component 8376: Jenis Carian datatable -->

@@ -84,7 +84,7 @@ watch(pcbId, () => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <!-- Breadcrumb header -->
       <div class="flex items-center gap-2 border-b border-slate-200 pb-2">
         <button
@@ -95,7 +95,7 @@ watch(pcbId, () => {
         >
           <ChevronLeft class="h-5 w-5" />
         </button>
-        <h1 class="text-base font-semibold text-slate-800">
+        <h1 class="page-title">
           Petty Cash (PTJ) / Petty Cash Recoup
         </h1>
       </div>

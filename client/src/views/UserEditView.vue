@@ -233,7 +233,7 @@ onMounted(load);
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <!-- ───── Page Header ───── -->
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">

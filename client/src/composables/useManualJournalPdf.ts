@@ -1,0 +1,406 @@
+/**
+ * PDF generators for General Ledger > Manual Journal Listing (PAGEID 1729 /
+ * MENUID 2089), replacing the legacy PHP reporters under
+ * `custom/report/Manual Journal/`:
+ *
+ *   - downloadManualJournalListingPdf  <-  downloadListPDF.php
+ *     Toolbar-level "Download PDF" button. Landscape A4, 7 columns
+ *     (No., Date, Journal No., Description, Amount, Status, Created By).
+ *
+ *   - downloadManualJournalFormPdf     <-  downloadPDFmj.php
+ *     Per-row "PDF" button. Landscape A4 Journal document with header,
+ *     GL line table (GL Structure, Account Code, Payee Type/Code,
+ *     Ref. 1, Ref. 2, Debit, Credit) + totals, description, workflow
+ *     signatories (Input / Verified / Approved), and a "computer
+ *     generated" footer.
+ *
+ * Both generators use the project's standard jsPDF + jspdf-autotable stack
+ * (see `usePettyCashFormPdf.ts` for the pattern).
+ */
+import type {
+  ManualJournalDetail,
+  ManualJournalListingPdfPayload,
+} from "@/types";
+
+const AMOUNT_FORMATTER = new Intl.NumberFormat("en-MY", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+function formatAmount(value: number | null | undefined): string {
+  if (value == null || Number.isNaN(value)) return "0.00";
+  return AMOUNT_FORMATTER.format(value);
+}
+
+/**
+ * Replicates the toolbar-level `downloadListPDF.php`:
+ *   - Landscape A4
+ *   - Header: left "Manual Journal Listing", right "Date / Time"
+ *   - Table: No. / Date / Journal No. / Description / Amount / Status / Created By
+ *   - Footer: page X / Y
+ */
+export async function downloadManualJournalListingPdf(
+  payload: ManualJournalListingPdfPayload,
+): Promise<void> {
+  const { default: jsPDF } = await import("jspdf");
+  const autoTable = (await import("jspdf-autotable")).default;
+
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+  const pw = doc.internal.pageSize.getWidth();
+  const ph = doc.internal.pageSize.getHeight();
+  const margin = 12;
+
+  const now = payload.generatedAt || new Date().toLocaleString("en-GB");
+  const [datePart, timePart] = now.split(" ");
+
+  const drawHeader = () => {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("Manual Journal Listing", margin, 14);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text(`Date: ${datePart ?? ""}`, pw - margin, 10, { align: "right" });
+    doc.text(`Time: ${timePart ?? ""}`, pw - margin, 14, { align: "right" });
+
+    if (payload.typeLabel) {
+      doc.setFontSize(9);
+      doc.text(`Type of Journal: ${payload.typeLabel}`, margin, 20);
+    }
+  };
+
+  const drawFooter = () => {
+    const pageCount = doc.getNumberOfPages();
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    for (let i = 1; i <= pageCount; i += 1) {
+      doc.setPage(i);
+      doc.text(`${i} / ${pageCount}`, pw / 2, ph - 7, { align: "center" });
+    }
+  };
+
+  const body = payload.rows.map((r) => [
+    String(r.index),
+    r.dateJournal,
+    r.journalNo,
+    r.description,
+    formatAmount(r.amount),
+    r.status,
+    r.createdBy,
+  ]);
+
+  autoTable(doc, {
+    startY: 24,
+    margin: { left: margin, right: margin, top: 24, bottom: 14 },
+    head: [
+      [
+        "No.",
+        "Date",
+        "Journal No.",
+        "Description",
+        "Amount",
+        "Status",
+        "Created By",
+      ],
+    ],
+    body,
+    styles: {
+      fontSize: 8,
+      cellPadding: 2,
+      lineColor: [0, 0, 0],
+      lineWidth: 0.2,
+      overflow: "linebreak",
+    },
+    headStyles: {
+      fillColor: [235, 235, 235],
+      textColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "center",
+      lineColor: [0, 0, 0],
+      lineWidth: 0.2,
+    },
+    columnStyles: {
+      0: { cellWidth: 14, halign: "center" },
+      1: { cellWidth: 22, halign: "center" },
+      2: { cellWidth: 36, halign: "center" },
+      3: { cellWidth: 90 },
+      4: { cellWidth: 30, halign: "right" },
+      5: { cellWidth: 30, halign: "center" },
+      6: { cellWidth: 40, halign: "center" },
+    },
+    theme: "grid",
+    didDrawPage: () => {
+      drawHeader();
+    },
+  });
+
+  if (payload.truncated) {
+    const tail = (doc as unknown as { lastAutoTable?: { finalY?: number } })
+      .lastAutoTable?.finalY ?? 28;
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(8);
+    doc.text(
+      `Note: output truncated at ${payload.limit ?? payload.rows.length} rows — narrow filters to see additional entries.`,
+      margin,
+      tail + 6,
+    );
+  }
+
+  drawFooter();
+
+  doc.save(`Manual Journal Listing.pdf`);
+}
+
+/**
+ * Replicates the per-row `downloadPDFmj.php`:
+ *   - Landscape A4
+ *   - Organisation + "BAHAGIAN KEWANGAN" + "JOURNAL" banner
+ *   - Date / Type, Time / Journal No, Month / Status grid
+ *   - Line table with GL Structure, Account Code, Payee Type/Code,
+ *     Ref. 1, Ref. 2, Debit, Credit + totals
+ *   - Description
+ *   - Input / Verified / Approved By signers (if workflow history exists),
+ *     otherwise a "Generated By" system-ID block (same fallback as legacy
+ *     when `$createby` is NULL)
+ *   - Computer-generated footer
+ */
+export async function downloadManualJournalFormPdf(
+  detail: ManualJournalDetail,
+): Promise<void> {
+  const { default: jsPDF } = await import("jspdf");
+  const autoTable = (await import("jspdf-autotable")).default;
+
+  const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+  const pw = doc.internal.pageSize.getWidth();
+  const ph = doc.internal.pageSize.getHeight();
+  const margin = 10;
+  const innerW = pw - margin * 2;
+
+  const { header, lines, totals, processFlow } = detail;
+  const hasWorkflow = header.hasHumanApprover && processFlow.length > 0;
+
+  // ── Banner ────────────────────────────────────────────────────────────────
+  let y = 10;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text(header.organization || "", pw / 2, y, { align: "center" });
+  y += 5;
+  doc.text("BAHAGIAN KEWANGAN", pw / 2, y, { align: "center" });
+  y += 5;
+  doc.text("JOURNAL", pw / 2, y, { align: "center" });
+  y += 6;
+
+  // ── Header grid: Date/Type, Time/JournalNo, Month/Status ─────────────────
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+
+  const typeText = hasWorkflow ? header.typeOfJournal || "" : "AUTO";
+  const statusText = header.status || "";
+
+  const headerLeftLabels: Array<[string, string]> = [
+    ["Date", header.enterDate || ""],
+    ["Time", header.createdTime || ""],
+    ["Month", header.enterMonth || ""],
+  ];
+  const headerRightLabels: Array<[string, string]> = [
+    ["Type", typeText],
+    ["Journal No", header.journalNo || ""],
+    ["Status", statusText],
+  ];
+
+  const rowH = 5.5;
+  const leftLabelX = margin;
+  const leftValueX = margin + 22;
+  const rightLabelX = margin + innerW * 0.6;
+  const rightValueX = margin + innerW * 0.6 + 25;
+
+  headerLeftLabels.forEach(([label, value], i) => {
+    doc.setFont("helvetica", "bold");
+    doc.text(`${label}`, leftLabelX, y + i * rowH);
+    doc.setFont("helvetica", "normal");
+    doc.text(`: ${value}`, leftValueX - 4, y + i * rowH);
+  });
+  headerRightLabels.forEach(([label, value], i) => {
+    doc.setFont("helvetica", "bold");
+    doc.text(`${label}`, rightLabelX, y + i * rowH);
+    doc.setFont("helvetica", "normal");
+    doc.text(`: ${value}`, rightValueX - 4, y + i * rowH);
+  });
+  y += rowH * 3 + 2;
+
+  // ── Line table ───────────────────────────────────────────────────────────
+  const body = lines.map((l) => [
+    l.glStructure,
+    l.accountCode,
+    l.payToType,
+    l.payToId,
+    l.documentNo,
+    l.reference,
+    l.debit ? formatAmount(l.debit) : "0.00",
+    l.credit ? formatAmount(l.credit) : "0.00",
+  ]);
+
+  autoTable(doc, {
+    startY: y,
+    margin: { left: margin, right: margin },
+    head: [
+      [
+        "GL Structure",
+        "Account Code",
+        "Payee\nType",
+        "Payee\nCode",
+        "Ref. 1",
+        "Ref. 2",
+        "Debit",
+        "Credit",
+      ],
+    ],
+    body,
+    styles: {
+      fontSize: 8,
+      cellPadding: 1.8,
+      lineColor: [0, 0, 0],
+      lineWidth: 0.2,
+      overflow: "linebreak",
+    },
+    headStyles: {
+      fillColor: [235, 235, 235],
+      textColor: [0, 0, 0],
+      fontStyle: "bold",
+      halign: "center",
+      lineColor: [0, 0, 0],
+      lineWidth: 0.2,
+    },
+    columnStyles: {
+      0: { cellWidth: innerW * 0.18 },
+      1: { cellWidth: innerW * 0.21, halign: "center" },
+      2: { cellWidth: innerW * 0.05, halign: "center" },
+      3: { cellWidth: innerW * 0.08, halign: "center" },
+      4: { cellWidth: innerW * 0.15, halign: "center" },
+      5: { cellWidth: innerW * 0.15, halign: "center" },
+      6: { cellWidth: innerW * 0.09, halign: "right" },
+      7: { cellWidth: innerW * 0.09, halign: "right" },
+    },
+    theme: "grid",
+  });
+
+  y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable
+    .finalY;
+
+  // Totals row (top+bottom border, aligned under Debit/Credit columns).
+  const totalY = y + 4;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  const totalDebitX = margin + innerW * 0.82;
+  const totalCreditX = margin + innerW * 0.91;
+  doc.text(formatAmount(totals.debit), totalDebitX, totalY, {
+    align: "right",
+  });
+  doc.text(formatAmount(totals.credit), totalCreditX, totalY, {
+    align: "right",
+  });
+  doc.setLineWidth(0.3);
+  doc.line(totalDebitX - 22, totalY + 1.2, margin + innerW, totalY + 1.2);
+  y = totalY + 5;
+
+  // ── Description ──────────────────────────────────────────────────────────
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text("Description", margin, y);
+  doc.setFont("helvetica", "normal");
+  const descStartX = margin + 25;
+  const descLines = doc.splitTextToSize(
+    `: ${header.journalDesc || ""}`,
+    innerW - 25,
+  );
+  doc.text(descLines, descStartX, y);
+  y += Math.max(5, descLines.length * 4) + 3;
+
+  // Flush to a new page if the signature block would overflow.
+  const estBlockH = 36;
+  if (y + estBlockH > ph - 16) {
+    doc.addPage();
+    y = 12;
+  }
+
+  // ── Signers ──────────────────────────────────────────────────────────────
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+
+  if (hasWorkflow) {
+    const input = processFlow[0];
+    const verifier = processFlow[1];
+    const approver = processFlow[2];
+
+    const blocks: Array<[string, (typeof input) | undefined]> = [
+      ["Input By", input],
+      ["Verified By", verifier],
+      ["Approved By", approver],
+    ];
+
+    blocks.forEach(([label, step]) => {
+      doc.setFont("helvetica", "bold");
+      doc.text(label, margin, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(`: ${(step?.createdByName ?? "").toUpperCase()}`, margin + 25, y);
+      y += 5;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Date", margin, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(`: ${step?.createdDate ?? ""}`, margin + 25, y);
+      y += 5;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Time", margin, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(`: ${step?.createdTime ?? ""}`, margin + 25, y);
+      y += 6;
+    });
+  } else {
+    // Legacy "auto / system" fallback block.
+    doc.setFont("helvetica", "bold");
+    doc.text("Generated By", margin, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(`: ${header.systemId || ""}`, margin + 25, y);
+    y += 5;
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Date", margin, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(`: ${header.createdDate || ""}`, margin + 25, y);
+    y += 5;
+
+    doc.setFont("helvetica", "bold");
+    doc.text("Time", margin, y);
+    doc.setFont("helvetica", "normal");
+    doc.text(`: ${header.createdTime || ""}`, margin + 25, y);
+    y += 6;
+  }
+
+  // ── Footer note ──────────────────────────────────────────────────────────
+  if (y + 10 > ph - 10) {
+    doc.addPage();
+    y = 12;
+  }
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8);
+  doc.text(
+    "(This is a computer generated document. No signature is required)",
+    pw / 2,
+    ph - 8,
+    { align: "center" },
+  );
+
+  // ── Page numbers ─────────────────────────────────────────────────────────
+  const pageCount = doc.getNumberOfPages();
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  for (let i = 1; i <= pageCount; i += 1) {
+    doc.setPage(i);
+    doc.text(`${i} / ${pageCount}`, pw / 2, ph - 3, { align: "center" });
+  }
+
+  const title = `Jurnal ${header.journalNo || header.journalId}`.trim();
+  doc.save(`${title}.pdf`);
+}

@@ -57,7 +57,7 @@ onMounted(load);
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl space-y-4">
+    <div class="space-y-4">
       <!-- ───── Title ───── -->
       <h1 class="page-title">{{ isEdit ? 'Edit Category' : 'Create Category' }}</h1>
 

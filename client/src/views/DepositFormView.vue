@@ -399,7 +399,7 @@ onUnmounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-[1400px] space-y-4">
+    <div class="space-y-4">
       <input
         ref="templateFileInputRef"
         type="file"
@@ -417,9 +417,9 @@ onUnmounted(() => {
           <ChevronLeft class="h-3.5 w-3.5" />
           Back
         </button>
-        <p class="text-base font-semibold text-slate-500">
+        <h1 class="page-title">
           Credit Control / Detail of Deposit
-        </p>
+        </h1>
       </div>
 
       <article v-if="!masterId" class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">

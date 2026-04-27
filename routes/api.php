@@ -37,11 +37,14 @@ use App\Http\Controllers\Api\DevelopersGuideController;
 use App\Http\Controllers\Api\DiscountNoteController;
 use App\Http\Controllers\Api\DiscountNoteFormController;
 use App\Http\Controllers\Api\FundTypeController;
+use App\Http\Controllers\Api\GeneralLedgerListingController;
+use App\Http\Controllers\Api\ManualJournalListingController;
 use App\Http\Controllers\Api\InvoiceBalanceController;
 use App\Http\Controllers\Api\LetterPhraseController;
 use App\Http\Controllers\Api\ListOfDepositController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\PageController;
+use App\Http\Controllers\Api\PostingToTbController;
 use App\Http\Controllers\Api\PayeeRegistrationController;
 use App\Http\Controllers\Api\PettyCashApplicationListController;
 use App\Http\Controllers\Api\PettyCashBillController;
@@ -56,6 +59,18 @@ use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\PtjCodeController;
 use App\Http\Controllers\Api\PublicController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\GlYearMonthController;
+use App\Http\Controllers\Api\JournalListingController;
+use App\Http\Controllers\Api\BankAccountUpdateController;
+use App\Http\Controllers\Api\LedgerController;
+use App\Http\Controllers\Api\InvestmentAccrualController;
+use App\Http\Controllers\Api\InvestmentGenerateScheduleController;
+use App\Http\Controllers\Api\InvestmentMonitoringController;
+use App\Http\Controllers\Api\InvestmentToBeWithdrawnController;
+use App\Http\Controllers\Api\ListOfAccrualController;
+use App\Http\Controllers\Api\ListOfInvestmentsController;
+use App\Http\Controllers\Api\ManualInvoiceListingController;
+use App\Http\Controllers\Api\SummaryListInvestmentsController;
 use App\Http\Controllers\Api\PtptnDataController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\SetupBudgetStructureSearchController;
@@ -250,6 +265,122 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/student-finance/ptptn-data/{id}', [PtptnDataController::class, 'destroy'])
         ->whereNumber('id');
 
+    // Student Finance > Student Profile or Ledger (PAGEID 1232 / MENUID 1509).
+    // Legacy BL V2_SFSP_LEDGER_API — list + smart filter. View Profile / View
+    // Ledger deep-links (menuID 1512 / V2_SFSP_LEDGER_VIEWPROFILE_API) are
+    // NOT migrated yet; the frontend renders those buttons disabled.
+    Route::get('/student-finance/ledger/options', [LedgerController::class, 'options']);
+    Route::get('/student-finance/ledger', [LedgerController::class, 'index']);
+
+    // Student Finance > Manual Invoice Listing (PAGEID 2389 / MENUID 2897).
+    // Legacy BL DT_SF_MANUAL_INV_LISTING — list + smart filter + grand-total
+    // footer. Delete cascades cust_invoice_details → cust_invoice_master and
+    // is gated to DRAFT invoices (matching the legacy dt_js guard). The
+    // Manual Invoice Form (MENUID 2898) is NOT migrated yet so View/Edit
+    // render disabled on the frontend.
+    Route::get('/student-finance/manual-invoice/options', [ManualInvoiceListingController::class, 'options']);
+    Route::get('/student-finance/manual-invoice', [ManualInvoiceListingController::class, 'index']);
+    Route::delete('/student-finance/manual-invoice/{id}', [ManualInvoiceListingController::class, 'destroy'])
+        ->whereNumber('id');
+
+    // Student Finance > Bank Account Update (PAGEID 977 / MENUID 1081).
+    // Legacy BL DT_BANK_ACC_UPDATE — list + smart filter across
+    // student + stud_account_application + bank_master + academic_calendar.
+    // Read-only: the "Update" flow (inserts into student + stud_account)
+    // is NOT migrated yet.
+    Route::get('/student-finance/bank-account-update/options', [BankAccountUpdateController::class, 'options']);
+    Route::get('/student-finance/bank-account-update', [BankAccountUpdateController::class, 'index']);
+
+    // Investment > List Of Accrual (PAGEID 1548 / MENUID 1877). Legacy BL
+    // API_LIST_OF_ACCRUAL (action=listing_all_dt) — read-only datatable
+    // joining investment_profile + investment_institution + investment_accrual.
+    // The detail page (legacy menuID 1878) is NOT migrated; Action column
+    // in the Vue view renders a disabled View button.
+    Route::get('/investment/list-of-accrual/options', [ListOfAccrualController::class, 'options']);
+    Route::get('/investment/list-of-accrual', [ListOfAccrualController::class, 'index']);
+
+    // Investment > Summary List of Investments (PAGEID 2316 / MENUID 2808).
+    // Legacy BL API_SUMMARY_LIST_OF_NEW_INVESTMENT (action=listing_all_dt) —
+    // read-only datatable scoped to ipf_status IN ('APPROVE','WITHDRAW','PENDING')
+    // with a 10-field smart filter. Detail page (legacy menuID 2820) is NOT
+    // migrated; Action renders a disabled View button.
+    Route::get('/investment/summary-list/options', [SummaryListInvestmentsController::class, 'options']);
+    Route::get('/investment/summary-list', [SummaryListInvestmentsController::class, 'index']);
+
+    // Investment > List of Investments (PAGEID 1174 / MENUID 1448).
+    // Legacy BL API_LIST_OF_NEW_INVESTMENT (action=listing_all_dt).
+    // Read-only list; Action column (Edit menuID 3226, View Journal
+    // menuID 3313, Download Journal, Cancel with investment_report_detail
+    // side-effects) is NOT migrated — buttons render disabled.
+    Route::get('/investment/list/options', [ListOfInvestmentsController::class, 'options']);
+    Route::get('/investment/list', [ListOfInvestmentsController::class, 'index']);
+
+    // Investment > Investment to be Withdrawn (PAGEID 2895 / MENUID 3485).
+    // Legacy BL API_INV_WITHDRAWN. Scope ipf_status='APPROVE'; single
+    // write action flips ipf_status_withdraw to 'APPROVE' and tags
+    // ipf_batch_no_wdraw='SYSTEM'. modal() returns the read-only summary
+    // the legacy `getDataModal` action served.
+    Route::get('/investment/withdrawn/options', [InvestmentToBeWithdrawnController::class, 'options']);
+    Route::get('/investment/withdrawn', [InvestmentToBeWithdrawnController::class, 'index']);
+    Route::get('/investment/withdrawn/{id}/modal', [InvestmentToBeWithdrawnController::class, 'modal'])
+        ->whereNumber('id');
+    Route::post('/investment/withdrawn/{id}/withdraw', [InvestmentToBeWithdrawnController::class, 'withdraw'])
+        ->whereNumber('id');
+
+    // Investment > Accrual (PAGEID 1175 / MENUID 1446). Legacy BL
+    // API_INVESTMENT_ACCRUAL — datatable joining investment_accrual +
+    // investment_institution + investment_profile. Scope:
+    // iac_start_date <= current_date() AND pmt_posting_no IS NULL.
+    // Post-to-TB action mirrors INSERT_UPDATE_INVESTMENT_ACCRUAL
+    // default branch — inserts posting_master / posting_details rows
+    // and calls the legacy stored procs `getTableSequenceNum` +
+    // `getRefNoByCurrentYear` on mysql_secondary. Response returns
+    // processed + failed arrays so the UI can surface partial
+    // outcomes (same contract as the Generate Schedule endpoint).
+    Route::get('/investment/accrual/options', [InvestmentAccrualController::class, 'options']);
+    Route::get('/investment/accrual', [InvestmentAccrualController::class, 'index']);
+    Route::post('/investment/accrual/post-to-tb', [InvestmentAccrualController::class, 'postToTb']);
+
+    // Investment > Generate Schedule (PAGEID 1206 / MENUID 1475). Legacy
+    // BL API_INVESTMENT_GENERATE_ACCRUAL — read-only datatable joining
+    // investment_profile + investment_type, scoped to
+    // ipf_status IN ('APPROVE','MATURED') AND NOT EXISTS an
+    // investment_accrual row. "Generate Schedule" write action calls
+    // the stored procedure investment_accrual(?) via legacy
+    // INSERT_UPDATE_INVESTMENT_ACCRUAL (mode=generateScheduleAccrual);
+    // that flow is NOT migrated and the Vue view renders the action
+    // disabled.
+    Route::get('/investment/generate-schedule', [InvestmentGenerateScheduleController::class, 'index']);
+    // POST body: { investmentNumbers: string[] }. Fans out to the
+    // legacy stored procedure investment_accrual(?) via mysql_secondary
+    // for each number (mirrors INSERT_UPDATE_INVESTMENT_ACCRUAL mode=
+    // generateScheduleAccrual). Response returns processed + failed
+    // arrays so the UI can show partial-success outcomes.
+    Route::post('/investment/generate-schedule/generate', [InvestmentGenerateScheduleController::class, 'generate']);
+
+    // Investment > Monitoring (PAGEID 1183 / MENUID 1458). Legacy BL
+    // ATR_INVESTMENT_MONITORING — two-level drill-down datatable:
+    //   - /batches: group investment_profile by ipf_batch_no
+    //   - /investments?batch=X: list investments inside the selected
+    //     batch (joins manual_journal_master, correlated receipts
+    //     subquery on receipt_details / receipt_master).
+    // Scope: ipf_status IN ('APPROVE','MATURED'), ipf_ref_investment_no
+    // IS NULL, (bim_bills_no != 'RENEW' OR bim_bills_no IS NULL).
+    // Legacy PDF report URLs:
+    //   - summary     -> /summary-pdf (MIGRATED, jsPDF in the SPA)
+    //   - billBatch   -> legacy billRegistrationInvestBatch_pdf.php
+    //                    (DEFERRED; requires bills_master, wf_task,
+    //                    staff, bank_master, lookup_details joins)
+    //   - reportUrl   -> legacy billRegistrationInvest_pdf.php
+    //                    (DEFERRED; per-bill entry point not exposed
+    //                    by the monitoring grid)
+    // Row-action "Download Journal" is MIGRATED (reuses the manual
+    // journal PDF pipeline); the legacy menuID-3226 "View" deep-link
+    // remains disabled until that page is migrated.
+    Route::get('/investment/monitoring/batches', [InvestmentMonitoringController::class, 'batches']);
+    Route::get('/investment/monitoring/investments', [InvestmentMonitoringController::class, 'investments']);
+    Route::get('/investment/monitoring/summary-pdf', [InvestmentMonitoringController::class, 'summaryForPdf']);
+
     // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841). Legacy BL
     // ZR_PURCHASING_STATUSPOPR_API — read-only datatable with a smart
     // filter (date range + PO/PR/Vendor/Status). PTJ scoping is exposed via
@@ -257,6 +388,57 @@ Route::middleware('auth:sanctum')->group(function () {
     // group 22/271 / PTJ 'S10400' bursar rules (see controller docblock).
     Route::get('/purchasing/status-po-pr/options', [StatusPoPrController::class, 'options']);
     Route::get('/purchasing/status-po-pr', [StatusPoPrController::class, 'index']);
+
+    // General Ledger > Journal Listing (PAGEID 1700 / MENUID 2056). Legacy
+    // BL SNA_API_GLREPORT_JOURNAL_LISTING — list + DR/CR details via
+    // manual_journal_details. Delete is gated server-side against posted /
+    // cancelled statuses.
+    Route::get('/general-ledger/journal-listing/options', [JournalListingController::class, 'options']);
+    Route::get('/general-ledger/journal-listing', [JournalListingController::class, 'index']);
+    Route::get('/general-ledger/journal-listing/{id}', [JournalListingController::class, 'show'])
+        ->whereNumber('id');
+    Route::delete('/general-ledger/journal-listing/{id}', [JournalListingController::class, 'destroy'])
+        ->whereNumber('id');
+
+    // General Ledger > List of Year and Month (PAGEID 2721 / MENUID 3287).
+    // Legacy BL MZ_BL_GL_LIST_YEAR_MONTH — list + add/edit via popup modal.
+    // No delete endpoint exists in legacy so none is exposed here.
+    Route::get('/general-ledger/year-month/options', [GlYearMonthController::class, 'options']);
+    Route::get('/general-ledger/year-month', [GlYearMonthController::class, 'index']);
+    Route::get('/general-ledger/year-month/{id}', [GlYearMonthController::class, 'show'])
+        ->whereNumber('id');
+    Route::post('/general-ledger/year-month', [GlYearMonthController::class, 'store']);
+    Route::put('/general-ledger/year-month/{id}', [GlYearMonthController::class, 'update'])
+        ->whereNumber('id');
+
+    // General Ledger > Posting to GL (TB) (PAGEID 1139 / MENUID 1409).
+    // Legacy BL POSTING_TO_TB — read-only listing + in-page DR/CR drilldown.
+    // `show` returns master header + debit lines + credit lines in one payload.
+    Route::get('/general-ledger/posting-to-tb/options', [PostingToTbController::class, 'options']);
+    Route::get('/general-ledger/posting-to-tb', [PostingToTbController::class, 'index']);
+    Route::get('/general-ledger/posting-to-tb/{id}', [PostingToTbController::class, 'show'])
+        ->whereNumber('id');
+
+    // General Ledger > General Ledger Listing (PAGEID 2068 / MENUID 2519).
+    // Legacy BL NAD_API_GL_LISTINGPOSTINGTOGL — line-level read-only listing
+    // with 17-field top filter + 16-field smart filter consolidated into a
+    // single smart filter modal on the client.
+    Route::get('/general-ledger/general-ledger-listing/options', [GeneralLedgerListingController::class, 'options']);
+    Route::get('/general-ledger/general-ledger-listing', [GeneralLedgerListingController::class, 'index']);
+
+    // General Ledger > Manual Journal Listing (PAGEID 1729 / MENUID 2089).
+    // Legacy BL V2_GL_JOURNAL_API — endpoints ?listing=1 and ?listing_delete=1.
+    // Read + draft-delete only. `mjm_typeofjournal` is required on index
+    // (General / InterOU / Intercompany); index returns an empty page when it
+    // is missing to mirror the legacy contract. Edit / View / Duplicate row
+    // actions are deferred until MENUID 2090 (Manual Journal Form) is migrated.
+    Route::get('/general-ledger/manual-journal/options', [ManualJournalListingController::class, 'options']);
+    Route::get('/general-ledger/manual-journal/listing-pdf', [ManualJournalListingController::class, 'listingForPdf']);
+    Route::get('/general-ledger/manual-journal', [ManualJournalListingController::class, 'index']);
+    Route::get('/general-ledger/manual-journal/{id}', [ManualJournalListingController::class, 'show'])
+        ->whereNumber('id');
+    Route::delete('/general-ledger/manual-journal/{id}', [ManualJournalListingController::class, 'destroy'])
+        ->whereNumber('id');
 
     Route::get('/account-payable/utility-registration', [UtilityRegistrationController::class, 'index']);
     Route::get('/account-payable/utility-registration/{id}', [UtilityRegistrationController::class, 'show'])->whereNumber('id');

@@ -2247,3 +2247,873 @@ export type StatusPoPrSmartFilter = {
   dateStart: string;
   dateEnd: string;
 };
+
+// General Ledger > Journal Listing (PAGEID 1700 / MENUID 2056).
+// Source: FIMS BL `SNA_API_GLREPORT_JOURNAL_LISTING`. Read-only listing
+// with a View-details modal (DR + CR sub-tables) and a delete action
+// gated client- and server-side against posted / cancelled journals.
+export type JournalListingRow = {
+  index: number;
+  mjmJournalId: number;
+  journalNo: string | null;
+  description: string | null;
+  typeOfJournal: string | null;
+  amount: number | null;
+  status: string | null;
+  systemId: string | null;
+  dateJournal: string | null;
+  createdBy: string | null;
+};
+
+export type JournalListingOptions = {
+  types: string[];
+  statuses: string[];
+  systemIds: string[];
+};
+
+export type JournalListingSmartFilter = {
+  year: string;
+  typeOfJournal: string;
+  description: string;
+  dateJournal: string;
+  status: string;
+  systemId: string;
+};
+
+export type JournalListingHeader = {
+  mjmJournalId: number;
+  journalNo: string | null;
+  description: string | null;
+  typeOfJournal: string | null;
+  amount: number | null;
+  status: string | null;
+  systemId: string | null;
+  dateJournal: string | null;
+  createdBy: string | null;
+  sumDebit: number;
+  sumCredit: number;
+};
+
+export type JournalListingLine = {
+  id: number;
+  ounCode: string | null;
+  fundType: string | null;
+  activityCode: string | null;
+  costCentre: string | null;
+  acctCode: string | null;
+  documentNo: string | null;
+  amount: number | null;
+  codeSo: string | null;
+  projectNo: string | null;
+  taxcode: string | null;
+  status: string | null;
+  reference: string | null;
+  paytoId: string | null;
+  paytoType: string | null;
+  paytoName: string | null;
+  source: string | null;
+};
+
+// General Ledger > Manual Journal Listing (PAGEID 1729 / MENUID 2089).
+// Source: FIMS BL `V2_GL_JOURNAL_API` (endpoints ?listing=1 and
+// ?listing_delete=1). Read + DRAFT-only delete. The legacy page feeds the
+// Top Filter's Type-of-Journal dropdown as a required `mjm_typeofjournal`
+// query param; when empty the listing simply returns nothing (same as
+// legacy BL). Listing PDF mirrors `custom/report/Manual Journal/downloadListPDF.php`
+// (toolbar button) and the per-row Journal PDF mirrors
+// `custom/report/Manual Journal/downloadPDFmj.php` (row action). Edit /
+// View / Duplicate row actions are deferred until MENUID 2090 lands.
+export type ManualJournalRow = {
+  index: number;
+  mjmJournalId: number;
+  journalNo: string | null;
+  description: string | null;
+  typeOfJournal: string | null;
+  amount: number | null;
+  status: string | null;
+  systemId: string | null;
+  dateJournal: string | null;
+  createdBy: string | null;
+  createdDate: string | null;
+  wasNotes: string | null;
+};
+
+export type ManualJournalTypeOption = {
+  code: string;
+  label: string;
+};
+
+export type ManualJournalOptions = {
+  types: ManualJournalTypeOption[];
+  statuses: string[];
+};
+
+export type ManualJournalSmartFilter = {
+  enterDateFrom: string;
+  enterDateTo: string;
+  status: string;
+  totalAmtFrom: string;
+  totalAmtTo: string;
+};
+
+/** Row shape returned by `/api/general-ledger/manual-journal/listing-pdf`
+ * — the toolbar-level "Download PDF" button. Columns match the legacy
+ * `downloadListPDF.php` output exactly.
+ */
+export type ManualJournalListingPdfRow = {
+  index: number;
+  journalNo: string;
+  description: string;
+  amount: number;
+  status: string;
+  dateJournal: string;
+  createdBy: string;
+};
+
+export type ManualJournalListingPdfFilters = {
+  typeOfJournal: string;
+  globalSearch: string;
+  dateFrom: string;
+  dateTo: string;
+  status: string;
+  amountFrom: string;
+  amountTo: string;
+};
+
+export type ManualJournalListingPdfPayload = {
+  rows: ManualJournalListingPdfRow[];
+  filters: ManualJournalListingPdfFilters;
+  generatedAt: string;
+  typeLabel: string;
+  truncated?: boolean;
+  limit?: number;
+};
+
+/** Per-row Journal PDF payload backing `downloadPDFmj.php`. The backend
+ * resolves the workflow signers (Input / Verifier / Approver) from
+ * `wf_application_status` + `wf_process` + `staff_service`.
+ */
+export type ManualJournalDetailHeader = {
+  journalId: number;
+  journalNo: string;
+  journalDesc: string;
+  typeOfJournal: string;
+  status: string;
+  systemId: string;
+  enterDate: string;
+  enterMonth: string;
+  createdBy: string;
+  createdByName: string | null;
+  createdDate: string;
+  createdTime: string;
+  organization: string;
+  hasHumanApprover: boolean;
+};
+
+export type ManualJournalDetailLine = {
+  glStructure: string;
+  accountCode: string;
+  payToType: string;
+  payToId: string;
+  documentNo: string;
+  reference: string;
+  debit: number;
+  credit: number;
+};
+
+export type ManualJournalDetailProcessStep = {
+  processName: string;
+  createdByName: string;
+  ounDesc: string;
+  emailAddr: string;
+  telNoWork: string;
+  statusDesc: string;
+  remark: string;
+  createdDate: string;
+  createdTime: string;
+};
+
+export type ManualJournalDetail = {
+  header: ManualJournalDetailHeader;
+  lines: ManualJournalDetailLine[];
+  totals: { debit: number; credit: number };
+  processFlow: ManualJournalDetailProcessStep[];
+};
+
+// General Ledger > List of Year and Month (PAGEID 2721 / MENUID 3287).
+// Source: FIMS BL `MZ_BL_GL_LIST_YEAR_MONTH`. List + add/edit popup modal;
+// no delete endpoint exists in legacy.
+export type GlYearMonthRow = {
+  index: number;
+  gymId: number;
+  year: string;
+  month: string;
+  status: string;
+  remark: string | null;
+};
+
+export type GlYearMonthDetail = {
+  gymId: number;
+  year: string;
+  month: string;
+  status: string;
+  remark: string | null;
+};
+
+export type GlYearMonthInput = {
+  gym_year: string;
+  gym_month: string;
+  gym_status: "OPEN" | "CLOSE";
+  gym_remark?: string | null;
+};
+
+export type GlYearMonthLookupOption = {
+  value: string;
+  label: string;
+};
+
+export type GlYearMonthOptions = {
+  months: GlYearMonthLookupOption[];
+  statuses: GlYearMonthLookupOption[];
+};
+
+export type GlYearMonthSmartFilter = {
+  year: string;
+  month: string;
+  status: string;
+};
+
+// General Ledger > Posting to GL (TB) (PAGEID 1139 / MENUID 1409).
+// Source: FIMS BL `POSTING_TO_TB`. Read-only listing over
+// posting_master + posting_details grouped per posting + document +
+// references + date, with a View-details modal (DR + CR sub-tables) that
+// replaces the legacy deep-link to MENUID 1413 (out of migration scope).
+export type PostingToTbRow = {
+  index: number;
+  pmtPostingId: number;
+  postingNo: string | null;
+  documentNo: string | null;
+  systemId: string | null;
+  amountCr: number;
+  amountDt: number;
+  status: string | null;
+  reference: string | null;
+  reference1: string | null;
+  transDate: string | null;
+};
+
+export type PostingToTbOptions = {
+  systemIds: string[];
+  statuses: string[];
+};
+
+export type PostingToTbSmartFilter = {
+  systemId: string;
+  dateFrom: string;
+  dateTo: string;
+  totalAmt: string;
+};
+
+export type PostingToTbHeader = {
+  pmtPostingId: number;
+  postingNo: string | null;
+  systemId: string | null;
+  status: string | null;
+  totalAmount: number;
+  description: string | null;
+  currency: string | null;
+  postedDate: string | null;
+  postedBy: string | null;
+  sumDebit: number;
+  sumCredit: number;
+};
+
+export type PostingToTbLine = {
+  id: number;
+  fund: string | null;
+  activity: string | null;
+  ptj: string | null;
+  account: string | null;
+  documentNo: string | null;
+  reference: string | null;
+  reference1: string | null;
+  amount: number;
+  payTo: string | null;
+};
+
+export type PostingToTbFooter = {
+  amountDt: number;
+  amountCr: number;
+};
+
+// General Ledger > General Ledger Listing (PAGEID 2068 / MENUID 2519).
+// Source: FIMS BL `NAD_API_GL_LISTINGPOSTINGTOGL`. Read-only line-level
+// listing over posting_master + posting_details with the 5-level
+// account_main self-join hierarchy. Legacy page had separate Top Filter +
+// Smart Filter; here both are consolidated into one smart filter modal
+// (same pattern as PostingToTb).
+export type GlListingRow = {
+  index: number;
+  pdePostingDetlId: number;
+  pmtPostingId: number;
+  postingNo: string | null;
+  documentNo: string | null;
+  docDescription: string | null;
+  fundType: string | null;
+  fundDesc: string | null;
+  activityCode: string | null;
+  activityDesc: string | null;
+  ounCode: string | null;
+  ounDesc: string | null;
+  costCentre: string | null;
+  costCentreDesc: string | null;
+  soCode: string | null;
+  projectDesc: string | null;
+  acctCode: string | null;
+  acctDesc: string | null;
+  acctActivity: string | null;
+  acctBehavior: string | null;
+  accountClass: string | null;
+  accountSubclass: string | null;
+  accountSeries: string | null;
+  accountSubseries: string | null;
+  transAmt: number;
+  transType: string | null;
+  reference: string | null;
+  reference1: string | null;
+  postedDate: string | null;
+  postedPeriod: string | null;
+  transDate: string | null;
+  payToType: string | null;
+  payToId: string | null;
+  createdBy: string | null;
+  systemId: string | null;
+};
+
+export type GlListingCodeOption = {
+  code: string;
+  description: string;
+};
+
+export type GlListingPtjOption = GlListingCodeOption & {
+  parent: string | null;
+  level?: number | null;
+};
+
+export type GlListingCostCentreOption = GlListingCodeOption & {
+  parent: string | null;
+};
+
+export type GlListingAccountOption = GlListingCodeOption & {
+  parent: string | null;
+};
+
+export type GlListingOptions = {
+  systemIds: string[];
+  fundTypes: GlListingCodeOption[];
+  activityCodes: GlListingCodeOption[];
+  ptjL3: GlListingPtjOption[];
+  ptj: GlListingPtjOption[];
+  costCentres: GlListingCostCentreOption[];
+  accountsByLevel: Partial<Record<1 | 2 | 3 | 4 | 5, GlListingAccountOption[]>>;
+  accountTypes: string[];
+  statementItems: string[];
+  transTypes: string[];
+  payToTypes: GlListingCodeOption[];
+};
+
+export type GlListingSmartFilter = {
+  systemId: string;
+  dateStart: string;
+  dateEnd: string;
+  fundType: string;
+  activityCode: string;
+  ounCodeL3: string;
+  ounCode: string;
+  costCentre: string;
+  accountClass: string;
+  accountSubclass: string;
+  accountSeries: string;
+  accountSubseries: string;
+  acctCode: string;
+  accountType: string;
+  payToType: string;
+  postingNo: string;
+  documentNo: string;
+  soCode: string;
+  payToId: string;
+  reference: string;
+  reference1: string;
+  transType: string;
+  statementItem: string;
+};
+
+export type GlListingFooter = {
+  transAmt: number;
+};
+
+// Student Finance > Student Profile or Ledger (PAGEID 1232 / MENUID 1509).
+// Source: FIMS BL `V2_SFSP_LEDGER_API`. Read-only datatable with smart
+// filter (Matric / Name / NRIC/Passport / Semester No. / Program Level /
+// Status). The View Profile + View Ledger deep-links are not yet migrated.
+export type LedgerRow = {
+  index: number;
+  studentId: string;
+  studentName: string | null;
+  icPassport: string | null;
+  semLevel: string | null;
+  programLevel: string | null;
+  programLevelLabel: string | null;
+  statusDesc: string;
+  outstandingAmt: number;
+};
+
+export type LedgerOptions = {
+  programLevel: ArOption[];
+  status: ArOption[];
+};
+
+export type LedgerSmartFilter = {
+  studentId: string;
+  studentName: string;
+  icPassport: string;
+  semLevel: string;
+  programLevel: string;
+  statusDesc: string[];
+};
+
+// Student Finance > Manual Invoice Listing (PAGEID 2389 / MENUID 2897).
+// Source: FIMS BL `DT_SF_MANUAL_INV_LISTING`. Scoped to
+// cim_system_id='STUD_INV' AND cim_invoice_type='12'. The list meta
+// includes a `footer.totalAmt` grand total (same as the legacy BL).
+export type ManualInvoiceRow = {
+  index: number;
+  id: number;
+  invoiceNo: string | null;
+  invoiceDate: string | null;
+  invoiceDateIso: string | null;
+  status: string | null;
+  debtorId: string | null;
+  debtorName: string | null;
+  debtorType: string | null;
+  debtorTypeLabel: string;
+  totalAmt: number;
+  crNoteAmt: number;
+  dnNoteAmt: number;
+  dcNoteAmt: number;
+  paidAmt: number;
+  balAmt: number;
+};
+
+export type ManualInvoiceOptions = {
+  debtorType: ArOption[];
+  status: ArOption[];
+};
+
+export type ManualInvoiceSmartFilter = {
+  invoiceDate: string;
+  debtorType: string;
+  status: string;
+};
+
+export type ManualInvoiceFooter = {
+  totalAmt: number;
+};
+
+// Student Finance > Bank Account Update (PAGEID 977 / MENUID 1081).
+// Source: FIMS BL `DT_BANK_ACC_UPDATE`. Read-only datatable joining
+// student + stud_account_application + bank_master + academic_calendar.
+export type BankAccountUpdateRow = {
+  index: number;
+  applicationId: number;
+  applicationNo: string | null;
+  matric: string | null;
+  name: string | null;
+  icPassport: string | null;
+  currentSemester: string | null;
+  accountNo: string | null;
+  bankName: string | null;
+  bankCode: string | null;
+  applicationDate: string | null;
+  approvedDate: string | null;
+  status: string | null;
+  statusRaw: string | null;
+};
+
+export type BankAccountUpdateOptions = {
+  bank: ArOption[];
+  status: ArOption[];
+};
+
+export type BankAccountUpdateSmartFilter = {
+  semester: string;
+  bank: string;
+  status: string;
+};
+
+// Investment > List Of Accrual (PAGEID 1548 / MENUID 1877).
+// Legacy BL `API_LIST_OF_ACCRUAL` (action=listing_all_dt). Read-only
+// listing joining investment_profile + investment_institution +
+// investment_accrual.
+export type ListOfAccrualRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionDesc: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  totalSum: number;
+  status: string | null;
+};
+
+export type ListOfAccrualOptions = {
+  institution: ArOption[];
+  status: ArOption[];
+};
+
+export type ListOfAccrualSmartFilter = {
+  batch: string;
+  institution: string;
+  period: string;
+  tenure: string;
+  amount: string;
+  status: string;
+};
+
+// Investment > Summary List of Investments (PAGEID 2316 / MENUID 2808).
+// Legacy BL `API_SUMMARY_LIST_OF_NEW_INVESTMENT` (action=listing_all_dt).
+export type SummaryListInvestmentRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionName: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  investmentTypeCode: string | null;
+  investmentTypeDesc: string | null;
+  fundTypeCode: string | null;
+  fundTypeDesc: string | null;
+  activityCode: string | null;
+  activityDesc: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+};
+
+export type SummaryListInvestmentOptions = {
+  yearOfBatch: ArOption[];
+  batchNo: ArOption[];
+  bank: ArOption[];
+  institution: ArOption[];
+  investmentType: ArOption[];
+  fundType: ArOption[];
+  activity: ArOption[];
+  tenure: ArOption[];
+  status: ArOption[];
+};
+
+export type SummaryListInvestmentSmartFilter = {
+  year: string;
+  batch: string;
+  bank: string;
+  institution: string;
+  investType: string;
+  fundType: string;
+  activity: string;
+  tenure: string;
+  amount: string;
+  status: string;
+};
+
+// Investment > List of Investments (PAGEID 1174 / MENUID 1448).
+// Legacy BL `API_LIST_OF_NEW_INVESTMENT` (action=listing_all_dt).
+export type ListOfInvestmentReceipt = {
+  receiptNo: string;
+  amount: string;
+  date: string;
+};
+
+export type ListOfInvestmentRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionName: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  journalNo: string | null;
+  journalStatus: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+  withdrawalType: string | null;
+  receipts: ListOfInvestmentReceipt[];
+};
+
+export type ListOfInvestmentOptions = {
+  prefix: ArOption[];
+  batchNo: ArOption[];
+  institution: ArOption[];
+  status: ArOption[];
+};
+
+export type ListOfInvestmentSmartFilter = {
+  prefix: string;
+  batch: string;
+  institution: string;
+  periodFrom: string;
+  periodTo: string;
+  maturedFrom: string;
+  maturedTo: string;
+  amount: string;
+  status: string;
+};
+
+// Investment > Investment to be Withdrawn (PAGEID 2895 / MENUID 3485).
+// Legacy BL `API_INV_WITHDRAWN`.
+export type InvestmentToBeWithdrawnReceipt = {
+  receiptNo: string;
+  amount: string;
+  date: string;
+};
+
+export type InvestmentToBeWithdrawnRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionName: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  journalNo: string | null;
+  journalStatus: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+  // 'WITHDRAWN' when ipf_status_withdraw='APPROVE', otherwise 'RENEW'
+  withdrawnLabel: string | null;
+  // false when the investment has already been marked as withdrawn
+  canWithdraw: boolean;
+  receipts: InvestmentToBeWithdrawnReceipt[];
+};
+
+export type InvestmentToBeWithdrawnOptions = {
+  batchNo: ArOption[];
+  institution: ArOption[];
+  status: ArOption[];
+};
+
+export type InvestmentToBeWithdrawnSmartFilter = {
+  batch: string;
+  institution: string;
+  periodFrom: string;
+  periodTo: string;
+  amount: string;
+  status: string;
+};
+
+export type InvestmentToBeWithdrawnModalData = {
+  investmentId: number;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  tenure: string | null;
+  alreadyWithdrawn: boolean;
+};
+
+// Investment > Accrual (PAGEID 1175 / MENUID 1446).
+// Legacy BL `API_INVESTMENT_ACCRUAL` (default listing action).
+// Read-only datatable joining investment_accrual +
+// investment_institution + investment_profile, scoped to
+// iac_start_date <= current_date() AND pmt_posting_no IS NULL.
+export type InvestmentAccrualRow = {
+  index: number;
+  accrualId: number | null;
+  // Legacy row.ID = `${ipf_investment_no}_${iac_id}` — exposed for the
+  // write flow payload once Post-to-TB lands. Unused in the read view.
+  rowId: string | null;
+  investmentNo: string | null;
+  institutionCode: string | null;
+  institutionName: string | null;
+  institutionBranch: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  createdDate: string | null;
+  amount: number | null;
+  noOfDays: number | null;
+  amtPerDay: number | null;
+  rate: number | null;
+  // Hidden column in legacy UI (dt_class="d-none"); kept for clients
+  // that need the reference but the migrated view does not render it.
+  postingNo: string | null;
+};
+
+export type InvestmentAccrualOptions = {
+  institution: ArOption[];
+};
+
+export type InvestmentAccrualSmartFilter = {
+  investNo: string;
+  instCode: string;
+  instName: string;
+  branch: string;
+  noOfDays: string;
+  rate: string;
+};
+
+// POST /api/investment/accrual/post-to-tb — fans out the legacy
+// INSERT_UPDATE_INVESTMENT_ACCRUAL default branch per selected iac_id.
+// Each row either lands in `processed` (with the generated
+// pmt_posting_no) or `failed` (with a reason — e.g. start date
+// still today, no matching investment_acct_setup row, or a stored
+// procedure error).
+export type InvestmentAccrualPostProcessed = {
+  accrualId: number;
+  investmentNo: string | null;
+  postingNo: string;
+  amount: number | null;
+};
+
+export type InvestmentAccrualPostFailure = {
+  accrualId: number;
+  investmentNo: string | null;
+  reason: string;
+};
+
+export type InvestmentAccrualPostResult = {
+  processed: InvestmentAccrualPostProcessed[];
+  failed: InvestmentAccrualPostFailure[];
+  successCount: number;
+  failureCount: number;
+};
+
+// Investment > Generate Schedule (PAGEID 1206 / MENUID 1475).
+// Legacy BL `API_INVESTMENT_GENERATE_ACCRUAL`. Read-only datatable
+// joining investment_profile + investment_type, scoped to
+// ipf_status IN ('APPROVE','MATURED') AND NOT EXISTS an
+// investment_accrual row for the investment.
+export type InvestmentGenerateScheduleRow = {
+  index: number;
+  investmentId: number | null;
+  investmentNo: string | null;
+  investmentType: string | null;
+  rate: number | null;
+  principalAmount: number | null;
+  startDate: string | null;
+  endDate: string | null;
+};
+
+// POST /api/investment/generate-schedule/generate — fans out
+// CALL investment_accrual(?) per selected investment_no on the
+// legacy DB. Returns per-row success/failure breakdown so the UI
+// can surface partial outcomes.
+export type InvestmentGenerateScheduleFailure = {
+  investmentNo: string;
+  reason: string;
+};
+
+export type InvestmentGenerateScheduleResult = {
+  processed: string[];
+  failed: InvestmentGenerateScheduleFailure[];
+  successCount: number;
+  failureCount: number;
+};
+
+// Investment > Monitoring (PAGEID 1183 / MENUID 1458).
+// Legacy BL `ATR_INVESTMENT_MONITORING`. Two-level drill-down:
+// Level 1 groups investment_profile by ipf_batch_no; Level 2 lists
+// investments within the selected batch, joining
+// manual_journal_master (system_id='JOURNAL_INVEST') plus a
+// correlated receipts subquery (receipt_details / receipt_master).
+export type InvestmentMonitoringBatchRow = {
+  index: number;
+  batchNo: string | null;
+  totalAmount: number | null;
+};
+
+export type InvestmentMonitoringReceipt = {
+  receiptNo: string;
+  amount: string;
+  date: string;
+};
+
+export type InvestmentMonitoringInvestmentRow = {
+  index: number;
+  investmentId: number;
+  batchNo: string | null;
+  institutionCode: string | null;
+  institutionDesc: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  journalNo: string | null;
+  journalId: number | null;
+  journalStatus: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+  receipts: InvestmentMonitoringReceipt[];
+};
+
+/**
+ * Row shape returned by `/api/investment/monitoring/summary-pdf`.
+ * Mirrors the single-line-per-investment layout of the legacy
+ * TCPDF report `investmentSummary_pdf.php`. Institution / tenure
+ * are pre-assembled on the backend; the client composable
+ * concatenates them for the table cell so the PDF output matches
+ * the legacy `Institution` + `Tenure` HTML columns exactly.
+ */
+export type InvestmentMonitoringSummaryPdfRow = {
+  index: number;
+  institutionCode: string | null;
+  institutionDesc: string | null;
+  institutionBranch: string | null;
+  investmentNo: string | null;
+  certificateNo: string | null;
+  journalNo: string | null;
+  journalStatus: string | null;
+  period: number | null;
+  tenureDesc: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  principalAmount: number | null;
+  rate: number | null;
+  status: string | null;
+};
+
+export type InvestmentMonitoringSummaryPdfPayload = {
+  batch: string;
+  totalByBatch: number;
+  grandTotal: number;
+  generatedAt: string;
+  rows: InvestmentMonitoringSummaryPdfRow[];
+  truncated: boolean;
+  limit: number;
+};

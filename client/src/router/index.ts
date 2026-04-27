@@ -63,7 +63,22 @@ import ListOfDepositView from "@/views/ListOfDepositView.vue";
 import InvoiceBalanceView from "@/views/InvoiceBalanceView.vue";
 import DepositFormView from "@/views/DepositFormView.vue";
 import DebtorProfileUpdateView from "@/views/DebtorProfileUpdateView.vue";
+import GlYearMonthView from "@/views/GlYearMonthView.vue";
+import GeneralLedgerListingView from "@/views/GeneralLedgerListingView.vue";
+import JournalListingView from "@/views/JournalListingView.vue";
+import ManualJournalListingView from "@/views/ManualJournalListingView.vue";
+import PostingToTbView from "@/views/PostingToTbView.vue";
+import BankAccountUpdateView from "@/views/BankAccountUpdateView.vue";
+import ListOfAccrualView from "@/views/ListOfAccrualView.vue";
+import InvestmentAccrualView from "@/views/InvestmentAccrualView.vue";
+import InvestmentGenerateScheduleView from "@/views/InvestmentGenerateScheduleView.vue";
+import InvestmentMonitoringView from "@/views/InvestmentMonitoringView.vue";
+import InvestmentToBeWithdrawnView from "@/views/InvestmentToBeWithdrawnView.vue";
+import ListOfInvestmentsView from "@/views/ListOfInvestmentsView.vue";
+import ManualInvoiceListingView from "@/views/ManualInvoiceListingView.vue";
+import SummaryListInvestmentsView from "@/views/SummaryListInvestmentsView.vue";
 import PtptnDataView from "@/views/PtptnDataView.vue";
+import StudentLedgerView from "@/views/StudentLedgerView.vue";
 import StatusPoPrView from "@/views/StatusPoPrView.vue";
 import TenderQuotationView from "@/views/TenderQuotationView.vue";
 import VendorRegistrationFeeHistoryView from "@/views/VendorRegistrationFeeHistoryView.vue";
@@ -223,6 +238,21 @@ const router = createRouter({
     { path: "/admin/kerisi/m/2767", name: "kerisi-portal-tender-list", component: TenderQuotationView, meta: { requiresAuth: true, title: "Tender/Quotation List" } },
     { path: "/admin/kerisi/m/1841", name: "kerisi-purchasing-status-po-pr", component: StatusPoPrView, meta: { requiresAuth: true, title: "Status PO & PR" } },
     { path: "/admin/kerisi/m/1031", name: "kerisi-student-finance-ptptn-data", component: PtptnDataView, meta: { requiresAuth: true, title: "PTPTN Data" } },
+    { path: "/admin/kerisi/m/1509", name: "kerisi-student-finance-ledger", component: StudentLedgerView, meta: { requiresAuth: true, title: "Student Profile or Ledger" } },
+    { path: "/admin/kerisi/m/2897", name: "kerisi-student-finance-manual-invoice", component: ManualInvoiceListingView, meta: { requiresAuth: true, title: "Manual Invoice Listing" } },
+    { path: "/admin/kerisi/m/1081", name: "kerisi-student-finance-bank-account-update", component: BankAccountUpdateView, meta: { requiresAuth: true, title: "Bank Account Update" } },
+    { path: "/admin/kerisi/m/1877", name: "kerisi-investment-list-of-accrual", component: ListOfAccrualView, meta: { requiresAuth: true, title: "List of Accrual" } },
+    { path: "/admin/kerisi/m/2808", name: "kerisi-investment-summary-list", component: SummaryListInvestmentsView, meta: { requiresAuth: true, title: "Summary List of Investments" } },
+    { path: "/admin/kerisi/m/1448", name: "kerisi-investment-list", component: ListOfInvestmentsView, meta: { requiresAuth: true, title: "List of Investments" } },
+    { path: "/admin/kerisi/m/3485", name: "kerisi-investment-to-be-withdrawn", component: InvestmentToBeWithdrawnView, meta: { requiresAuth: true, title: "Investment to be Withdrawn" } },
+    { path: "/admin/kerisi/m/1446", name: "kerisi-investment-accrual", component: InvestmentAccrualView, meta: { requiresAuth: true, title: "Accrual" } },
+    { path: "/admin/kerisi/m/1475", name: "kerisi-investment-generate-schedule", component: InvestmentGenerateScheduleView, meta: { requiresAuth: true, title: "Generate Schedule" } },
+    { path: "/admin/kerisi/m/1458", name: "kerisi-investment-monitoring", component: InvestmentMonitoringView, meta: { requiresAuth: true, title: "Investment Monitoring" } },
+    { path: "/admin/kerisi/m/2056", name: "kerisi-gl-journal-listing", component: JournalListingView, meta: { requiresAuth: true, title: "Journal Listing" } },
+    { path: "/admin/kerisi/m/3287", name: "kerisi-gl-year-month", component: GlYearMonthView, meta: { requiresAuth: true, title: "List of Year and Month" } },
+    { path: "/admin/kerisi/m/1409", name: "kerisi-gl-posting-to-tb", component: PostingToTbView, meta: { requiresAuth: true, title: "Posting to GL (TB)" } },
+    { path: "/admin/kerisi/m/2519", name: "kerisi-gl-listing", component: GeneralLedgerListingView, meta: { requiresAuth: true, title: "General Ledger Listing" } },
+    { path: "/admin/kerisi/m/2089", name: "kerisi-gl-manual-journal-listing", component: ManualJournalListingView, meta: { requiresAuth: true, title: "Manual Journal Listing" } },
     { path: "/admin/kerisi/m/2003", name: "kerisi-portal-registration-fees", component: VendorRegistrationFeeHistoryView, meta: { requiresAuth: true, title: "Online Registration Fee History" } },
     { path: "/admin/kerisi/m/2584", name: "kerisi-portal-debtor-reminder", component: DebtorReminderView, meta: { requiresAuth: true, title: "Reminder" } },
     { path: "/admin/kerisi/m/2267", name: "kerisi-portal-debtor-statement", component: DebtorStatementView, meta: { requiresAuth: true, title: "Debtors Statement" } },

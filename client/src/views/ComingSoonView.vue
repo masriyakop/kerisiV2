@@ -11,7 +11,7 @@ const title = (route.meta.title as string) || "Coming Soon";
 
 <template>
   <AdminLayout>
-    <div class="mx-auto max-w-7xl">
+    <div>
       <div class="flex items-center justify-between">
         <h1 class="page-title">{{ title }}</h1>
       </div>

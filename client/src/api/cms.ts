@@ -148,6 +148,48 @@ import type {
   DebtorReminderRow,
   DebtorStatementFooter,
   DebtorStatementRow,
+  GlListingOptions,
+  GlListingRow,
+  GlYearMonthDetail,
+  GlYearMonthInput,
+  GlYearMonthOptions,
+  GlYearMonthRow,
+  JournalListingHeader,
+  JournalListingLine,
+  JournalListingOptions,
+  JournalListingRow,
+  ManualJournalDetail,
+  ManualJournalListingPdfPayload,
+  ManualJournalOptions,
+  ManualJournalRow,
+  PostingToTbHeader,
+  PostingToTbLine,
+  PostingToTbOptions,
+  PostingToTbRow,
+  BankAccountUpdateOptions,
+  BankAccountUpdateRow,
+  LedgerOptions,
+  LedgerRow,
+  InvestmentAccrualOptions,
+  InvestmentAccrualPostResult,
+  InvestmentAccrualRow,
+  InvestmentGenerateScheduleResult,
+  InvestmentGenerateScheduleRow,
+  InvestmentMonitoringBatchRow,
+  InvestmentMonitoringInvestmentRow,
+  InvestmentMonitoringSummaryPdfPayload,
+  ListOfAccrualOptions,
+  ListOfAccrualRow,
+  InvestmentToBeWithdrawnModalData,
+  InvestmentToBeWithdrawnOptions,
+  InvestmentToBeWithdrawnRow,
+  ListOfInvestmentOptions,
+  ListOfInvestmentRow,
+  SummaryListInvestmentOptions,
+  SummaryListInvestmentRow,
+  ManualInvoiceFooter,
+  ManualInvoiceOptions,
+  ManualInvoiceRow,
   PtptnDataDetail,
   PtptnDataHeader,
   PtptnDataRow,
@@ -1785,6 +1827,204 @@ export async function deletePtptnData(id: number) {
   );
 }
 
+// Student Finance > Student Profile or Ledger (PAGEID 1232 / MENUID 1509).
+// Legacy BL `V2_SFSP_LEDGER_API`.
+export async function listLedger(params = "") {
+  return apiRequest<{ data: LedgerRow[]; meta: Record<string, unknown> }>(
+    `/api/student-finance/ledger${params}`,
+  );
+}
+
+export async function getLedgerOptions() {
+  return apiRequest<{ data: LedgerOptions }>("/api/student-finance/ledger/options");
+}
+
+// Student Finance > Manual Invoice Listing (PAGEID 2389 / MENUID 2897).
+// Legacy BL `DT_SF_MANUAL_INV_LISTING`.
+export async function listManualInvoices(params = "") {
+  return apiRequest<{
+    data: ManualInvoiceRow[];
+    meta: Record<string, unknown> & { footer?: ManualInvoiceFooter };
+  }>(`/api/student-finance/manual-invoice${params}`);
+}
+
+export async function getManualInvoiceOptions() {
+  return apiRequest<{ data: ManualInvoiceOptions }>(
+    "/api/student-finance/manual-invoice/options",
+  );
+}
+
+export async function deleteManualInvoice(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/student-finance/manual-invoice/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+// Student Finance > Bank Account Update (PAGEID 977 / MENUID 1081).
+// Legacy BL `DT_BANK_ACC_UPDATE`. Read-only listing.
+export async function listBankAccountUpdates(params = "") {
+  return apiRequest<{ data: BankAccountUpdateRow[]; meta: Record<string, unknown> }>(
+    `/api/student-finance/bank-account-update${params}`,
+  );
+}
+
+export async function getBankAccountUpdateOptions() {
+  return apiRequest<{ data: BankAccountUpdateOptions }>(
+    "/api/student-finance/bank-account-update/options",
+  );
+}
+
+// Investment > List Of Accrual (PAGEID 1548 / MENUID 1877).
+// Legacy BL `API_LIST_OF_ACCRUAL` (action=listing_all_dt).
+export async function listListOfAccrual(params = "") {
+  return apiRequest<{ data: ListOfAccrualRow[]; meta: Record<string, unknown> }>(
+    `/api/investment/list-of-accrual${params}`,
+  );
+}
+
+export async function getListOfAccrualOptions() {
+  return apiRequest<{ data: ListOfAccrualOptions }>(
+    "/api/investment/list-of-accrual/options",
+  );
+}
+
+// Investment > Summary List of Investments (PAGEID 2316 / MENUID 2808).
+// Legacy BL `API_SUMMARY_LIST_OF_NEW_INVESTMENT` (action=listing_all_dt).
+export async function listSummaryListInvestments(params = "") {
+  return apiRequest<{
+    data: SummaryListInvestmentRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/summary-list${params}`);
+}
+
+export async function getSummaryListInvestmentOptions() {
+  return apiRequest<{ data: SummaryListInvestmentOptions }>(
+    "/api/investment/summary-list/options",
+  );
+}
+
+// Investment > List of Investments (PAGEID 1174 / MENUID 1448).
+// Legacy BL `API_LIST_OF_NEW_INVESTMENT` (action=listing_all_dt).
+export async function listInvestments(params = "") {
+  return apiRequest<{
+    data: ListOfInvestmentRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/list${params}`);
+}
+
+export async function getListOfInvestmentOptions() {
+  return apiRequest<{ data: ListOfInvestmentOptions }>(
+    "/api/investment/list/options",
+  );
+}
+
+// Investment > Investment to be Withdrawn (PAGEID 2895 / MENUID 3485).
+// Legacy BL `API_INV_WITHDRAWN` (action=listing_all_dt / getDataModal /
+// edit_investment).
+export async function listInvestmentsToBeWithdrawn(params = "") {
+  return apiRequest<{
+    data: InvestmentToBeWithdrawnRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/withdrawn${params}`);
+}
+
+export async function getInvestmentToBeWithdrawnOptions() {
+  return apiRequest<{ data: InvestmentToBeWithdrawnOptions }>(
+    "/api/investment/withdrawn/options",
+  );
+}
+
+export async function getInvestmentWithdrawModalData(id: number) {
+  return apiRequest<{ data: InvestmentToBeWithdrawnModalData }>(
+    `/api/investment/withdrawn/${id}/modal`,
+  );
+}
+
+export async function withdrawInvestment(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/investment/withdrawn/${id}/withdraw`,
+    { method: "POST", body: JSON.stringify({}) },
+  );
+}
+
+// Investment > Accrual (PAGEID 1175 / MENUID 1446).
+// Legacy BL `API_INVESTMENT_ACCRUAL`.
+export async function listInvestmentAccrual(params = "") {
+  return apiRequest<{
+    data: InvestmentAccrualRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/accrual${params}`);
+}
+
+export async function getInvestmentAccrualOptions() {
+  return apiRequest<{ data: InvestmentAccrualOptions }>(
+    "/api/investment/accrual/options",
+  );
+}
+
+// Legacy INSERT_UPDATE_INVESTMENT_ACCRUAL default branch — inserts
+// posting_master / posting_details rows and calls the
+// getTableSequenceNum / getRefNoByCurrentYear stored procs for each
+// selected accrual. Response returns per-iac_id success/failure.
+export async function postInvestmentAccrualToTb(accrualIds: number[]) {
+  return apiRequest<{ data: InvestmentAccrualPostResult }>(
+    "/api/investment/accrual/post-to-tb",
+    {
+      method: "POST",
+      body: JSON.stringify({ accrualIds }),
+    },
+  );
+}
+
+// Investment > Generate Schedule (PAGEID 1206 / MENUID 1475).
+// Legacy BL `API_INVESTMENT_GENERATE_ACCRUAL`.
+export async function listInvestmentGenerateSchedule(params = "") {
+  return apiRequest<{
+    data: InvestmentGenerateScheduleRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/generate-schedule${params}`);
+}
+
+// Legacy INSERT_UPDATE_INVESTMENT_ACCRUAL mode=generateScheduleAccrual.
+// Fans `CALL investment_accrual(?)` per number; response includes
+// per-number success/failure breakdown.
+export async function generateInvestmentSchedules(investmentNumbers: string[]) {
+  return apiRequest<{ data: InvestmentGenerateScheduleResult }>(
+    "/api/investment/generate-schedule/generate",
+    {
+      method: "POST",
+      body: JSON.stringify({ investmentNumbers }),
+    },
+  );
+}
+
+// Investment > Monitoring (PAGEID 1183 / MENUID 1458).
+// Legacy BL `ATR_INVESTMENT_MONITORING`. Two-level drill-down.
+export async function listInvestmentMonitoringBatches(params = "") {
+  return apiRequest<{
+    data: InvestmentMonitoringBatchRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/monitoring/batches${params}`);
+}
+
+export async function listInvestmentMonitoringInvestments(params = "") {
+  return apiRequest<{
+    data: InvestmentMonitoringInvestmentRow[];
+    meta: Record<string, unknown>;
+  }>(`/api/investment/monitoring/investments${params}`);
+}
+
+// Backs the "Investment Summary" batch-level PDF report — migrated
+// from the legacy `investmentSummary_pdf.php`. Returns the full
+// batch payload (rows + totals + generated timestamp) for
+// `downloadInvestmentMonitoringSummaryPdf` to render client-side.
+export async function getInvestmentMonitoringSummaryPdf(params = "") {
+  return apiRequest<{ data: InvestmentMonitoringSummaryPdfPayload }>(
+    `/api/investment/monitoring/summary-pdf${params}`,
+  );
+}
+
 // Purchasing > Status PO & PR (PAGEID 1520 / MENUID 1841).
 export async function listStatusPoPr(params = "") {
   return apiRequest<{ data: StatusPoPrRow[]; meta: Record<string, unknown> }>(
@@ -1795,5 +2035,145 @@ export async function listStatusPoPr(params = "") {
 export async function getStatusPoPrOptions() {
   return apiRequest<{ data: StatusPoPrOptions }>(
     "/api/purchasing/status-po-pr/options",
+  );
+}
+
+// General Ledger > Journal Listing (PAGEID 1700 / MENUID 2056).
+export async function listJournalListing(params = "") {
+  return apiRequest<{ data: JournalListingRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/journal-listing${params}`,
+  );
+}
+
+export async function getJournalListing(id: number) {
+  return apiRequest<{
+    data: {
+      header: JournalListingHeader;
+      debit: JournalListingLine[];
+      credit: JournalListingLine[];
+    };
+  }>(`/api/general-ledger/journal-listing/${id}`);
+}
+
+export async function deleteJournalListing(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/general-ledger/journal-listing/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+export async function getJournalListingOptions() {
+  return apiRequest<{ data: JournalListingOptions }>(
+    "/api/general-ledger/journal-listing/options",
+  );
+}
+
+// General Ledger > Manual Journal Listing (PAGEID 1729 / MENUID 2089).
+// Source: FIMS BL `V2_GL_JOURNAL_API` (?listing=1 + ?listing_delete=1).
+// Read list + DRAFT-only delete. Type-of-Journal is a fixed dropdown
+// hard-coded on the legacy page (General / InterOU / Intercompany) and is
+// REQUIRED by the backend — index returns an empty page when missing, as
+// the legacy BL does.
+export async function listManualJournal(params = "") {
+  return apiRequest<{ data: ManualJournalRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/manual-journal${params}`,
+  );
+}
+
+export async function deleteManualJournal(id: number) {
+  return apiRequest<{ data: { success: boolean } }>(
+    `/api/general-ledger/manual-journal/${id}`,
+    { method: "DELETE" },
+  );
+}
+
+export async function getManualJournalOptions() {
+  return apiRequest<{ data: ManualJournalOptions }>(
+    "/api/general-ledger/manual-journal/options",
+  );
+}
+
+// Backs the toolbar "Download PDF" button — fetches ALL rows matching the
+// current filters (same contract as listManualJournal, no pagination).
+// Mirrors `custom/report/Manual Journal/downloadListPDF.php`.
+export async function getManualJournalListingPdf(params = "") {
+  return apiRequest<{ data: ManualJournalListingPdfPayload }>(
+    `/api/general-ledger/manual-journal/listing-pdf${params}`,
+  );
+}
+
+// Backs the per-row "PDF" row action — header + GL lines + workflow signers.
+// Mirrors `custom/report/Manual Journal/downloadPDFmj.php`.
+export async function getManualJournalDetail(id: number) {
+  return apiRequest<{ data: ManualJournalDetail }>(
+    `/api/general-ledger/manual-journal/${id}`,
+  );
+}
+
+// General Ledger > List of Year and Month (PAGEID 2721 / MENUID 3287).
+export async function listGlYearMonth(params = "") {
+  return apiRequest<{ data: GlYearMonthRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/year-month${params}`,
+  );
+}
+
+export async function getGlYearMonth(id: number) {
+  return apiRequest<{ data: GlYearMonthDetail }>(`/api/general-ledger/year-month/${id}`);
+}
+
+export async function getGlYearMonthOptions() {
+  return apiRequest<{ data: GlYearMonthOptions }>(
+    "/api/general-ledger/year-month/options",
+  );
+}
+
+export async function createGlYearMonth(input: GlYearMonthInput) {
+  return apiRequest<{ data: GlYearMonthDetail }>("/api/general-ledger/year-month", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+}
+
+export async function updateGlYearMonth(id: number, input: GlYearMonthInput) {
+  return apiRequest<{ data: GlYearMonthDetail }>(
+    `/api/general-ledger/year-month/${id}`,
+    { method: "PUT", body: JSON.stringify(input) },
+  );
+}
+
+// General Ledger > Posting to GL (TB) (PAGEID 1139 / MENUID 1409).
+// Source: FIMS BL `POSTING_TO_TB`. List returns grouped master+document
+// rows with aggregated DR/CR sums; show returns the master header plus
+// debit + credit line sub-tables in one payload for the in-page modal.
+export async function listPostingToTb(params = "") {
+  return apiRequest<{ data: PostingToTbRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/posting-to-tb${params}`,
+  );
+}
+
+export async function getPostingToTb(id: number) {
+  return apiRequest<{
+    data: { header: PostingToTbHeader; debit: PostingToTbLine[]; credit: PostingToTbLine[] };
+  }>(`/api/general-ledger/posting-to-tb/${id}`);
+}
+
+export async function getPostingToTbOptions() {
+  return apiRequest<{ data: PostingToTbOptions }>(
+    "/api/general-ledger/posting-to-tb/options",
+  );
+}
+
+// General Ledger > General Ledger Listing (PAGEID 2068 / MENUID 2519).
+// Source: FIMS BL `NAD_API_GL_LISTINGPOSTINGTOGL`. Read-only line-level
+// datatable with a single consolidated smart filter modal.
+export async function listGlListing(params = "") {
+  return apiRequest<{ data: GlListingRow[]; meta: Record<string, unknown> }>(
+    `/api/general-ledger/general-ledger-listing${params}`,
+  );
+}
+
+export async function getGlListingOptions() {
+  return apiRequest<{ data: GlListingOptions }>(
+    "/api/general-ledger/general-ledger-listing/options",
   );
 }
